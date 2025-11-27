@@ -1,10 +1,12 @@
-// todo: check why this path needs this
 // ts-unused-exports:disable-next-line
 export {
   fetchTwitchUserInfo,
   fetchTwitchStreamStatus,
   fetchTwitchUserFollowersCount,
   fetchUserFollowedChannels,
-  DEFAULT_FOLLOWED_CHANNELS,
-  type FollowedChannel,
 } from './twitch-api';
+
+// ts-unused-exports:disable-next-line
+export { DEFAULT_FOLLOWED_CHANNELS } from './constants';
+// ts-unused-exports:disable-next-line
+export type { FollowedChannel, InvitedStreamersData } from './interfaces';

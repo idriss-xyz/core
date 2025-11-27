@@ -6,6 +6,7 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { TabItem, TabsPill } from '@idriss-xyz/ui/tabs-pill';
 import { Badge } from '@idriss-xyz/ui/badge';
 import { formatFollowerCount } from '@idriss-xyz/utils';
+import { InvitedStreamersData } from '@idriss-xyz/utils/server';
 
 import { TimeAgoCell } from '@/app/components/time-ago-cell';
 import { Avatar } from '@/app/components/avatar/avatar';
@@ -26,22 +27,8 @@ interface Streamer {
 
 // ---------- props ----------
 type Properties = {
-  invited: {
-    displayName: string;
-    profilePictureUrl: string;
-    numberOfFollowers: number;
-    joinDate: string;
-    streamStatus: boolean;
-    game: { name: string; url: string } | null;
-  }[];
-  suggested: {
-    displayName: string;
-    profilePictureUrl: string;
-    numberOfFollowers: number;
-    joinDate: string;
-    streamStatus: boolean;
-    game: { name: string; url: string } | null;
-  }[];
+  invited: InvitedStreamersData[];
+  suggested: InvitedStreamersData[];
 };
 
 const columns: ColumnDefinition<Streamer>[] = [
@@ -150,7 +137,7 @@ export default function StreamersTable({
         streamStatus: u.streamStatus ?? false,
         followers: u.numberOfFollowers,
         reward: 0,
-        joined: u.joinDate,
+        joined: u.joinDate.toString(),
         game: u.game,
       };
     });

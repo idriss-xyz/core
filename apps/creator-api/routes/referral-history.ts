@@ -8,8 +8,9 @@ import {
   fetchTwitchStreamStatus,
   fetchTwitchUserFollowersCount,
   fetchTwitchUserInfo,
+  InvitedStreamersData,
+  DEFAULT_FOLLOWED_CHANNELS,
 } from '@idriss-xyz/utils/server';
-import { DEFAULT_FOLLOWED_CHANNELS } from '@idriss-xyz/utils/server';
 import { CreatorFollowedChannel } from '@idriss-xyz/db';
 
 const router = Router();
@@ -20,15 +21,6 @@ interface CreatorReferralStats {
   inviteRank: number;
   networkEarnings: number;
   suggestedInvitees: InvitedStreamersData[];
-}
-
-interface InvitedStreamersData {
-  displayName: string;
-  profilePictureUrl: string;
-  numberOfFollowers: number;
-  joinDate: Date;
-  streamStatus: boolean;
-  game: { name: string; url: string } | null;
 }
 
 router.get(

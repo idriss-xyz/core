@@ -1,25 +1,12 @@
 import { getAccessToken } from '@privy-io/react-auth';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { useQuery } from '@tanstack/react-query';
+import { InvitedStreamersData } from '@idriss-xyz/utils/server';
 
 interface ReferralHistoryResponse {
   successfulInvites: number;
-  successfulInvitesUsers: {
-    displayName: string;
-    profilePictureUrl: string;
-    numberOfFollowers: number;
-    joinDate: string;
-    streamStatus: boolean;
-    game: { name: string; url: string } | null;
-  }[];
-  suggestedInvitees: {
-    displayName: string;
-    profilePictureUrl: string;
-    numberOfFollowers: number;
-    joinDate: string;
-    streamStatus: boolean;
-    game: { name: string; url: string } | null;
-  }[];
+  successfulInvitesUsers: InvitedStreamersData[];
+  suggestedInvitees: InvitedStreamersData[];
   inviteRank: number;
   networkEarnings: number;
 }

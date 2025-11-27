@@ -57,6 +57,9 @@ export function PrivyAuthSync() {
 
       if (existingCreator) {
         setCreator(existingCreator);
+        deleteCookie('referrerName');
+        deleteCookie('referrerAddress');
+        deleteCookie('referrerProfilePictureUrl');
         if (callbackUrl && !isHomeCallback(callbackUrl)) {
           // If existing creator has isDonor true, update it to false
           if (existingCreator.isDonor) {
