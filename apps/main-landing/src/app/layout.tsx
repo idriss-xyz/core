@@ -1,6 +1,3 @@
-import fs from 'node:fs';
-import path from 'node:path';
-
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
@@ -11,40 +8,27 @@ import { GoogleAnalytics } from '@next/third-parties/google';
 import { CreatorsProviders } from './creators-providers';
 import { PrivyModalHider } from './components/privy-modal-hider';
 
-const fontsDirectory = path.join(process.cwd(), 'src/app/fonts');
-const fontsExist = fs.existsSync(
-  path.join(fontsDirectory, 'AeonikPro-Light.woff2'),
-);
-
-const aeonikPro = fontsExist
-  ? localFont({
-      src: [
-        {
-          path: './fonts/AeonikPro-Light.woff2',
-          weight: '300',
-          style: 'normal',
-        },
-        {
-          path: './fonts/AeonikPro-Regular.woff2',
-          weight: '400',
-          style: 'normal',
-        },
-        {
-          path: './fonts/AeonikPro-RegularItalic.woff2',
-          weight: '400',
-          style: 'italic',
-        },
-        {
-          path: './fonts/AeonikPro-Medium.woff2',
-          weight: '500',
-          style: 'normal',
-        },
-      ],
-      variable: '--font-aeonikpro',
-    })
-  : {
-      variable: '--font-aeonikpro',
-    };
+const aeonikPro = localFont({
+  src: [
+    {
+      path: './fonts/AeonikPro-Light.woff2',
+      weight: '300',
+      style: 'normal',
+    },
+    { path: './fonts/AeonikPro-Regular.woff2', weight: '400', style: 'normal' },
+    {
+      path: './fonts/AeonikPro-RegularItalic.woff2',
+      weight: '400',
+      style: 'italic',
+    },
+    {
+      path: './fonts/AeonikPro-Medium.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-aeonikpro',
+});
 
 const DEPLOYMENT_URL = process.env.RAILWAY_PUBLIC_DOMAIN
   ? new URL(`https://${process.env.RAILWAY_PUBLIC_DOMAIN}`)
