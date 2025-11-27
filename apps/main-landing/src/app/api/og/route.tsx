@@ -9,20 +9,13 @@ export async function GET(request: Request) {
   const name = searchParams.get('name') ?? '';
   const avatar = searchParams.get('avatar') ?? '';
 
-  let mediumFontData: ArrayBuffer | undefined;
+  const fontPath = ['..', '..', 'fonts', 'AeonikPro-Medium.woff'].join('/');
 
-  try {
-    // Skip in GitHub CI (prevents build error)
-    mediumFontData = process.env.CI
-      ? undefined
-      : await fetch(
-          new URL('../../fonts/AeonikPro-Medium.woff', import.meta.url),
-        ).then((r) => {
-          return r.arrayBuffer();
-        });
-  } catch {
-    mediumFontData = undefined;
-  }
+  const mediumFontData = await fetch(new URL(fontPath, import.meta.url)).then(
+    (r) => {
+      return r.arrayBuffer();
+    },
+  );
 
   const CANVAS_W = 2400;
   const CANVAS_H = 1260;
@@ -180,16 +173,14 @@ export async function GET(request: Request) {
     {
       width: CANVAS_W,
       height: CANVAS_H,
-      fonts: mediumFontData
-        ? [
-            {
-              name: 'AeonikPro',
-              data: mediumFontData,
-              weight: 500,
-              style: 'normal',
-            },
-          ]
-        : [],
+      fonts: [
+        {
+          name: 'AeonikPro',
+          data: mediumFontData,
+          weight: 500,
+          style: 'normal',
+        },
+      ],
     },
   );
 }
