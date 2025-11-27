@@ -21,7 +21,6 @@ import { CreatorNetwork, CreatorToken, DonationParameters } from '../entities';
       .addSelect('c.joined_at', 'joinedAt')
       .addSelect('c.done_setup', 'doneSetup')
       .addSelect('c.receive_emails', 'receiveEmails')
-      .addSelect('c.twitch_id', 'twitchId')
       .addSelect('c.is_donor', 'isDonor')
       .addSelect('c.display_top_donor', 'displayTopDonor')
       .addSelect('dp.token_enabled', 'tokenEnabled')
@@ -107,6 +106,8 @@ export class CreatorProfileView {
 
   @ViewColumn()
   twitchId!: string;
+
+  @ViewColumn()
   goalUrl!: string | null;
 
   @ViewColumn()
