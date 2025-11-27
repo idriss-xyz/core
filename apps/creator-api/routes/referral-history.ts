@@ -183,8 +183,7 @@ router.get(
         networkEarnings,
         suggestedInvitees,
       } as CreatorReferralStats);
-    } catch (error) {
-      console.log('Referral history error:', error);
+    } catch {
       res.status(500).json({ error: 'Failed to fetch referral history' });
     }
   },
