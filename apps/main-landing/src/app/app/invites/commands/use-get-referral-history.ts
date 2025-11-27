@@ -31,7 +31,6 @@ export function useGetReferralHistory(options?: { enabled?: boolean }) {
     queryFn: async () => {
       const authToken = await getAccessToken();
       if (!authToken) throw new Error('Unauthorized');
-      console.log('Getting now');
 
       const response = await fetch(`${CREATOR_API_URL}/referral-history`, {
         method: 'GET',

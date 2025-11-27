@@ -48,7 +48,6 @@ router.get(
       });
 
       if (!referrer) {
-        console.log('Referrer with given name does not exist');
         res
           .status(400)
           .json({ error: 'Referrer with given name does not exist' });
