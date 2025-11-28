@@ -15,8 +15,8 @@ export async function GET(request: Request) {
     return result.arrayBuffer();
   });
 
-  const CANVAS_W = 4800;
-  const CANVAS_H = 2520;
+  const CANVAS_W = 2400;
+  const CANVAS_H = 1260;
 
   return new ImageResponse(
     (
@@ -49,9 +49,9 @@ export async function GET(request: Request) {
         <div
           style={{
             width: '100%',
-            paddingTop: 4.44,
-            paddingBottom: 4.44,
-            marginBottom: 136,
+            paddingTop: 2.22,
+            paddingBottom: 2.22,
+            marginBottom: 68,
             backgroundImage:
               'linear-gradient(180deg, rgba(145, 206, 154, 0.5) 0%, #55EB3C 99.33%)',
             display: 'flex',
@@ -60,8 +60,8 @@ export async function GET(request: Request) {
           <div
             style={{
               width: '100%',
-              paddingLeft: 180,
-              paddingRight: 32,
+              paddingLeft: 90,
+              paddingRight: 16,
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
@@ -71,7 +71,7 @@ export async function GET(request: Request) {
           >
             <div
               style={{
-                maxHeight: 368,
+                maxHeight: 184,
                 display: 'flex',
                 alignItems: 'center',
               }}
@@ -80,9 +80,9 @@ export async function GET(request: Request) {
                 <div
                   style={{
                     position: 'relative',
-                    width: 288,
-                    height: 288,
-                    padding: 40,
+                    width: 144,
+                    height: 144,
+                    padding: 20,
                     opacity: 1,
                     transform: 'rotate(0deg)',
                     boxSizing: 'border-box',
@@ -93,14 +93,14 @@ export async function GET(request: Request) {
                     <img
                       alt=""
                       src={avatar}
-                      width={288}
-                      height={288}
+                      width={144}
+                      height={144}
                       style={{
                         width: '100%',
                         height: '100%',
                         borderRadius: '50%',
                         objectFit: 'cover',
-                        border: '4px solid rgb(219 221 226)',
+                        border: '2px solid rgb(219 221 226)',
                         display: 'block',
                       }}
                     />
@@ -113,8 +113,8 @@ export async function GET(request: Request) {
                   display: 'flex',
                   flexWrap: 'wrap',
                   textTransform: 'uppercase',
-                  fontSize: 96,
-                  lineHeight: '112px',
+                  fontSize: 48,
+                  lineHeight: '56px',
                   fontWeight: 500,
                   letterSpacing: '0px',
                   alignItems: 'center',
@@ -135,10 +135,10 @@ export async function GET(request: Request) {
                 </span>
 
                 <svg
-                  style={{ marginRight: 32, flexShrink: 0 }}
+                  style={{ marginRight: 16, flexShrink: 0 }}
                   xmlns="http://www.w3.org/2000/svg"
-                  width={128}
-                  height={128}
+                  width={64}
+                  height={64}
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="#05AB13"
