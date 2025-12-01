@@ -7,6 +7,7 @@ import {
   CreatorToken,
   CreatorNetwork,
   AppDataSource,
+  Referral,
 } from '@idriss-xyz/db';
 import { Hex } from 'viem';
 
@@ -755,6 +756,42 @@ router.get('/list/all', async (req: Request, res: Response) => {
     }));
 
     res.json(creatorList);
+  } catch (error) {
+    console.error('Error fetching all creators:', error);
+    res.status(500).json({ error: 'Failed to fetch all creators' });
+  }
+});
+
+router.get('/invites/all', async (req: Request, res: Response) => {
+  const { secret } = req.query;
+  if (secret !== process.env.SECRET_PASSWORD) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  try {
+    const referralRepository = AppDataSource.getRepository(Referral);
+    const invites = await referralRepository.find({
+      relations: {
+        referrer: true,
+        referred: true,
+      },
+      order: {
+        referred: {
+          joinedAt: 'ASC',
+        },
+      },
+    });
+
+    const invitesList = invites.map((invite) => ({
+      referrer: invite.referrer.displayName,
+      referred: invite.referred.displayName,
+      joinedAt: invite.referred.joinedAt,
+      doneSetup: invite.referred.doneSetup,
+      twitchUrl: `https://twitch.tv/${invite.referred.displayName}`,
+    }));
+
+    res.json(invitesList);
   } catch (error) {
     console.error('Error fetching all creators:', error);
     res.status(500).json({ error: 'Failed to fetch all creators' });
