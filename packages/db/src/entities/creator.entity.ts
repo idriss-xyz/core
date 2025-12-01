@@ -58,6 +58,7 @@ export class Creator {
   )
   @JoinColumn({ name: 'twitch_id', referencedColumnName: 'twitchId' })
   twitchInfo!: TwitchInfo;
+
   @Column({ type: 'text', name: 'goal_url', nullable: true })
   goalUrl?: string;
 
