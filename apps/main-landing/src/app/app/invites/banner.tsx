@@ -20,7 +20,7 @@ export default function InviteBanner() {
         <img
           alt="idriss stream"
           src={IDRISS_SCENE_STREAM_4.src}
-          className="absolute bottom-[-200px] lg:bottom-[-260px] xl:bottom-[-350px] 2xl:bottom-[-420px] 4xl:bottom-[-600px]"
+          className="absolute inset-0 size-full object-cover object-[center_10%] lg:object-[center_33%] 3xl:object-[center_37%]"
         />
         <div className="px-24 py-8">
           <div className="flex max-w-[659px] flex-col gap-3">
