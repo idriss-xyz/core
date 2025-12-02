@@ -36,6 +36,31 @@ async function getHeaders(): Promise<Record<string, string>> {
   };
 }
 
+// ts-unused-exports:disable-next-line
+export async function getTwitchInfoForCreatorCreation(creatorName: string) {
+  try {
+    const userInfo = await fetchTwitchUserInfo(creatorName);
+    if (!userInfo) {
+      console.warn(`No Twitch user found for creator: ${creatorName}`);
+      return null;
+    }
+
+    const followersInfo = await fetchTwitchUserFollowersCount(creatorName);
+
+    return {
+      twitchId: userInfo.id,
+      username: userInfo.login,
+      displayName: userInfo.display_name,
+      profileImageUrl: userInfo.profile_image_url,
+      description: userInfo.description,
+      followerCount: followersInfo?.total ?? 0,
+    };
+  } catch (error) {
+    console.error(`Error fetching Twitch info for ${creatorName}:`, error);
+    return null;
+  }
+}
+
 // Reference: https://dev.twitch.tv/docs/api/reference/#get-users
 // ts-unused-exports:disable-next-line
 export async function fetchTwitchUserInfo(

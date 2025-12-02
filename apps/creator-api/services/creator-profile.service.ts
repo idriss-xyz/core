@@ -6,6 +6,7 @@ import {
   DonationParameters,
   CreatorAddress,
   CreatorProfileView,
+  TwitchInfo,
 } from '@idriss-xyz/db';
 import { randomBytes } from 'crypto';
 import { Request } from 'express';
@@ -22,6 +23,7 @@ import { ILike } from 'typeorm';
 import {
   fetchTwitchStreamStatus,
   fetchTwitchUserInfo,
+  getTwitchInfoForCreatorCreation,
 } from '@idriss-xyz/utils/server';
 
 interface EnrichedCreatorProfile extends CreatorProfileView {
@@ -78,6 +80,7 @@ class CreatorProfileService {
       AppDataSource.getRepository(DonationParameters);
     const tokenRepository = AppDataSource.getRepository(CreatorToken);
     const networkRepository = AppDataSource.getRepository(CreatorNetwork);
+    const twitchInfoRepository = AppDataSource.getRepository(TwitchInfo);
 
     const creator = new Creator();
     creator.doneSetup = false;
@@ -95,11 +98,21 @@ class CreatorProfileService {
     creator.goalUrl = `${MAIN_LANDING_LINK}/goal-overlay/${obsUrlSecret}`;
     creator.isDonor = isDonor;
 
-    const twitchInfoforCreator = await fetchTwitchUserInfo(creatorData.name);
+    const twitchInfoforCreator = await getTwitchInfoForCreatorCreation(
+      creatorData.name,
+    );
+
     if (!twitchInfoforCreator) {
       throw new Error('Could not find creator on Twitch api');
     }
-    creator.twitchId = twitchInfoforCreator.id;
+    await twitchInfoRepository.save({
+      twitchId: twitchInfoforCreator.twitchId,
+      username: twitchInfoforCreator?.username ?? creator.name,
+      description: twitchInfoforCreator?.description ?? null,
+      followerCount: twitchInfoforCreator?.followerCount ?? 0,
+    });
+
+    creator.twitchId = twitchInfoforCreator.twitchId;
 
     // Create and save new creator
     const savedCreator = await creatorRepository.save(creator);

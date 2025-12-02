@@ -4,6 +4,7 @@ export {
   fetchTwitchStreamStatus,
   fetchTwitchUserFollowersCount,
   fetchUserFollowedChannels,
+  getTwitchInfoForCreatorCreation,
 } from './twitch-api';
 
 // ts-unused-exports:disable-next-line
