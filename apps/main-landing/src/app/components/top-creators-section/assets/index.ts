@@ -1,7 +1,7 @@
 export { default as DafaqtorCard } from './dafaqtor-card.svg';
 export { default as ExcelsorphCard } from './excelsorph-card.svg';
 export { default as DmoneyCard } from './dmoney-card.svg';
-export { default as Qflux888Card } from './qflux888-card.svg';
+export { default as ThijsCard } from './thijs-card.webp';
 export { default as LambyseriestvCard } from './lambyseriestv-card.svg';
 export { default as ViperCard } from './viper-card.jpg';
 export { default as YoJurmyCard } from './yojurmy-card.webp';
@@ -9,3 +9,5 @@ export { default as FenoHSCard } from './fenohs-card.png';
 export { default as BabyBearHSCard } from './babybearhs-card.jpg';
 export { default as AlliestraszaCard } from './alliestrasza-card.jpg';
 export { default as PandappleCard } from './pandapple-card.jpg';
+export { default as HamHocks42Card } from './HamHocks42.webp';
+export { default as SequinoxTVCard } from './SequinoxTV.webp';

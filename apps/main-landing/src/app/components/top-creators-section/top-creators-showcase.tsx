@@ -9,13 +9,15 @@ import {
   ExcelsorphCard,
   BabyBearHSCard,
   DmoneyCard,
-  Qflux888Card,
+  ThijsCard,
   LambyseriestvCard,
   ViperCard,
   YoJurmyCard,
   FenoHSCard,
   AlliestraszaCard,
   PandappleCard,
+  HamHocks42Card,
+  SequinoxTVCard,
 } from './assets';
 
 const creators = [
@@ -110,15 +112,15 @@ const creators = [
     },
   },
   {
-    name: 'qFlux888',
+    name: 'Thijs',
     followers: '3.4K',
-    image: Qflux888Card.src,
+    image: ThijsCard.src,
     platform: {
       icon: (
         <IconButton
           asLink
           isExternal
-          href="https://www.twitch.tv/qflux888"
+          href="https://www.twitch.tv/thijs"
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
@@ -164,6 +166,24 @@ const creators = [
     },
   },
   {
+    name: 'SequinoxTV',
+    followers: '13.2K',
+    image: SequinoxTVCard.src,
+    platform: {
+      icon: (
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/sequinoxtv"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8"
+        />
+      ),
+    },
+  },
+  {
     name: 'viper_9337',
     followers: '18.9K',
     image: ViperCard.src,
@@ -173,6 +193,24 @@ const creators = [
           asLink
           isExternal
           href="https://www.twitch.tv/viper_9337"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8"
+        />
+      ),
+    },
+  },
+  {
+    name: 'HamHocks42',
+    followers: '5.4K',
+    image: HamHocks42Card.src,
+    platform: {
+      icon: (
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/hamhocks42"
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
