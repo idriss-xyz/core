@@ -101,8 +101,7 @@ class CreatorProfileService {
     const twitchInfoforCreator = await getTwitchInfoForCreatorCreation(
       creatorData.name,
     );
-    console.log('getTwitchInfoForCreatorCreation');
-    console.log(twitchInfoforCreator);
+
     if (!twitchInfoforCreator) {
       throw new Error('Could not find creator on Twitch api');
     }
