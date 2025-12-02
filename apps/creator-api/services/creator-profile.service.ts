@@ -101,16 +101,16 @@ class CreatorProfileService {
     const twitchInfoforCreator = await getTwitchInfoForCreatorCreation(
       creatorData.name,
     );
+    console.log('getTwitchInfoForCreatorCreation');
+    console.log(twitchInfoforCreator);
     if (!twitchInfoforCreator) {
       throw new Error('Could not find creator on Twitch api');
     }
-    twitchInfoRepository.save({
-      twitch_id: twitchInfoforCreator.twitchId,
+    await twitchInfoRepository.save({
+      twitchId: twitchInfoforCreator.twitchId,
       username: twitchInfoforCreator?.username ?? creator.name,
       description: twitchInfoforCreator?.description ?? null,
-      follower_count: twitchInfoforCreator?.followerCount ?? 0,
-      created_at: new Date(),
-      updated_at: new Date(),
+      followerCount: twitchInfoforCreator?.followerCount ?? 0,
     });
 
     creator.twitchId = twitchInfoforCreator.twitchId;
