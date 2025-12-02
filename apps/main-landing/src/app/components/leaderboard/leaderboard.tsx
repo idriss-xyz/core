@@ -36,6 +36,7 @@ type Properties = {
   leaderboardError: boolean;
   leaderboardLoading: boolean;
   leaderboard: LeaderboardStats[];
+  hasResults: boolean;
   onDonorClick?: (displayName: string) => void;
   updateCurrentContent?: (content: DonateContentValues) => void;
   activeFilter?: string;
@@ -55,6 +56,7 @@ export const Leaderboard = ({
   address,
   className,
   leaderboard = [],
+  hasResults,
   onDonorClick,
   leaderboardError,
   leaderboardLoading,
@@ -277,12 +279,16 @@ export const Leaderboard = ({
                           No fans yet
                         </span>
                         <span className="mx-8 text-center text-display5 uppercase gradient-text">
-                          Share your page to get your first fan
+                          {activeFilter !== 'All time' && hasResults
+                            ? 'Change the time range to see results'
+                            : 'Share your page to get your first fan'}
                         </span>
-                        <CopyButton
-                          text={creator?.donationUrl ?? ''}
-                          disabled={!creator?.donationUrl}
-                        />
+                        {!hasResults && (
+                          <CopyButton
+                            text={creator?.donationUrl ?? ''}
+                            disabled={!creator?.donationUrl}
+                          />
+                        )}
                       </div>
                     )
                   }

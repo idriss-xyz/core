@@ -31,6 +31,8 @@ export default function TopDonors() {
     [leaderboardQuery.data],
   );
 
+  const hasResults = (leaderboardQuery.data?.length ?? 0) > 0;
+
   if (leaderboardQuery.isLoading || !ready || !authenticated) {
     return <SkeletonRanking />;
   }
@@ -39,6 +41,7 @@ export default function TopDonors() {
     <div>
       <Leaderboard
         leaderboard={leaderboardQuery.data ?? []}
+        hasResults={hasResults}
         leaderboardError={leaderboardQuery.isError}
         leaderboardLoading={leaderboardQuery.isLoading}
         address={{

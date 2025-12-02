@@ -30,9 +30,9 @@ export default function TopDonors() {
     return tipHistoryQuery.data?.donations ?? [];
   }, [tipHistoryQuery.data?.donations]);
 
-  const leaderboard = useMemo(() => {
-    const allTimeLeaderboard = calculateDonationLeaderboard(allDonations);
+  const allTimeLeaderboard = calculateDonationLeaderboard(allDonations);
 
+  const leaderboard = useMemo(() => {
     if (activeFilter === 'All time') {
       return allTimeLeaderboard;
     }
@@ -57,7 +57,9 @@ export default function TopDonors() {
         donorSince: donorSinceMap.get(item.address) ?? item.donorSince,
       };
     });
-  }, [allDonations, activeFilter]);
+  }, [allDonations, activeFilter, allTimeLeaderboard]);
+
+  const hasResults = allTimeLeaderboard.length > 0;
 
   if (tipHistoryQuery.isLoading || !ready || !authenticated) {
     return <SkeletonRanking />;
@@ -67,6 +69,7 @@ export default function TopDonors() {
     <div>
       <Leaderboard
         leaderboard={leaderboard}
+        hasResults={hasResults}
         leaderboardError={tipHistoryQuery.isError}
         leaderboardLoading={tipHistoryQuery.isLoading}
         address={{
