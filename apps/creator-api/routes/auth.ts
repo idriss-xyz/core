@@ -73,7 +73,7 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       followed = await fetchUserFollowedChannels(
         access_token,
         twitchUser.id,
-        30,
+        10,
       );
     } catch (err) {
       console.error('fetchUserFollowedChannels failed:', err);
