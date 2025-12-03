@@ -39,8 +39,7 @@ async function getHeaders(): Promise<Record<string, string>> {
   };
 }
 
-// ts-unused-exports:disable-next-line
-export async function fetchTwitchUsersBatch(
+async function fetchTwitchUsersBatch(
   ids: string[],
 ): Promise<Record<string, TwitchUserBasic>> {
   const headers = await getHeaders();
@@ -106,7 +105,9 @@ export async function fetchTwitchUserInfo(
       throw new Error(`Twitch API error: ${userResponse.status}`);
     }
 
-    const userJson = await userResponse.json();
+    const userJson = (await userResponse.json()) as {
+      data?: TwitchUserBasic[];
+    };
 
     const user = userJson.data?.[0];
     if (!user) return null;
@@ -257,7 +258,7 @@ export async function fetchUserFollowedChannels(
       }
 
       // current game
-      let game = null;
+      let game: { name: string; url: string } | null = null;
       const channelResult = await fetch(
         `${TWITCH_BASE_URL}/channels?broadcaster_id=${row.broadcaster_id}`,
         { headers },
