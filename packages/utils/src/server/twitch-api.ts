@@ -3,12 +3,15 @@ import { DEFAULT_FOLLOWED_CHANNELS } from './constants';
 import { FollowedChannel } from './interfaces';
 import { twitchAuthManager } from './twitch-auth-manager';
 
-interface TwitchUserInfo {
+interface TwitchUserBasic {
   id: string;
   login: string;
   display_name: string;
   profile_image_url: string;
   description: string;
+}
+
+interface TwitchUserInfo extends TwitchUserBasic {
   game: { name: string; url: string } | null;
 }
 
@@ -34,6 +37,33 @@ async function getHeaders(): Promise<Record<string, string>> {
     'Authorization': `Bearer ${authToken}`,
     'Client-Id': clientId,
   };
+}
+
+// ts-unused-exports:disable-next-line
+export async function fetchTwitchUsersBatch(
+  ids: string[],
+): Promise<Record<string, TwitchUserBasic>> {
+  const headers = await getHeaders();
+
+  const url = new URL(`${TWITCH_BASE_URL}/users`);
+  for (const id of ids) url.searchParams.append('id', id);
+
+  const response = await fetch(url.toString(), { headers });
+  if (!response.ok) {
+    throw new Error(`Twitch API /users error: ${response.status}`);
+  }
+
+  const json = (await response.json()) as {
+    data: TwitchUserBasic[];
+  };
+
+  const map: Record<string, TwitchUserBasic> = {};
+
+  for (const user of json.data) {
+    map[user.id] = user;
+  }
+
+  return map;
 }
 
 // ts-unused-exports:disable-next-line
@@ -76,15 +106,7 @@ export async function fetchTwitchUserInfo(
       throw new Error(`Twitch API error: ${userResponse.status}`);
     }
 
-    const userJson = (await userResponse.json()) as {
-      data?: {
-        id: string;
-        login: string;
-        display_name: string;
-        profile_image_url: string;
-        description: string;
-      }[];
-    };
+    const userJson = await userResponse.json();
 
     const user = userJson.data?.[0];
     if (!user) return null;
@@ -183,80 +205,91 @@ export async function fetchTwitchUserFollowersCount(
 export async function fetchUserFollowedChannels(
   userAccessToken: string,
   userId: string,
-  limit = 30,
+  limit = 10,
 ): Promise<FollowedChannel[]> {
   const clientId = process.env.TWITCH_CLIENT_ID;
   if (!clientId) throw new Error('Missing TWITCH_CLIENT_ID env var');
 
+  const headers = {
+    'Authorization': `Bearer ${userAccessToken}`,
+    'Client-Id': clientId,
+  };
+
   try {
-    const headers = {
-      'Authorization': `Bearer ${userAccessToken}`,
-      'Client-Id': clientId,
+    // get 10 most recent follows
+    const url = new URL(`${TWITCH_BASE_URL}/channels/followed`);
+    url.searchParams.set('user_id', userId);
+    url.searchParams.set('first', String(limit));
+
+    const r = await fetch(url.toString(), { headers });
+    if (!r.ok) throw new Error(`Twitch /channels/followed error: ${r.status}`);
+
+    const { data: recentFollows } = (await r.json()) as {
+      data: {
+        broadcaster_id: string;
+        broadcaster_login: string;
+        broadcaster_name: string;
+        followed_at: string;
+      }[];
     };
 
-    const pageSize = 100;
-    const allFollows: {
-      broadcaster_id: string;
-      broadcaster_login: string;
-      broadcaster_name: string;
-      followed_at: string;
-    }[] = [];
+    if (recentFollows.length === 0) return DEFAULT_FOLLOWED_CHANNELS;
 
-    let cursor: string | undefined;
-    do {
-      const url = new URL(`${TWITCH_BASE_URL}/channels/followed`);
-      url.searchParams.set('user_id', userId);
-      url.searchParams.set('first', String(pageSize));
-      if (cursor) url.searchParams.set('after', cursor);
+    // batch fetch user info
+    const ids = recentFollows.map((f) => {
+      return f.broadcaster_id;
+    });
+    const userMap = await fetchTwitchUsersBatch(ids);
 
-      const response = await fetch(url.toString(), { headers });
-      if (!response.ok) {
-        throw new Error(`Twitch /channels/followed error: ${response.status}`);
-      }
-
-      const json = (await response.json()) as {
-        data: typeof allFollows;
-        pagination?: { cursor?: string };
-      };
-
-      allFollows.push(...json.data);
-      cursor = json.pagination?.cursor;
-    } while (cursor);
-
-    if (allFollows.length === 0) return DEFAULT_FOLLOWED_CHANNELS;
-
-    /* ------------ enrich each channel -------------------------------- */
-    const concurrency = 10;
     const enriched: FollowedChannel[] = [];
 
-    for (let index = 0; index < allFollows.length; index += concurrency) {
-      const slice = allFollows.slice(index, index + concurrency);
-      const chunk = await Promise.all(
-        slice.map(async (row) => {
-          const [userInfo, followersInfo] = await Promise.all([
-            fetchTwitchUserInfo(row.broadcaster_login),
-            fetchTwitchUserFollowersCount(row.broadcaster_login),
-          ]);
-
-          return {
-            broadcasterId: row.broadcaster_id,
-            login: row.broadcaster_login,
-            name: row.broadcaster_name,
-            profileImage: userInfo?.profile_image_url ?? '',
-            followers: followersInfo?.total ?? 0,
-            followedAt: row.followed_at,
-            game: userInfo?.game,
-          } as FollowedChannel;
-        }),
+    for (const row of recentFollows) {
+      // follower count
+      const followersResult = await fetch(
+        `${TWITCH_BASE_URL}/channels/followers?broadcaster_id=${row.broadcaster_id}`,
+        { headers },
       );
-      enriched.push(...chunk);
+
+      let followerCount = 0;
+      if (followersResult.ok) {
+        const index = (await followersResult.json()) as { total?: number };
+        followerCount = index.total ?? 0;
+      }
+
+      // current game
+      let game = null;
+      const channelResult = await fetch(
+        `${TWITCH_BASE_URL}/channels?broadcaster_id=${row.broadcaster_id}`,
+        { headers },
+      );
+
+      if (channelResult.ok) {
+        const cj = (await channelResult.json()) as {
+          data?: { game_id?: string; game_name?: string }[];
+        };
+        const c = cj.data?.[0];
+        if (c?.game_id) {
+          game = {
+            name: c.game_name ?? '',
+            url: `https://static-cdn.jtvnw.net/ttv-boxart/${c.game_id}-285x380.jpg`,
+          };
+        }
+      }
+
+      const user = userMap[row.broadcaster_id];
+
+      enriched.push({
+        broadcasterId: row.broadcaster_id,
+        login: user?.login ?? row.broadcaster_login,
+        name: user?.display_name ?? row.broadcaster_name,
+        profileImage: user?.profile_image_url ?? '',
+        followers: followerCount,
+        followedAt: row.followed_at,
+        game,
+      });
     }
 
-    /* ------------ sort by followers and return top `limit` ----------- */
-    enriched.sort((a, b) => {
-      return b.followers - a.followers;
-    });
-    return enriched.slice(0, limit);
+    return enriched;
   } catch (error) {
     console.error('Error fetching followed channels:', error);
     return DEFAULT_FOLLOWED_CHANNELS;
