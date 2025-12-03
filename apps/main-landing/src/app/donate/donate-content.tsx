@@ -301,7 +301,7 @@ export function DonateContent({ creatorProfile }: Properties) {
               className="text-mint-600 underline"
               href={MAIN_LANDING_LINK}
             >
-              IDRISS Creators&nbsp;v2
+              IDRISS&nbsp;v2
             </ExternalLink>{' '}
             to continue receiving donations.
           </p>

@@ -52,7 +52,7 @@ export function useLinkWalletIfNeeded(
         domain: window.location.hostname,
         address,
         statement:
-          'Sign to confirm this wallet is yours and link it to your IDRISS Creators account. This is a one-time free signature.',
+          'Sign to confirm this wallet is yours and link it to your IDRISS account. This is a one-time free signature.',
         uri: window.location.origin,
         version: '1',
         chainId,
