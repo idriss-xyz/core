@@ -50,6 +50,9 @@ export class Creator {
   @Column({ type: 'text', name: 'twitch_id', nullable: false, unique: true })
   twitchId!: string;
 
+  @Column({ type: 'text', name: 'twitch_bot_token', nullable: true })
+  twitchBotToken!: string;
+
   @OneToOne(
     () => {
       return TwitchInfo;

@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import { ILike } from 'typeorm';
 import { createAddressToCreatorMap } from '@idriss-xyz/utils';
 import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
+import { twitchBotService } from './twitch-bot.service';
 
 export async function startDbListener(io: Server) {
   const creatorRepository = AppDataSource.getRepository(Creator);
@@ -48,6 +49,13 @@ export async function startDbListener(io: Server) {
         const overlayWS = io.of('/overlay');
         const userId = creator.privyId.toLowerCase();
         overlayWS.to(userId).emit('newDonation', donation);
+
+        // Send message on twitch chat
+        await twitchBotService.sendMessage(
+          creator?.name,
+          creator?.twitchBotToken,
+          donation.tradeValue.toString(), // TODO: replace for string like "donor donated 10 IDRISS ($10)"
+        );
       }
     } catch (error) {
       console.error('Error handling new_donation notification:', error);
