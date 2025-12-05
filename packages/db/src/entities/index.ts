@@ -16,3 +16,4 @@ export { DripDailyClaim } from './daily-drip.entity';
 export { TwitchInfo } from './twitch-info.entity';
 export { CreatorFollowedChannel } from './creator-followed-channel.entity';
 export { DonationGoal } from './donation-goal.entity';
+export { Environment } from './environment.entity';

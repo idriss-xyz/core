@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import axios from 'axios';
 import { URLSearchParams } from 'url';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
-import { AppDataSource, Creator } from '@idriss-xyz/db';
+import { AppDataSource, Environment } from '@idriss-xyz/db';
 
 const router = Router();
 
@@ -18,7 +18,7 @@ router.get('/twitch', (req, res) => {
     client_id: TWITCH_BOT_CLIENT_ID!,
     redirect_uri: API_CALLBACK_URI,
     response_type: 'code',
-    scope: 'chat:read chat:edit',
+    scope: 'chat:read chat:edit moderation:read',
     ...(state && { state }),
   })}`;
 
@@ -49,38 +49,22 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       }),
     );
 
-    const { access_token } = tokenResponse.data;
+    const { access_token, refresh_token } = await tokenResponse.data;
 
-    const userResponse = await axios.get('https://api.twitch.tv/helix/users', {
-      headers: {
-        'Authorization': `Bearer ${access_token}`,
-        'Client-Id': TWITCH_BOT_CLIENT_ID!,
-      },
-    });
+    // Store tokens in database
+    const environmentRepository = AppDataSource.getRepository(Environment);
 
-    const twitchUser = userResponse.data.data[0];
-    if (!twitchUser) {
-      throw new Error('Failed to fetch user profile from Twitch.');
-    }
-
-    const creatorRepo = AppDataSource.getRepository(Creator);
-    const creator = await creatorRepo.findOne({
-      where: { twitchId: twitchUser.id }, // Assuming you have user context
-    });
-
-    if (creator) {
-      creator.twitchBotToken = access_token;
-      await creatorRepo.save(creator);
-    }
-
-    const finalCallbackUrl = state
-      ? `${process.env.BASE_URL}/${decodeURIComponent(state as string)}`
-      : `${process.env.BASE_URL}/app/setup/stream-alerts`;
-
-    res.redirect(
-      `${finalCallbackUrl}?success=true&channel=${twitchUser.login}`,
+    await environmentRepository.upsert(
+      { key: 'bot_access_token', value: access_token },
+      ['key'],
     );
-    return;
+
+    await environmentRepository.upsert(
+      { key: 'bot_refresh_token', value: refresh_token },
+      ['key'],
+    );
+
+    res.send('Bot authorization successful! Tokens stored in database.');
   } catch (error: any) {
     console.error('Twitch bot auth failed:', error);
     const finalCallbackUrl = state
