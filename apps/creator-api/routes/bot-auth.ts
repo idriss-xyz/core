@@ -8,6 +8,7 @@ const router = Router();
 
 const TWITCH_BOT_CLIENT_ID = process.env.TWITCH_BOT_CLIENT_ID;
 const TWITCH_BOT_CLIENT_SECRET = process.env.TWITCH_BOT_CLIENT_SECRET;
+const TWITCH_BOT_USER_ID = process.env.TWITCH_BOT_USER_ID;
 const API_CALLBACK_URI = `${CREATOR_API_URL}/bot-auth/twitch/callback`;
 
 router.get('/twitch', (req, res) => {
@@ -50,6 +51,38 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
     );
 
     const { access_token, refresh_token } = await tokenResponse.data;
+
+    // Validate the authenticated user matches the expected bot account
+    if (TWITCH_BOT_USER_ID) {
+      try {
+        const userResponse = await axios.get(
+          'https://api.twitch.tv/helix/users',
+          {
+            headers: {
+              'Authorization': `Bearer ${access_token}`,
+              'Client-Id': TWITCH_BOT_CLIENT_ID!,
+            },
+          },
+        );
+
+        const userData = userResponse.data.data[0];
+        if (userData.id !== TWITCH_BOT_USER_ID) {
+          throw new Error(
+            `Invalid bot account. Expected user ID: ${TWITCH_BOT_USER_ID}, got: ${userData.id}`,
+          );
+        }
+      } catch (userError: any) {
+        console.error('Bot user validation failed:', userError);
+        const finalCallbackUrl = state
+          ? `${process.env.BASE_URL}/${decodeURIComponent(state as string)}`
+          : `${process.env.BASE_URL}/app/setup/stream-alerts`;
+
+        res.redirect(
+          `${finalCallbackUrl}?success=false&error=${encodeURIComponent(userError.message)}`,
+        );
+        return;
+      }
+    }
 
     // Store tokens in database
     const environmentRepository = AppDataSource.getRepository(Environment);
