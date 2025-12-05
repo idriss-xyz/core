@@ -163,6 +163,9 @@ importers:
       socket.io:
         specifier: ^4.8.1
         version: 4.8.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      tmi.js:
+        specifier: ^1.8.5
+        version: 1.8.5(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
       typeorm:
         specifier: ^0.3.20
         version: 0.3.20(pg@8.13.1)(ts-node@10.9.2(@types/node@24.7.2)(typescript@5.6.3))
@@ -188,6 +191,9 @@ importers:
       '@types/socket.io':
         specifier: ^3.0.2
         version: 3.0.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      '@types/tmi.js':
+        specifier: ^1.8.6
+        version: 1.8.6
       dependency-cruiser:
         specifier: ^16.4.2
         version: 16.4.2
@@ -5279,6 +5285,9 @@ packages:
 
   '@types/stylis@4.2.5':
     resolution: {integrity: sha512-1Xve+NMN7FWjY14vLoY5tL3BVEQ/n42YLwaqJIPYhotZ9uBHt87VceMwWQpzmdEt2TNXIorIFG+YeCUUW7RInw==}
+
+  '@types/tmi.js@1.8.6':
+    resolution: {integrity: sha512-LVzNK7AxTMyh9qHLanAQR1o0I9XzfbIcXk85cx85igmCJHHO1Sm71sdhQ8Mj1WmRGzynPIoCXx6mVaFynWbsQw==}
 
   '@types/trusted-types@2.0.7':
     resolution: {integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==}
@@ -10874,6 +10883,10 @@ packages:
   tinyspy@4.0.3:
     resolution: {integrity: sha512-t2T/WLB2WRgZ9EpE4jgPJ9w+i66UZfDc8wHh0xrwiRNN+UwH98GIJkTeZqX9rg0i0ptwzqW+uYeIF0T4F8LR7A==}
     engines: {node: '>=14.0.0'}
+
+  tmi.js@1.8.5:
+    resolution: {integrity: sha512-A9qrydfe1e0VWM9MViVhhxVgvLpnk7pFShVUWePsSTtoi+A1X+Zjdoa7OJd7/YsgHXGj3GkNEvnWop/1WwZuew==}
+    engines: {node: '>=10.0.0'}
 
   tmpl@1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
@@ -17696,6 +17709,8 @@ snapshots:
   '@types/stack-utils@2.0.3': {}
 
   '@types/stylis@4.2.5': {}
+
+  '@types/tmi.js@1.8.6': {}
 
   '@types/trusted-types@2.0.7': {}
 
@@ -24887,6 +24902,15 @@ snapshots:
   tinyrainbow@2.0.0: {}
 
   tinyspy@4.0.3: {}
+
+  tmi.js@1.8.5(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10):
+    dependencies:
+      node-fetch: 2.7.0(encoding@0.1.13)
+      ws: 8.18.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
 
   tmpl@1.0.5: {}
 
