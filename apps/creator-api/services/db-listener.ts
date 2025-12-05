@@ -52,8 +52,8 @@ export async function startDbListener(io: Server) {
 
         // Send message on twitch chat
         await twitchBotService.sendMessage(
-          creator?.name,
-          donation.tradeValue.toString(), // TODO: replace for string like "donor donated 10 IDRISS ($10)"
+          creator?.twitchId,
+          `<3 ${donation.fromUser.displayName ?? 'anon'} just donated $${donation.tradeValue.toString()}`,
         );
       }
     } catch (error) {

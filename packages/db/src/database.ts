@@ -20,6 +20,7 @@ import {
   TwitchInfo,
   CreatorFollowedChannel,
   DonationGoal,
+  Environment,
 } from './entities';
 import {
   AddAmountRaw1743181200000,
@@ -67,6 +68,7 @@ import {
   AddDisplayTopDonor1762624664000,
   CreatorProfileViewUpdate1762797156607,
   AddGameToCreatorFollowedChannel1763232396000,
+  AddEnvironmentTable1764948355300,
 } from './migrations';
 import { CreatorProfileView, DonationGoalView } from './views';
 
@@ -94,6 +96,7 @@ export const AppDataSource = new DataSource({
     TwitchInfo,
     CreatorFollowedChannel,
     DonationGoal,
+    Environment,
   ],
   synchronize: false,
   migrations: [
@@ -142,6 +145,7 @@ export const AppDataSource = new DataSource({
     AddDisplayTopDonor1762624664000,
     CreatorProfileViewUpdate1762797156607,
     AddGameToCreatorFollowedChannel1763232396000,
+    AddEnvironmentTable1764948355300,
   ],
 });
 

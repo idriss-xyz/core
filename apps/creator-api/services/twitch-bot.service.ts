@@ -1,6 +1,6 @@
 import { AppDataSource, Environment } from '@idriss-xyz/db';
 
-export class TwitchBotService {
+class TwitchBotService {
   async sendMessage(creatorTwitchId: string, message: string) {
     const accessToken = await this.getValidAccessToken();
     await fetch('https://api.twitch.tv/helix/chat/messages', {

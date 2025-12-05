@@ -18,7 +18,7 @@ router.get('/twitch', (req, res) => {
     client_id: TWITCH_BOT_CLIENT_ID!,
     redirect_uri: API_CALLBACK_URI,
     response_type: 'code',
-    scope: 'chat:read chat:edit moderation:read',
+    scope: 'user:write:chat',
     ...(state && { state }),
   })}`;
 
