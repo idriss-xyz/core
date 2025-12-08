@@ -28,7 +28,23 @@ router.get('/twitch', (req, res) => {
     client_id: TWITCH_CLIENT_ID!,
     redirect_uri: API_CALLBACK_URI,
     response_type: 'code',
-    scope: 'user:read:email user:read:follows',
+    scope: 'user:read:email user:read:follows moderation:read',
+    ...(state && { state }),
+  })}`;
+  res.redirect(authUrl);
+});
+
+router.get('/twitch/add-moderation', (req, res) => {
+  const { callback } = req.query;
+
+  // Store the callback in the state parameter to retrieve it later
+  const state = callback ? encodeURIComponent(callback as string) : '';
+
+  const authUrl = `https://id.twitch.tv/oauth2/authorize?${new URLSearchParams({
+    client_id: TWITCH_CLIENT_ID!,
+    redirect_uri: `${CREATOR_API_URL}/auth/twitch/callback`,
+    response_type: 'code',
+    scope: 'user:read:email user:read:follows moderation:read',
     ...(state && { state }),
   })}`;
   res.redirect(authUrl);
