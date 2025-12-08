@@ -118,7 +118,9 @@ export default function HubPage() {
                       placeholder="Search streamers or games"
                       value={searchQuery}
                       onChange={(inputEvent) => {
-                        return setSearchQuery(inputEvent.target.value);
+                        const value = inputEvent.target.value;
+                        setSearchQuery(value);     // keep updating the search query
+                        setActiveFilter('All');    // always reset the tag filter while typing
                       }}
                       prefixElement={
                         <Icon
