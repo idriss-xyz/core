@@ -15,7 +15,7 @@ export const Menu = ({ className }: Properties) => {
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
             <span>
-              <Link href={INTERNAL_LINK.HUB} passHref legacyBehavior>
+              <Link href={INTERNAL_LINK.EXPLORE} passHref legacyBehavior>
                 <Button
                   intent="tertiary"
                   size="large"

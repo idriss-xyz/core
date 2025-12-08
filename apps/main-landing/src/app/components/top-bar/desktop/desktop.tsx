@@ -85,7 +85,7 @@ export const Desktop = ({
                               <Link
                                 passHref
                                 legacyBehavior
-                                href={INTERNAL_LINK.HUB}
+                                href={INTERNAL_LINK.EXPLORE}
                               >
                                 <Button
                                   intent="tertiary"
