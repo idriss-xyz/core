@@ -119,8 +119,8 @@ export default function HubPage() {
                       value={searchQuery}
                       onChange={(inputEvent) => {
                         const value = inputEvent.target.value;
-                        setSearchQuery(value);     // keep updating the search query
-                        setActiveFilter('All');    // always reset the tag filter while typing
+                        setSearchQuery(value);
+                        setActiveFilter('All');
                       }}
                       prefixElement={
                         <Icon
