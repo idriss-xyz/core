@@ -3,7 +3,6 @@
 import { useMemo, useState } from 'react';
 import { Card } from '@idriss-xyz/ui/card';
 import { classes } from '@idriss-xyz/ui/utils';
-import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { Input } from '@idriss-xyz/ui/input';
 
@@ -92,94 +91,85 @@ export default function HubPage() {
           src={backgroundLines2.src}
           className="pointer-events-none absolute inset-0 z-0 hidden size-full object-cover opacity-40 lg:block"
         />
-        <div
-          className="relative z-10 mt-8 w-full max-w-[1176px] overflow-hidden rounded-2xl bg-neutral-100"
-          style={{ height: 'calc(100vh - 88px)' }}
-        >
-          <ScrollArea className="size-full">
-            <div className="grid grid-cols-3 gap-4">
-              {/* HEADER BANNER */}
-              <Card className="col-span-3 p-0">
-                <div className="relative h-[180px] overflow-hidden rounded-2xl">
-                  <img
-                    alt="idriss stream"
-                    src={IDRISS_SCENE_STREAM_2.src}
-                    className="absolute inset-0 z-0 size-full object-cover object-[center_30%] lg:object-[center_60%] 3xl:object-[center_70%]"
+        <div className="relative z-10 mt-8 w-full max-w-[1176px] overflow-hidden rounded-2xl bg-neutral-100">
+          <div className="grid grid-cols-3 gap-4">
+            {/* HEADER BANNER */}
+            <Card className="col-span-3 p-0">
+              <div className="relative h-[180px] overflow-hidden rounded-2xl">
+                <img
+                  alt="idriss stream"
+                  src={IDRISS_SCENE_STREAM_2.src}
+                  className="absolute inset-0 z-0 size-full object-cover object-[center_30%] lg:object-[center_60%] 3xl:object-[center_70%]"
+                />
+                <div className="absolute inset-0 z-10 bg-black/20" />
+                <div className="absolute left-1/2 top-1/2 z-20 flex h-[86px] w-[512px] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-4.5 px-4">
+                  <h4 className={classes('text-heading4 uppercase text-white')}>
+                    Streamer Hub
+                  </h4>
+                  <Input
+                    className="w-full"
+                    placeholder="Search streamers or games"
+                    value={searchQuery}
+                    onChange={(inputEvent) => {
+                      const value = inputEvent.target.value;
+                      setSearchQuery(value);
+                      setActiveFilter('All');
+                    }}
+                    prefixElement={
+                      <Icon
+                        name="Search"
+                        size={16}
+                        className="text-[#757575]"
+                      />
+                    }
                   />
-                  <div className="absolute inset-0 z-10 bg-black/20" />
-                  <div className="absolute left-1/2 top-1/2 z-20 flex h-[86px] w-[512px] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-4.5 px-4">
-                    <h4
-                      className={classes('text-heading4 uppercase text-white')}
-                    >
-                      Streamer Hub
-                    </h4>
-                    <Input
-                      className="w-full"
-                      placeholder="Search streamers or games"
-                      value={searchQuery}
-                      onChange={(inputEvent) => {
-                        const value = inputEvent.target.value;
-                        setSearchQuery(value);
-                        setActiveFilter('All');
-                      }}
-                      prefixElement={
-                        <Icon
-                          name="Search"
-                          size={16}
-                          className="text-[#757575]"
-                        />
-                      }
-                    />
-                  </div>
                 </div>
-              </Card>
+              </div>
+            </Card>
 
-              {/* FILTER + LIST */}
-              <div className="col-span-3 pl-3">
-                <div className="flex items-center gap-4">
-                  <div className="flex flex-wrap gap-1.5 font-medium">
-                    {filterOptions.map((option) => {
-                      return (
-                        <span
-                          key={option}
-                          onClick={() => {
-                            return setActiveFilter(option);
-                          }}
-                          className={classes(
-                            'flex h-[34px] cursor-pointer items-center justify-center rounded-full border border-mint-400 px-3 py-1 text-label4 text-neutralGreen-900',
-                            activeFilter === option
-                              ? 'border-neutralGreen-900 bg-neutralGreen-900 text-white'
-                              : 'bg-white/80',
-                          )}
-                        >
-                          {option}
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-                {/* cards grid */}
-                <div className="flex flex-col gap-3 py-2">
-                  {visible.map((group) => {
+            {/* FILTER + LIST */}
+            <div className="col-span-3 pl-3">
+              <div className="flex items-center gap-4">
+                <div className="flex flex-wrap gap-1.5 font-medium">
+                  {filterOptions.map((option) => {
                     return (
-                      <div key={group.header} className="flex flex-col gap-3">
-                        <h3 className={classes('text-heading3')}>
-                          {group.header}
-                        </h3>
-                        <div className="flex flex-wrap justify-start gap-3">
-                          {group.users.map((user) => {
-                            return (
-                              <HubItemCard key={user.id} streamer={user} />
-                            );
-                          })}
-                        </div>
-                      </div>
+                      <span
+                        key={option}
+                        onClick={() => {
+                          return setActiveFilter(option);
+                        }}
+                        className={classes(
+                          'flex h-[34px] cursor-pointer items-center justify-center rounded-full border border-mint-400 px-3 py-1 text-label4 text-neutralGreen-900',
+                          activeFilter === option
+                            ? 'border-neutralGreen-900 bg-neutralGreen-900 text-white'
+                            : 'bg-white/80',
+                        )}
+                      >
+                        {option}
+                      </span>
                     );
                   })}
                 </div>
               </div>
+              {/* cards grid */}
+              <div className="flex flex-col gap-3 py-2">
+                {visible.map((group) => {
+                  return (
+                    <div key={group.header} className="flex flex-col gap-3">
+                      <h3 className={classes('text-heading3')}>
+                        {group.header}
+                      </h3>
+                      <div className="flex flex-wrap justify-start gap-3">
+                        {group.users.map((user) => {
+                          return <HubItemCard key={user.id} streamer={user} />;
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </ScrollArea>
+          </div>
         </div>
       </main>
     </>
