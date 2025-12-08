@@ -15,6 +15,23 @@ export const Menu = ({ className }: Properties) => {
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
             <span>
+              <Link href={INTERNAL_LINK.HUB} passHref legacyBehavior>
+                <Button
+                  intent="tertiary"
+                  size="large"
+                  asLink
+                  className="uppercase"
+                >
+                  Explore
+                </Button>
+              </Link>
+            </span>
+          </NavigationMenu.Link>
+        </NavigationMenu.Item>
+
+        <NavigationMenu.Item>
+          <NavigationMenu.Link asChild>
+            <span>
               <Link href={EXTERNAL_LINK.TOP_CREATORS} passHref legacyBehavior>
                 <Button
                   intent="tertiary"
