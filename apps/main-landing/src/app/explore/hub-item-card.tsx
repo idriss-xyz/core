@@ -2,6 +2,7 @@
 'use client';
 
 import { Button } from '@idriss-xyz/ui/button';
+import { Icon } from '@idriss-xyz/ui/icon';
 
 import type { HubStreamerUser } from './types';
 
@@ -28,17 +29,40 @@ export default function HubItemCard({ streamer }: HubItemCardProperties) {
             {streamer.description}
           </p>
         )}
-        <Button
-          className="w-full"
-          intent="secondary"
-          size="medium"
-          isExternal
-          asLink
-          href={streamer.donationLink}
-          suffixIconName="HandCoins"
-        >
-          DONATE
-        </Button>
+        {streamer.stats?.followers ? (
+          <div className="flex items-center gap-[29px]">
+            {/* followers counter */}
+            <div className="flex w-[64px] items-center gap-2">
+              <Icon name="Users2" size={16} className="text-neutral-600" />
+              <span className="text-body4 text-neutralGreen-900">
+                {streamer.stats.followers}
+              </span>
+            </div>
+            <Button
+              className="w-full"
+              intent="primary"
+              size="medium"
+              isExternal
+              asLink
+              href={streamer.donationLink}
+              suffixIconName="HandCoins"
+            >
+              DONATE
+            </Button>
+          </div>
+        ) : (
+          <Button
+            className="w-full"
+            intent="secondary"
+            size="medium"
+            isExternal
+            asLink
+            href={streamer.donationLink}
+            suffixIconName="HandCoins"
+          >
+            DONATE
+          </Button>
+        )}
       </div>
     </div>
   );

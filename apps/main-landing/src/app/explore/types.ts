@@ -6,6 +6,7 @@ export type HubStreamerUser = {
   donationLink: string;
   languages?: string;
   filters?: string;
+  stats?: { followers?: string };
 };
 
 export type HubStreamer = {
