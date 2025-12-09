@@ -16,6 +16,7 @@ export interface CardTheme {
   donateButtonNoStatsClass?: string;
   donateButtonText: string;
   donateButtonIcon: IconName;
+  donateButtonColorScheme?: 'blue';
 }
 
 interface Properties {
@@ -74,6 +75,7 @@ export default function HubItemCard({ streamer, theme }: Properties) {
               isExternal
               href={streamer.donationLink}
               suffixIconName={theme.donateButtonIcon}
+              colorScheme={theme.donateButtonColorScheme}
             >
               {theme.donateButtonText}
             </Button>
@@ -87,6 +89,7 @@ export default function HubItemCard({ streamer, theme }: Properties) {
             isExternal
             href={streamer.donationLink}
             suffixIconName={theme.donateButtonIcon}
+            colorScheme={theme.donateButtonColorScheme}
           >
             {theme.donateButtonText}
           </Button>

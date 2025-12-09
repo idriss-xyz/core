@@ -19,6 +19,8 @@ const theme: HubTheme = {
     donateButtonClass: 'w-full',
     donateButtonText: 'Follow',
     donateButtonIcon: 'Plus',
+    donateButtonNoStatsClass: 'bg-white',
+    donateButtonColorScheme: 'blue',
   },
 };
 

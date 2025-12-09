@@ -21,10 +21,7 @@
         "description": "Ronin DEX tutorials and NFT gaming tips.",
         "donationLink": "https://idriss.xyz/katanaqueen",
         "languages": "English",
-        "filters": "Katana,DeFi,NFT",
-        "stats": {
-          "followers": "17"
-        }
+        "filters": "Katana,DeFi,NFT"
       },
       {
         "id": "ronin3",
