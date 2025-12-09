@@ -4,4 +4,3 @@ export * from './fetch-known-donations';
 export * from './views';
 export * from './drip-quota';
 export * from './utils';
-export * from './services';

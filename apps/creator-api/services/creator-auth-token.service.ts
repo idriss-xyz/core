@@ -1,5 +1,4 @@
-import { AppDataSource } from '../database';
-import { Creator } from '../entities';
+import { AppDataSource, Creator } from '@idriss-xyz/db';
 
 export class CreatorAuthTokenService {
   private static instance: CreatorAuthTokenService;

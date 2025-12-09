@@ -1,9 +1,9 @@
 import { Router, Request, Response } from 'express';
 
 import { getModerationStatus } from '@idriss-xyz/utils/server';
-import { CreatorAuthTokenService } from '@idriss-xyz/db/';
 import { verifyToken } from '../middleware/auth.middleware';
 import { tightCors } from '../config/cors';
+import { CreatorAuthTokenService } from '../services/creator-auth-token.service';
 
 const router = Router();
 const creatorAuthTokenService = CreatorAuthTokenService.getInstance();
