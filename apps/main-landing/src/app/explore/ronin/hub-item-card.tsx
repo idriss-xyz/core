@@ -4,12 +4,11 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
 
-import type { HubStreamerUser } from './types';
+import type { HubStreamerUser } from '../types';
 
 interface HubItemCardProperties {
   streamer: HubStreamerUser;
 }
-
 // ts-unused-exports:disable-next-line
 export default function HubItemCard({ streamer }: HubItemCardProperties) {
   return (

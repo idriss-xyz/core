@@ -1,7 +1,7 @@
-import { IDRISS_SCENE_STREAM_2 } from '@/assets';
+import HubPage, { HubTheme } from '../common/hub-page';
+import type { HubStreamer } from '../types';
 
-import HubPage, { HubTheme } from './common/hub-page';
-import type { HubStreamer } from './types';
+import RONIN_BANNER from './banner.png';
 import data from './data.json';
 
 const theme: HubTheme = {
@@ -17,17 +17,17 @@ const theme: HubTheme = {
     followersTextClass: 'text-neutralGreen-900',
     donateButtonIntent: 'primary',
     donateButtonClass: 'w-full',
-    donateButtonText: 'DONATE',
-    donateButtonIcon: 'HandCoins',
+    donateButtonText: 'Follow',
+    donateButtonIcon: 'Plus',
   },
 };
 
 // ts-unused-exports:disable-next-line
-export default function GenericHub() {
+export default function RoninHub() {
   return (
     <HubPage
-      title="Streamer Hub"
-      bannerImage={IDRISS_SCENE_STREAM_2.src}
+      title="Ronin Creators"
+      bannerImage={RONIN_BANNER.src}
       groups={data as HubStreamer[]}
       theme={theme}
     />
