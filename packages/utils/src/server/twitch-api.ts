@@ -263,11 +263,22 @@ export async function fetchUserFollowedChannels(
   }
 }
 
-export async function getModerationStatus(name: string) {
+export async function getModerationStatus(
+  name: string,
+  userAccessToken: string,
+) {
   try {
-    const headers = await getHeaders();
-    const userInfo = await fetchTwitchUserInfo(name);
+    const clientId = process.env.TWITCH_CLIENT_ID;
+    if (!clientId) {
+      throw new Error('Missing TWITCH_CLIENT_ID env var');
+    }
 
+    const headers = {
+      'Authorization': `Bearer ${userAccessToken}`,
+      'Client-Id': clientId,
+    };
+
+    const userInfo = await fetchTwitchUserInfo(name);
     const botUserId = process.env.TWITCH_BOT_USER_ID;
 
     if (!botUserId) {
@@ -284,12 +295,12 @@ export async function getModerationStatus(name: string) {
     if (!response.ok) {
       throw new Error(`Twitch API error: ${response.status}`);
     }
-    console.log(response);
+    console.log(response); // TODO: Remove
     const moderators = (await response.json()) as { data: object[] };
     const isModerator = moderators.data.length > 0;
     return isModerator;
   } catch (error) {
-    console.error('Error fetching Twitch user info:', error);
+    console.error('Error fetching moderation status:', error);
     return null;
   }
 }

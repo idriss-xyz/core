@@ -87,6 +87,9 @@ export class Creator {
   @Column({ type: 'text', name: 'twitch_oauth_token', nullable: true })
   twitchOauthToken!: string;
 
+  @Column({ type: 'text', name: 'twitch_refresh_token', nullable: true })
+  twitchRefreshToken!: string;
+
   @OneToMany(
     () => {
       return CreatorNetwork;

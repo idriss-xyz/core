@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import axios from 'axios';
 import { URLSearchParams } from 'url';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
-import { AppDataSource, Creator, Environment } from '@idriss-xyz/db';
+import { AppDataSource, Environment } from '@idriss-xyz/db';
 
 const router = Router();
 
@@ -110,60 +110,5 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
     return;
   }
 });
-
-//router.get(
-//  '/twitch/check-moderator/:creatorTwitchId',
-//  verifyToken(),
-//  async (req: Request, res: Response) => {
-//    const errors = validationResult(req);
-//    if (!errors.isEmpty()) {
-//      res.status(400).json({ errors: errors.array() });
-//      return;
-//    }
-//    if (!req.user?.id) {
-//      res.status(401).json({ error: 'Unauthorized' });
-//      return;
-//    }
-//    const { creatorTwitchId } = req.params;
-//    const botUserId = process.env.TWITCH_BOT_USER_ID;
-//
-//    if (!botUserId) {
-//      res.status(500).json({ error: 'Bot user ID not configured' });
-//      return;
-//    }
-//
-//    try {
-//      // Get the creator's moderation access token from database
-//      const isModerator = getModerationStatus()
-//
-//      res.json({
-//        isModerator,
-//        broadcasterTwitchId: creatorTwitchId,
-//        botUserId,
-//      });
-//      return;
-//    } catch (error: any) {
-//      console.error('Failed to check moderator status:', error);
-//
-//      // Handle specific Twitch API errors
-//      if (error.response?.status === 401) {
-//        res.status(401).json({
-//          error: 'Access token expired or invalid',
-//          isModerator: false,
-//        });
-//      } else if (error.response?.status === 403) {
-//        res.status(403).json({
-//          error: 'Insufficient permissions to check moderator status',
-//          isModerator: false,
-//        });
-//      } else {
-//        res.status(500).json({
-//          error: 'Failed to check moderator status',
-//          isModerator: false,
-//        });
-//      }
-//      return;
-//    }
-//  },
 
 export default router;

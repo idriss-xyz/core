@@ -70,7 +70,7 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       }),
     );
 
-    const { access_token } = tokenResponse.data;
+    const { access_token, refresh_token } = tokenResponse.data;
 
     const userResponse = await axios.get('https://api.twitch.tv/helix/users', {
       headers: {
@@ -103,6 +103,13 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       });
 
       if (creator && followed.length) {
+        // store twitch oauth token
+        await creatorRepo.update(
+          { twitchId: twitchUser.id },
+          { twitchOauthToken: access_token, twitchRefreshToken: refresh_token },
+        );
+
+        // store follow data
         await followsRepo.delete({ creator: { id: creator.id } });
         await followsRepo.insert(
           followed.map((c) =>
