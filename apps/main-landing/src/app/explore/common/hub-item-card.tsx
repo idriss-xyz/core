@@ -12,6 +12,8 @@ export interface CardTheme {
   followersTextClass: string;
   donateButtonIntent: 'primary' | 'secondary';
   donateButtonClass?: string;
+  donateButtonNoStatsIntent?: 'primary' | 'secondary';
+  donateButtonNoStatsClass?: string;
   donateButtonText: string;
   donateButtonIcon: IconName;
 }
@@ -23,6 +25,15 @@ interface Properties {
 
 export default function HubItemCard({ streamer, theme }: Properties) {
   const hasFollowers = !!streamer.stats?.followers;
+
+  const buttonIntent = hasFollowers
+    ? theme.donateButtonIntent
+    : (theme.donateButtonNoStatsIntent ??
+      (theme.donateButtonIntent === 'primary' ? 'secondary' : 'primary'));
+
+  const buttonClass = hasFollowers
+    ? (theme.donateButtonClass ?? 'w-full')
+    : (theme.donateButtonNoStatsClass ?? theme.donateButtonClass ?? 'w-full');
 
   return (
     <div
@@ -56,8 +67,8 @@ export default function HubItemCard({ streamer, theme }: Properties) {
               <span className="text-body4">{streamer.stats!.followers}</span>
             </div>
             <Button
-              intent={theme.donateButtonIntent}
-              className={theme.donateButtonClass ?? 'w-full'}
+              intent={buttonIntent}
+              className={buttonClass}
               size="medium"
               asLink
               isExternal
@@ -69,10 +80,8 @@ export default function HubItemCard({ streamer, theme }: Properties) {
           </div>
         ) : (
           <Button
-            intent={
-              theme.donateButtonIntent === 'primary' ? 'secondary' : 'primary'
-            }
-            className={theme.donateButtonClass ?? 'w-full'}
+            intent={buttonIntent}
+            className={buttonClass}
             size="medium"
             asLink
             isExternal
