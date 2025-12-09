@@ -224,7 +224,7 @@ router.get('/csv/all', async (req: Request, res: Response) => {
         amountFormatted,
         tradeValueUSD: d.tradeValue ?? '',
         fromAddress: d.fromAddress ?? '',
-        fromUserName: d.fromUser?.displayName ?? '',
+        fromUserName: d.fromUser?.displayName ?? 'anon',
         toAddress: d.toAddress ?? '',
         toUserName: d.toUser?.displayName ?? '',
         comment: d.comment,
