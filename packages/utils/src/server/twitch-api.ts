@@ -263,6 +263,7 @@ export async function fetchUserFollowedChannels(
   }
 }
 
+// ts-unused-exports:disable-next-line
 export async function getModerationStatus(
   name: string,
   userAccessToken: string,
