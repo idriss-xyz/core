@@ -103,6 +103,38 @@ const errorSaveSettingsToast: Omit<ToastData, 'id'> = {
   autoClose: true,
 };
 
+async function fetchModerationStatus(creatorName: string): Promise<boolean> {
+  try {
+    const authToken = await getAccessToken();
+    if (!authToken) {
+      console.error('Could not get auth token for moderation status');
+      return false;
+    }
+
+    const response = await fetch(
+      `${CREATOR_API_URL}/moderator-status/${creatorName}`,
+      {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
+      },
+    );
+
+    if (response.ok) {
+      const data = (await response.json()) as { isModerator: boolean };
+      return data.isModerator || false;
+    } else {
+      console.error('Failed to fetch moderation status:', response.status);
+      return false;
+    }
+  } catch (error) {
+    console.error('Error fetching moderation status:', error);
+    return false;
+  }
+}
+
 // ts-unused-exports:disable-next-line
 export default function StreamAlerts() {
   const { creator, creatorLoading, setCreator } = useAuth();
@@ -119,6 +151,7 @@ export default function StreamAlerts() {
   const [wasCopied, setWasCopied] = useState(false);
   const [unsavedChangesToastId, setUnsavedChangesToastId] = useState('');
   const hasShownTestAlertToastReference = useRef(false);
+  const [isModerator, setIsModerator] = useState(false);
 
   const alertSounds = [
     ...defaultAlertSounds,
@@ -377,6 +410,12 @@ export default function StreamAlerts() {
     };
   }, [unsavedChangesToastId, removeToast]);
 
+  useEffect(() => {
+    if (creator?.name) {
+      void fetchModerationStatus(creator.name).then(setIsModerator);
+    }
+  }, [creator?.name]);
+
   if (creatorLoading) {
     return <SkeletonSetup />;
   }
@@ -464,6 +503,12 @@ export default function StreamAlerts() {
                         className="p-0.5 text-neutral-600"
                       />
                     </div>
+                    {!isModerator && (
+                      <div>
+                        Type **/mod idriss_xyz** in your Twitch chat to enable
+                        additional chat alerts
+                      </div>
+                    )}
                   </div>
                   <div className="flex flex-col gap-2">
                     {isAcceptingToken && isAcceptingCollectibles ? (
