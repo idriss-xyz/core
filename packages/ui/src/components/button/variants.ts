@@ -12,12 +12,14 @@ export const button = cva(
     variants: {
       intent: {
         primary: [
-          'uppercase text-neutralGreen-900 shadow-input',
+          'uppercase shadow-input',
           'disabled:text-white',
+          'disabled:bg-neutral-400',
         ],
         secondary: [
           'text-neutralGreen-900 shadow-input outline outline-1 outline-offset-[-1px]',
           'disabled:text-white disabled:outline-none',
+          'disabled:bg-neutral-400',
         ],
         tertiary: [
           'bg-transparent text-neutralGreen-900',
@@ -63,7 +65,7 @@ export const button = cva(
           'bg-mint-400',
           'hover:bg-mint-500',
           'active:bg-mint-600',
-          'disabled:bg-neutral-400',
+          'text-neutralGreen-900',
         ],
       },
       {
@@ -74,21 +76,26 @@ export const button = cva(
           'outline-mint-400',
           'hover:bg-mint-200 hover:outline-mint-500',
           'active:bg-mint-300 active:outline-mint-600',
-          'disabled:bg-neutral-400',
         ],
       },
       {
         intent: 'primary',
         colorScheme: 'blue',
-        className: ['bg-[#004DE5]'],
+        className: [
+          'bg-blue-400',
+          'hover:bg-blue-500',
+          'active:bg-blue-600',
+          'text-white',
+        ],
       },
       {
         intent: 'secondary',
         colorScheme: 'blue',
         className: [
-          'outline-blue-400',
-          'hover:outline-blue-500 hover:bg-blue-100',
-          'active:outline-blue-600 active:bg-blue-200',
+          'bg-white',
+          'outline-white',
+          'hover:bg-blue-200 hover:outline-blue-500',
+          'active:bg-blue-300 active:outline-blue-600',
         ],
       },
       //icon

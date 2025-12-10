@@ -3,10 +3,13 @@ export type HubStreamerUser = {
   name: string;
   profilePictureUrl: string;
   description?: string;
-  donationLink: string;
+  /* one of the two links is required */
+  followLink?: string;
+  donationLink?: string;
   languages?: string;
   filters?: string;
   stats?: { followers?: string };
+  featured?: boolean;
 };
 
 export type HubStreamer = {

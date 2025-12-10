@@ -17,8 +17,6 @@ const theme: HubTheme = {
     followersTextClass: 'text-neutralGreen-900',
     donateButtonIntent: 'primary',
     donateButtonClass: 'w-full',
-    donateButtonText: 'DONATE',
-    donateButtonIcon: 'HandCoins',
   },
 };
 

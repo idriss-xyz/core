@@ -5,11 +5,12 @@
       {
         "id": "1",
         "name": "DUR4ZN1LL0",
-        "profilePictureUrl": "https://static-cdn.jtvnw.net/jtv_user_pictures/afa40d39-4fc4-4819-bd45-130f0cf734a3-profile_image-300x300.png",
+        "profilePictureUrl": "https://pbs.twimg.com/profile_images/1981506185258795008/la0aeESA_400x400.jpg",
         "description": "Content creator focused on the Axie multiverse, Ronin chain, and more.",
         "donationLink": "https://idriss.xyz/DUR4ZN1LL0",
         "languages": "English, Spanish",
-        "filters": "Gaming, Ronin, Axie Infinity"
+        "filters": "Gaming, Ronin, Axie Infinity",
+        "featured": true
       },
       {
         "id": "2",
@@ -18,7 +19,8 @@
         "description": "Content creator focused on the Axie multiverse, Ronin chain, and more.",
         "donationLink": "https://idriss.xyz/raiden_pad",
         "languages": "English, Spanish",
-        "filters": "Gaming, Ronin, Axie Infinity"
+        "filters": "Gaming, Ronin, Axie Infinity",
+        "featured": true
       },
       {
         "id": "3",
@@ -27,7 +29,8 @@
         "description": "Content creator focused on the Axie multiverse, Ronin chain, and more.",
         "donationLink": "https://idriss.xyz/f7ashp0int",
         "languages": "English, Spanish",
-        "filters": "Gaming, Ronin, Axie Infinity"
+        "filters": "Gaming, Ronin, Axie Infinity",
+        "featured": true
       },
       {
         "id": "4",
@@ -36,7 +39,8 @@
         "description": "Content creator focused on the Axie multiverse, Ronin chain, and more.",
         "donationLink": "https://idriss.xyz/0xanamul",
         "languages": "English, Spanish",
-        "filters": "Gaming, Ronin, Axie Infinity"
+        "filters": "Gaming, Ronin, Axie Infinity",
+        "featured": true
       }
     ]
   },

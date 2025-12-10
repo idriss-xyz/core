@@ -3,20 +3,21 @@
 
 import { Button } from '@idriss-xyz/ui/button';
 import { Icon, IconName } from '@idriss-xyz/ui/icon';
+import { classes } from '@idriss-xyz/ui/utils';
 
 import type { HubStreamerUser } from '../types';
 
 export interface CardTheme {
-  borderClass: string;
+  borderClass?: string;
   backgroundClass: string;
   followersTextClass: string;
   donateButtonIntent: 'primary' | 'secondary';
   donateButtonClass?: string;
   donateButtonNoStatsIntent?: 'primary' | 'secondary';
   donateButtonNoStatsClass?: string;
-  donateButtonText: string;
-  donateButtonIcon: IconName;
-  donateButtonColorScheme?: 'blue';
+  colorScheme?: 'blue';
+  featuredBackgroundClass?: string;
+  featuredNameTextClass?: string;
 }
 
 interface Properties {
@@ -26,19 +27,55 @@ interface Properties {
 
 export default function HubItemCard({ streamer, theme }: Properties) {
   const hasFollowers = !!streamer.stats?.followers;
+  const showBorder = streamer.featured;
 
-  const buttonIntent = hasFollowers
-    ? theme.donateButtonIntent
-    : (theme.donateButtonNoStatsIntent ??
-      (theme.donateButtonIntent === 'primary' ? 'secondary' : 'primary'));
+  const isFeaturedWithColor = streamer.featured && theme.colorScheme;
 
-  const buttonClass = hasFollowers
-    ? (theme.donateButtonClass ?? 'w-full')
-    : (theme.donateButtonNoStatsClass ?? theme.donateButtonClass ?? 'w-full');
+  const cardBgClass =
+    isFeaturedWithColor && theme.featuredBackgroundClass
+      ? theme.featuredBackgroundClass
+      : theme.backgroundClass;
+
+  const nameTextClass = classes(
+    'truncate text-heading5',
+    isFeaturedWithColor && theme.featuredNameTextClass
+      ? theme.featuredNameTextClass
+      : 'text-neutral-900',
+  );
+
+  const descriptionTextClass = classes(
+    'line-clamp-2 text-body4',
+    isFeaturedWithColor ? 'text-neutral-100' : 'text-neutral-600',
+  );
+
+  const link =
+    streamer.donationLink ??
+    streamer.donationLink ??
+    streamer.followLink ??
+    '#';
+
+  const hasDonateLink = !!(streamer.donationLink ?? streamer.donationLink);
+
+  const buttonText = hasDonateLink ? 'DONATE' : 'FOLLOW';
+  const buttonIcon: IconName = hasDonateLink ? 'HandCoins' : 'Plus';
+
+  const buttonIntent = streamer.featured
+    ? (theme.donateButtonNoStatsIntent ??
+      (theme.donateButtonIntent === 'primary' ? 'secondary' : 'primary'))
+    : theme.donateButtonIntent;
+
+  const buttonClass = streamer.featured
+    ? (theme.donateButtonNoStatsClass ?? theme.donateButtonClass ?? 'w-full')
+    : (theme.donateButtonClass ?? 'w-full');
 
   return (
     <div
-      className={`flex w-[279px] shrink-0 flex-col gap-[10px] rounded-[16px] border-[1.5px] ${theme.borderClass} ${theme.backgroundClass} px-2 pb-4 pt-2 shadow-sm`}
+      className={classes(
+        'flex w-[279px] shrink-0 flex-col gap-[10px] rounded-[16px]',
+        showBorder && ['border-[1.5px]', theme.borderClass],
+        cardBgClass,
+        'px-2 pb-4 pt-2 shadow-sm',
+      )}
     >
       <div className="flex aspect-square w-full items-center justify-center overflow-hidden rounded-[16px] bg-[#D9D9D9]">
         <img
@@ -49,14 +86,10 @@ export default function HubItemCard({ streamer, theme }: Properties) {
       </div>
 
       <div className="flex flex-col gap-4">
-        <p className="truncate text-heading5 text-neutral-900">
-          {streamer.name}
-        </p>
+        <p className={nameTextClass}>{streamer.name}</p>
 
-        {streamer.description && (
-          <p className="line-clamp-2 text-body4 text-neutral-600">
-            {streamer.description}
-          </p>
+        {streamer.featured && streamer.description && (
+          <p className={descriptionTextClass}>{streamer.description}</p>
         )}
 
         {hasFollowers ? (
@@ -73,11 +106,11 @@ export default function HubItemCard({ streamer, theme }: Properties) {
               size="medium"
               asLink
               isExternal
-              href={streamer.donationLink}
-              suffixIconName={theme.donateButtonIcon}
-              colorScheme={theme.donateButtonColorScheme}
+              href={link}
+              suffixIconName={buttonIcon}
+              colorScheme={theme.colorScheme}
             >
-              {theme.donateButtonText}
+              {buttonText}
             </Button>
           </div>
         ) : (
@@ -87,11 +120,11 @@ export default function HubItemCard({ streamer, theme }: Properties) {
             size="medium"
             asLink
             isExternal
-            href={streamer.donationLink}
-            suffixIconName={theme.donateButtonIcon}
-            colorScheme={theme.donateButtonColorScheme}
+            href={link}
+            suffixIconName={buttonIcon}
+            colorScheme={theme.colorScheme}
           >
-            {theme.donateButtonText}
+            {buttonText}
           </Button>
         )}
       </div>

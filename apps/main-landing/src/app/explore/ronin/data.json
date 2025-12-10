@@ -1,38 +1,44 @@
 [
   {
+    "header": "Featured by Ronin",
+    "users": [
+      {
+        "id": "ronin2",
+        "name": "DUR4ZN1LL0",
+        "profilePictureUrl": "https://pbs.twimg.com/profile_images/1981506185258795008/la0aeESA_400x400.jpg",
+        "description": "Content creator focused on the Axie multiverse, Ronin chain, and more.",
+        "donationLink": "https://idriss.xyz/DUR4ZN1LL0",
+        "languages": "English, Spanish",
+        "filters": "Ronin,DeFi,NFT,Axie",
+        "featured": true
+      }
+    ]
+  },
+  {
     "header": "Ronin Creators",
     "users": [
       {
-        "id": "ronin1",
-        "name": "AxieChad",
-        "profilePictureUrl": "https://ronin.img/axiechad.jpg",
-        "description": "Top Axie Infinity streamer and Ronin community builder.",
-        "donationLink": "https://idriss.xyz/axiechad",
-        "languages": "English,Tagalog",
-        "filters": "Axie Infinity,Web3,Play2Earn",
+        "id": "7",
+        "name": "b19bay",
+        "profilePictureUrl": "https://static-cdn.jtvnw.net/jtv_user_pictures/1cf39ea4-bbbf-4874-a7f6-7e9c3fbb27b5-profile_image-300x300.png",
+        "description": "Content creator focused on the Axie multiverse, Ronin chain, and more.",
+        "followLink": "https://www.twitch.tv/b19bay",
+        "languages": "English, Spanish",
+        "filters": "Gaming, Ronin, Axie Infinity",
         "stats": {
-          "followers": "1K"
+          "followers": "567"
         }
       },
       {
-        "id": "ronin2",
-        "name": "KatanaQueen",
-        "profilePictureUrl": "https://ronin.img/katanaqueen.jpg",
-        "description": "Ronin DEX tutorials and NFT gaming tips.",
-        "donationLink": "https://idriss.xyz/katanaqueen",
-        "languages": "English",
-        "filters": "Katana,DeFi,NFT"
-      },
-      {
-        "id": "ronin3",
-        "name": "YieldSamurai",
-        "profilePictureUrl": "https://ronin.img/yieldsamurai.jpg",
-        "description": "Yield farming and Ronin ecosystem alpha.",
-        "donationLink": "https://idriss.xyz/yieldsamurai",
-        "languages": "Japanese,English",
-        "filters": "Yield Farming,Ronin,Alpha",
+        "id": "8",
+        "name": "Jambre",
+        "profilePictureUrl": "https://static-cdn.jtvnw.net/jtv_user_pictures/af30aaa6-46c9-4056-9dff-0058be88f406-profile_image-300x300.png",
+        "description": "Content creator focused on the Axie multiverse, Ronin chain, and more.",
+        "donationLink": "https://idriss.xyz/jambre",
+        "languages": "English, Spanish",
+        "filters": "Gaming, Ronin, Axie Infinity",
         "stats": {
-          "followers": "234"
+          "followers": "1.3K"
         }
       }
     ]
