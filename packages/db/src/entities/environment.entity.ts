@@ -8,10 +8,10 @@ import {
 
 @Entity('environment')
 export class Environment {
-  @PrimaryColumn()
+  @PrimaryColumn({ type: 'text', name: 'key' })
   key!: string;
 
-  @Column('text')
+  @Column({ type: 'text', name: 'value' })
   value!: string;
 
   @CreateDateColumn()

@@ -6,6 +6,7 @@ import { createAddressToCreatorMap, formatFiatValue } from '@idriss-xyz/utils';
 import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
 import { twitchBotService } from './twitch-bot.service';
 import { creatorAuthTokenService } from './creator-auth-token.service';
+import { getModerationStatus } from '@idriss-xyz/utils/server';
 
 // Track which creators have already received the moderation warning
 const moderationWarningSent = new Map<string, boolean>();
@@ -65,9 +66,6 @@ export async function startDbListener(io: Server) {
           creator.privyId,
         );
         if (authToken) {
-          const { getModerationStatus } = await import(
-            '@idriss-xyz/utils/server'
-          );
           const isModerator = await getModerationStatus(
             creator.name,
             authToken,

@@ -296,7 +296,6 @@ export async function getModerationStatus(
     if (!response.ok) {
       throw new Error(`Twitch API error: ${response.status}`);
     }
-    console.log(response); // TODO: Remove
     const moderators = (await response.json()) as { data: object[] };
     const isModerator = moderators.data.length > 0;
     return isModerator;

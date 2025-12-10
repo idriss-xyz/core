@@ -504,9 +504,14 @@ export default function StreamAlerts() {
                       />
                     </div>
                     {!isModerator && (
-                      <div>
-                        Type **/mod idriss_xyz** in your Twitch chat to enable
-                        additional chat alerts
+                      /* Replace hidden for flex to show */
+                      <div className="hidden items-center gap-2 rounded-md bg-mint-500/10 p-4 text-label7">
+                        <Icon name="InfoCircle" size={20} />
+                        <div>
+                          Type{' '}
+                          <span className="font-bold">/mod idriss_xyz</span> in
+                          your Twitch chat to enable additional chat alerts
+                        </div>
                       </div>
                     )}
                   </div>

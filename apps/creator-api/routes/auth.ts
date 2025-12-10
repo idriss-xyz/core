@@ -84,6 +84,13 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       throw new Error('Failed to fetch user profile from Twitch.');
     }
 
+    // store twitch oauth token
+    const creatorRepo = AppDataSource.getRepository(Creator);
+    await creatorRepo.update(
+      { twitchId: twitchUser.id },
+      { twitchOauthToken: access_token, twitchRefreshToken: refresh_token },
+    );
+
     let followed: FollowedChannel[];
     try {
       followed = await fetchUserFollowedChannels(
@@ -96,19 +103,12 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       followed = [];
     }
     try {
-      const creatorRepo = AppDataSource.getRepository(Creator);
       const followsRepo = AppDataSource.getRepository(CreatorFollowedChannel);
       const creator = await creatorRepo.findOne({
         where: { twitchId: twitchUser.id },
       });
 
       if (creator && followed.length) {
-        // store twitch oauth token
-        await creatorRepo.update(
-          { twitchId: twitchUser.id },
-          { twitchOauthToken: access_token, twitchRefreshToken: refresh_token },
-        );
-
         // store follow data
         await followsRepo.delete({ creator: { id: creator.id } });
         await followsRepo.insert(
