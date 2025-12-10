@@ -2,7 +2,7 @@ import { AppDataSource, Creator, getTokenAndNftRows } from '@idriss-xyz/db';
 import { connectedClients } from './socket-server';
 import { Server } from 'socket.io';
 import { ILike } from 'typeorm';
-import { createAddressToCreatorMap } from '@idriss-xyz/utils';
+import { createAddressToCreatorMap, formatFiatValue } from '@idriss-xyz/utils';
 import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
 import { twitchBotService } from './twitch-bot.service';
 
@@ -53,7 +53,7 @@ export async function startDbListener(io: Server) {
         // Send message on twitch chat
         await twitchBotService.sendMessage(
           creator?.twitchId,
-          `<3 ${donation.fromUser.displayName ?? 'anon'} just donated $${donation.tradeValue.toString()}`,
+          `<3 ${donation.fromUser.displayName ?? 'anon'} just donated ${formatFiatValue(donation.tradeValue)}`,
         );
       }
     } catch (error) {

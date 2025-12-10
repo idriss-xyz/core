@@ -1,6 +1,6 @@
 import { AppDataSource, Creator } from '@idriss-xyz/db';
 
-export class CreatorAuthTokenService {
+class CreatorAuthTokenService {
   private static instance: CreatorAuthTokenService;
 
   private constructor() {}
