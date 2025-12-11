@@ -42,6 +42,9 @@ export const metadata: Metadata = {
       },
     ],
   },
+  other: {
+    'base:app_id': '693b3e008a7c4e55fec73eb6',
+  },
 };
 
 // ts-unused-exports:disable-next-line
