@@ -28,7 +28,23 @@ router.get('/twitch', (req, res) => {
     client_id: TWITCH_CLIENT_ID!,
     redirect_uri: API_CALLBACK_URI,
     response_type: 'code',
-    scope: 'user:read:email user:read:follows',
+    scope: 'user:read:email user:read:follows moderation:read',
+    ...(state && { state }),
+  })}`;
+  res.redirect(authUrl);
+});
+
+router.get('/twitch/add-moderation', (req, res) => {
+  const { callback } = req.query;
+
+  // Store the callback in the state parameter to retrieve it later
+  const state = callback ? encodeURIComponent(callback as string) : '';
+
+  const authUrl = `https://id.twitch.tv/oauth2/authorize?${new URLSearchParams({
+    client_id: TWITCH_CLIENT_ID!,
+    redirect_uri: `${CREATOR_API_URL}/auth/twitch/callback`,
+    response_type: 'code',
+    scope: 'user:read:email user:read:follows moderation:read',
     ...(state && { state }),
   })}`;
   res.redirect(authUrl);
@@ -54,7 +70,7 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       }),
     );
 
-    const { access_token } = tokenResponse.data;
+    const { access_token, refresh_token } = tokenResponse.data;
 
     const userResponse = await axios.get('https://api.twitch.tv/helix/users', {
       headers: {
@@ -68,6 +84,13 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       throw new Error('Failed to fetch user profile from Twitch.');
     }
 
+    // store twitch oauth token
+    const creatorRepo = AppDataSource.getRepository(Creator);
+    await creatorRepo.update(
+      { twitchId: twitchUser.id },
+      { twitchOauthToken: access_token, twitchRefreshToken: refresh_token },
+    );
+
     let followed: FollowedChannel[];
     try {
       followed = await fetchUserFollowedChannels(
@@ -80,13 +103,13 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       followed = [];
     }
     try {
-      const creatorRepo = AppDataSource.getRepository(Creator);
       const followsRepo = AppDataSource.getRepository(CreatorFollowedChannel);
       const creator = await creatorRepo.findOne({
         where: { twitchId: twitchUser.id },
       });
 
       if (creator && followed.length) {
+        // store follow data
         await followsRepo.delete({ creator: { id: creator.id } });
         await followsRepo.insert(
           followed.map((c) =>
