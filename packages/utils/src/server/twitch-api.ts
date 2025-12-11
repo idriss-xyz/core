@@ -265,7 +265,7 @@ export async function fetchUserFollowedChannels(
 
 // ts-unused-exports:disable-next-line
 export async function getModerationStatus(
-  name: string,
+  creatorTwitchId: string,
   userAccessToken: string,
 ) {
   try {
@@ -279,15 +279,13 @@ export async function getModerationStatus(
       'Client-Id': clientId,
     };
 
-    const userInfo = await fetchTwitchUserInfo(name);
     const botUserId = process.env.TWITCH_BOT_USER_ID;
-
     if (!botUserId) {
       throw new Error('Missing TWITCH_BOT_USER_ID env var');
     }
 
     const response = await fetch(
-      `${TWITCH_BASE_URL}/moderation/moderators?broadcaster_id=${userInfo?.id}&user_id=${botUserId}`,
+      `${TWITCH_BASE_URL}/moderation/moderators?broadcaster_id=${creatorTwitchId}&user_id=${botUserId}`,
       {
         headers,
       },
