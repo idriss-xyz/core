@@ -11,6 +11,7 @@ import {
   ERC20_ABI,
   TIPPING_ABI,
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
+  BASE_SUFFIX,
 } from '@idriss-xyz/constants';
 import { getChainById } from '@idriss-xyz/utils';
 
@@ -75,7 +76,8 @@ export const useErc20Transaction = () => {
           args: [idrissTippingAddress, tokensToSend],
         } as const;
 
-        const encodedData = encodeFunctionData(approveData);
+        const encodedData = (encodeFunctionData(approveData) +
+          BASE_SUFFIX.slice(2)) as Hex;
 
         const gas = await estimateGas(walletClient, {
           account,
@@ -109,7 +111,8 @@ export const useErc20Transaction = () => {
         args: [recipientAddress, tokensToSend, tokenAddress, message],
       } as const;
 
-      const data = encodeFunctionData(sendTokenToData);
+      const data = (encodeFunctionData(sendTokenToData) +
+        BASE_SUFFIX.slice(2)) as Hex;
 
       const gas = await estimateGas(walletClient, {
         account,

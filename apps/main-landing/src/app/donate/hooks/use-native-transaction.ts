@@ -5,6 +5,7 @@ import {
   EMPTY_HEX,
   TIPPING_ABI,
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
+  BASE_SUFFIX,
 } from '@idriss-xyz/constants';
 import { getChainById } from '@idriss-xyz/utils';
 
@@ -42,7 +43,8 @@ export const useNativeTransaction = () => {
         args: [recipientAddress, message],
       } as const;
 
-      const encodedData = encodeFunctionData(sendToData);
+      const encodedData = (encodeFunctionData(sendToData) +
+        BASE_SUFFIX.slice(2)) as Hex;
 
       const gas = await estimateGas(walletClient, {
         account,

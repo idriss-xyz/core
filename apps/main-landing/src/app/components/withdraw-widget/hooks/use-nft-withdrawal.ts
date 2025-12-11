@@ -9,7 +9,7 @@ import {
   createPublicClient,
   http,
 } from 'viem';
-import { DUMMY_RECIPIENT } from '@idriss-xyz/constants';
+import { BASE_SUFFIX, DUMMY_RECIPIENT } from '@idriss-xyz/constants';
 
 import { claimDailyDrip } from '../utils';
 
@@ -100,7 +100,7 @@ export const useNftWithdrawal = ({
                 abi: erc721Abi,
                 functionName: 'safeTransferFrom',
                 args: [activeWallet.address as Hex, DUMMY_RECIPIENT, tokenId],
-              })
+              }) + BASE_SUFFIX.slice(2)
             : encodeFunctionData({
                 abi: erc1155Abi,
                 functionName: 'safeTransferFrom',
@@ -111,7 +111,7 @@ export const useNftWithdrawal = ({
                   amount1155 ?? 1n,
                   '0x',
                 ],
-              });
+              }) + BASE_SUFFIX.slice(2);
 
         const [gas, gasPrice, nativeBalanceHex] = await Promise.all([
           provider.request({

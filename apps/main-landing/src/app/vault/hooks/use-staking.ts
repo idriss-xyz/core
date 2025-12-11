@@ -1,5 +1,10 @@
 import { useCallback, useState } from 'react';
-import { decodeFunctionResult, encodeFunctionData, parseEther } from 'viem';
+import {
+  decodeFunctionResult,
+  encodeFunctionData,
+  Hex,
+  parseEther,
+} from 'viem';
 import { base } from 'viem/chains';
 import { call, estimateGas, waitForTransactionReceipt } from 'viem/actions';
 import {
@@ -16,6 +21,7 @@ import {
   REWARDS_ABI,
   STAKER_ADDRESS,
   STAKING_ABI,
+  BASE_SUFFIX,
 } from '@idriss-xyz/constants';
 import { formatTokenValue } from '@idriss-xyz/utils';
 
@@ -89,7 +95,8 @@ export const useStaking = () => {
           args: [STAKER_ADDRESS, payload.tokensToSend],
         } as const;
 
-        const encodedData = encodeFunctionData(approveData);
+        const encodedData = (encodeFunctionData(approveData) +
+          BASE_SUFFIX.slice(2)) as Hex;
 
         const gas = await estimateGas(payload.walletClient, {
           to: IDRISS_TOKEN_ADDRESS,
@@ -144,7 +151,8 @@ export const useStaking = () => {
             args: [parsedAmount],
           } as const;
 
-          const encodedStakeData = encodeFunctionData(stakeData);
+          const encodedStakeData = (encodeFunctionData(stakeData) +
+            BASE_SUFFIX.slice(2)) as Hex;
 
           const gas = await estimateGas(walletClient, {
             to: STAKER_ADDRESS,
@@ -217,7 +225,8 @@ export const useStaking = () => {
             args: [parsedAmount],
           } as const;
 
-          const encodedUnstakeData = encodeFunctionData(unstakeData);
+          const encodedUnstakeData = (encodeFunctionData(unstakeData) +
+            BASE_SUFFIX.slice(2)) as Hex;
 
           const gas = await estimateGas(walletClient, {
             to: STAKER_ADDRESS,
@@ -284,7 +293,8 @@ export const useStaking = () => {
           functionName: 'claim',
         } as const;
 
-        const encodedClaimData = encodeFunctionData(claimData);
+        const encodedClaimData = (encodeFunctionData(claimData) +
+          BASE_SUFFIX.slice(2)) as Hex;
 
         const gas = await estimateGas(walletClient, {
           to: REWARDS_ADDRESS,
@@ -348,7 +358,8 @@ export const useStaking = () => {
           functionName: 'claimAndLock',
         } as const;
 
-        const encodedClaimData = encodeFunctionData(claimData);
+        const encodedClaimData = (encodeFunctionData(claimData) +
+          BASE_SUFFIX.slice(2)) as Hex;
 
         const gas = await estimateGas(walletClient, {
           to: REWARDS_ADDRESS,
