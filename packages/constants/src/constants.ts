@@ -11,6 +11,7 @@ import {
   celo,
   avalanche,
 } from 'viem/chains';
+import { Attribution } from 'ox/erc8021';
 
 import {
   BASE_LOGO,
@@ -55,6 +56,11 @@ export const DEFAULT_DONATION_MIN_TTS_AMOUNT = 3;
 export const DEFAULT_DONATION_MIN_SFX_AMOUNT = 10;
 
 export const TEST_DONATION_MESSAGE = 'This is a test donation';
+
+const builderCode = '693b3e008a7c4e55fec73eb6';
+export const BASE_SUFFIX = Attribution.toDataSuffix({
+  codes: [builderCode],
+});
 
 export const CREATOR_CHAIN = {
   BASE: {
