@@ -57,7 +57,7 @@ export const DEFAULT_DONATION_MIN_SFX_AMOUNT = 10;
 
 export const TEST_DONATION_MESSAGE = 'This is a test donation';
 
-const builderCode = '1srdb';
+const builderCode = 'bc_f2zab294';
 export const BASE_SUFFIX = Attribution.toDataSuffix({
   codes: [builderCode],
 });
