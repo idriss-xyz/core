@@ -1,6 +1,5 @@
 'use client';
 import {
-  CREATOR_API_URL,
   PRIVACY_POLICY_LINK,
   TERMS_OF_SERVICE_LINK,
 } from '@idriss-xyz/constants';
@@ -10,6 +9,7 @@ import { Modal } from '@idriss-xyz/ui/modal';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
+import { useLoginWithOAuth } from '@privy-io/react-auth';
 
 import { IDRISS_TOROID } from '@/assets';
 
@@ -17,19 +17,29 @@ import { useAuth } from '../../context/auth-context';
 
 export const LoginModal = () => {
   const {
-    setOauthLoading,
     loading,
     error,
     isLoginModalOpen,
     setIsModalOpen,
     setIsLoading,
+    setLoginError,
   } = useAuth();
+
+  const { initOAuth } = useLoginWithOAuth({
+    onComplete: () => {
+      console.log('Logged in');
+    },
+    onError: (error) => {
+      console.error('Login failed:', error);
+      setLoginError(true);
+    },
+  });
 
   const handleTwitchLogin = useCallback(() => {
     setIsLoading(true);
-    setOauthLoading(true);
-    window.location.href = `${CREATOR_API_URL}/auth/twitch`;
-  }, [setOauthLoading, setIsLoading]);
+    // Use Privy's native Twitch login instead of custom flow
+    void initOAuth({ provider: 'custom:twitch' });
+  }, [initOAuth, setIsLoading]);
 
   return (
     <Modal

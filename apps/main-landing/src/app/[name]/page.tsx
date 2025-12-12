@@ -4,7 +4,6 @@ import { isAddress } from 'viem';
 
 import { getPublicCreatorProfile } from '../utils';
 import { type CreatorProfile } from '../donate/types';
-import { OAuthCallbackHandler } from '../components/oauth-callback-handler';
 import { DonateContent } from '../donate/donate-content';
 import { DonateOptionsModal } from '../donate/donate-options-modal';
 import { RainbowKitProviders } from '../donate/providers';
@@ -53,7 +52,6 @@ export default async function CreatorProfile({ params }: Properties) {
 
   return (
     <RainbowKitProviders>
-      <OAuthCallbackHandler />
       <DonateOptionsModal />
       <DonateContent creatorProfile={creatorProfile} />
     </RainbowKitProviders>

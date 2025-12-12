@@ -1,9 +1,5 @@
 'use client';
-import {
-  useCreateWallet,
-  usePrivy,
-  useSubscribeToJwtAuthWithFlag,
-} from '@privy-io/react-auth';
+import { useCreateWallet, usePrivy } from '@privy-io/react-auth';
 import { useCallback, useEffect, useRef } from 'react';
 import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
@@ -21,11 +17,8 @@ export function PrivyAuthSync() {
   const hasRunAuth = useRef(false);
   const isAuthInProgress = useRef(false);
   const {
-    customAuthToken,
-    oauthLoading,
     setCreatorLoading,
     setCreator,
-    isAuthenticated,
     isLoginModalOpen,
     setLoginError,
     callbackUrl,
@@ -79,31 +72,25 @@ export function PrivyAuthSync() {
           router.replace('/app/setup/payment-methods');
         }
       } else {
-        let newCreatorName: string;
-        let newCreatorDisplayName: string | null = null;
-        let newCreatorProfilePic: string | null = null;
-        let newCreatorEmail: string | null = null;
+        // For new creators, get Twitch data from Privy user object
+        const twitchAccount = user.linkedAccounts.find((account) => {
+          return account.type === 'twitch_oauth';
+        });
+
+        if (!twitchAccount) {
+          throw new Error('No Twitch account found');
+        }
+
+        const newCreatorName = twitchAccount.username;
+        const newCreatorDisplayName = twitchAccount.username;
+        const newCreatorProfilePic = ''; // TODO: Find a solution for twitchAccount.profilePictureUrl not being present
+        const newCreatorEmail = user.email?.address;
+
         let isDonor = false;
         // set isDonor when callback is not the normal creators landing signup
         // (ex. a donate page like "/daniel0ar")
         if (callbackUrl && !isHomeCallback(callbackUrl)) {
           isDonor = true;
-        }
-
-        const twitchInfoRaw = localStorage.getItem('twitch_new_user_info');
-
-        // Check if we have Twitch info from the custom login flow
-        if (twitchInfoRaw) {
-          const twitchInfo = JSON.parse(twitchInfoRaw);
-          newCreatorName = twitchInfo.name;
-          newCreatorDisplayName = twitchInfo.displayName;
-          newCreatorProfilePic = twitchInfo.pfp;
-          newCreatorEmail = twitchInfo.email;
-        } else {
-          // User logged in with email or wallet, generate a random name
-          // newCreatorName = `user-${user.id.slice(-8)}`;
-          // newCreatorDisplayName = newCreatorName;
-          throw new Error('Unsupported login method');
         }
         // Create an embedded wallet for the creator
         let wallet = user.wallet;
@@ -158,6 +145,8 @@ export function PrivyAuthSync() {
   }, [
     user?.id,
     user?.wallet,
+    user?.linkedAccounts,
+    user?.email,
     router,
     authenticated,
     callbackUrl,
@@ -183,17 +172,6 @@ export function PrivyAuthSync() {
       void handleCreatorsAuth();
     }
   }, [ready, authenticated, user, isLoginModalOpen, handleCreatorsAuth]);
-
-  useSubscribeToJwtAuthWithFlag({
-    isAuthenticated,
-    isLoading: oauthLoading,
-    getExternalJwt: () => {
-      return Promise.resolve(customAuthToken ?? undefined);
-    },
-    onError(error) {
-      console.error('Error ocurred syncing:', error);
-    },
-  });
 
   return null;
 }

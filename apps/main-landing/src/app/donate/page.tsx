@@ -1,7 +1,5 @@
 import { Metadata } from 'next';
 
-import { OAuthCallbackHandler } from '../components/oauth-callback-handler';
-
 import { DonateContent } from './donate-content';
 import { RainbowKitProviders } from './providers';
 
@@ -16,7 +14,6 @@ export const metadata: Metadata = {
 export default function Donate() {
   return (
     <RainbowKitProviders>
-      <OAuthCallbackHandler />
       <DonateContent />
     </RainbowKitProviders>
   );
