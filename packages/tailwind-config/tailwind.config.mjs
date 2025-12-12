@@ -47,6 +47,13 @@ export default {
         800: '#175413',
         900: '#052F04',
       },
+      blue: {
+        200: '#F2F6FF',
+        300: '#E5EBFF',
+        400: '#004DE5',
+        500: '#003FCC',
+        600: '#0032A8',
+      },
       midnightGreen: {
         100: '#EBFEF3',
         200: '#CFFCE1',
@@ -365,11 +372,11 @@ export default {
           '100%': { transform: 'translateX(0)' },
         },
         'progress-glow': {
-          '0%': { 
+          '0%': {
             opacity: '0.4',
             transform: 'scale(1)',
           },
-          '100%': { 
+          '100%': {
             opacity: '0.7',
             transform: 'scale(1.05)',
           },

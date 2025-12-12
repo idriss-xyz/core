@@ -4,6 +4,7 @@ export const INTERNAL_LINK = {
   SUPERPOWERS: '/dao#apps',
   CREATORS: '/dao#creators',
   TOKEN: '/dao#token',
+  EXPLORE: '/explore',
 };
 
 export const EXTERNAL_LINK = {

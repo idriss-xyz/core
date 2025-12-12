@@ -16,6 +16,7 @@ type Properties = {
   referrerName?: string | null;
   referrerProfilePictureUrl?: string | null;
   creatorDonationPage?: string;
+  stickyEnabled?: boolean;
 };
 
 export const TopBar = ({
@@ -26,6 +27,7 @@ export const TopBar = ({
   referrerName,
   referrerProfilePictureUrl,
   creatorDonationPage,
+  stickyEnabled = true,
 }: Properties) => {
   const [displayMobileCTA, setDisplayMobileCTA] = useState<boolean>(false);
   const [isSticky, setIsSticky] = useState(false);
@@ -72,6 +74,7 @@ export const TopBar = ({
   };
 
   useEffect(() => {
+    if (!stickyEnabled) return;
     const handleScroll = (event: Event) => {
       const customEvent = event as CustomEvent<{ scrollTop: number }>;
 
@@ -104,15 +107,16 @@ export const TopBar = ({
     return () => {
       window.removeEventListener('creatorsLandingPageScroll', handleScroll);
     };
-  }, [displayCTA, heroButtonReference]);
+  }, [displayCTA, heroButtonReference, stickyEnabled]);
 
   return (
     <div
       ref={topBarReference}
       className={classes(
-        'sticky inset-x-0 top-0 w-full transition-colors duration-300 px-safe',
-        isSticky ? 'z-stickyNavbar' : 'z-topBar',
-        isSticky && STICKY_CLASSES,
+        stickyEnabled ? 'sticky inset-x-0 top-0' : 'relative',
+        'w-full transition-colors duration-300 px-safe',
+        stickyEnabled ? (isSticky ? 'z-stickyNavbar' : 'z-topBar') : 'z-topBar',
+        stickyEnabled && isSticky && STICKY_CLASSES,
         // Adjust negative margin based on whether banner is present
         referrerName ? 'mb-[-104px] lg:mb-[-128px]' : 'mb-[-64px] lg:-mb-20',
       )}
