@@ -28,6 +28,7 @@ export const LoginModal = () => {
   const { initOAuth } = useLoginWithOAuth({
     onComplete: () => {
       console.log('Logged in');
+      setIsLoading(false);
     },
     onError: (error) => {
       console.error('Login failed:', error);
@@ -38,7 +39,7 @@ export const LoginModal = () => {
   const handleTwitchLogin = useCallback(() => {
     setIsLoading(true);
     // Use Privy's native Twitch login instead of custom flow
-    void initOAuth({ provider: 'custom:twitch' });
+    void initOAuth({ provider: 'twitch' });
   }, [initOAuth, setIsLoading]);
 
   return (
