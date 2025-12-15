@@ -10,7 +10,6 @@ import { backgroundLines } from '@/assets';
 import { useStartEarningNavigation } from '../utils';
 
 import { VideoPlayer } from './hero-section/video-player';
-import { LoginModal } from './login-modal';
 
 type Properties = {
   heroButtonReference?: RefObject<HTMLButtonElement>;
@@ -103,7 +102,6 @@ export const HeroSection = ({
           <VideoPlayer />
         </div>
       </div>
-      <LoginModal />
       {isMobileNotSupportedOpen && (
         <MobileNotSupported
           className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm"

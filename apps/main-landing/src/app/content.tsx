@@ -1,5 +1,6 @@
 'use client';
 import { useRef, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 import { CreatorProfileResponse } from '@/app/utils/types';
 
@@ -11,7 +12,9 @@ import { SetUp } from './components/set-up';
 import { TopCreators } from './components/top-creators';
 import { Footer } from './components/footer';
 import { NftSection } from './components/nft-section';
+import { LoginModal } from './components/login-modal';
 import { getCookie } from './cookies';
+import { useAuth } from './context/auth-context';
 
 type ContentProperties = { creator?: CreatorProfileResponse | null };
 
@@ -25,6 +28,9 @@ export default function Content({ creator }: ContentProperties) {
     string | null
   >(creator?.profilePictureUrl ?? null);
 
+  const searchParameters = useSearchParams();
+  const { setIsModalOpen, setLoginError } = useAuth();
+
   useEffect(() => {
     // If no creator from SSR, check cookie on client
     if (!creator) {
@@ -34,6 +40,19 @@ export default function Content({ creator }: ContentProperties) {
       if (pfp) setReferrerProfilePictureUrl(pfp);
     }
   }, [creator]);
+
+  useEffect(() => {
+    const login = searchParameters.get('login');
+    const error = searchParameters.get('error');
+
+    if (login === 'true') {
+      setIsModalOpen(true);
+    }
+
+    if (error === 'true') {
+      setLoginError(true);
+    }
+  }, [searchParameters, setIsModalOpen, setLoginError]);
 
   return (
     <div className="relative">
@@ -57,6 +76,7 @@ export default function Content({ creator }: ContentProperties) {
         <TopCreators />
       </main>
       <Footer />
+      <LoginModal />
     </div>
   );
 }

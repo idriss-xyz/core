@@ -9,7 +9,7 @@ import { Modal } from '@idriss-xyz/ui/modal';
 import Image from 'next/image';
 import { useCallback } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
-import { useLoginWithOAuth } from '@privy-io/react-auth';
+import { useLoginWithOAuth, useCreateWallet } from '@privy-io/react-auth';
 
 import { IDRISS_TOROID } from '@/assets';
 
@@ -25,9 +25,23 @@ export const LoginModal = () => {
     setLoginError,
   } = useAuth();
 
+  const { createWallet } = useCreateWallet({
+    onSuccess: (wallet) => {
+      console.log('Wallet created:', wallet);
+    },
+    onError: (error) => {
+      console.error('Wallet creation failed:', error);
+    },
+  });
+
   const { initOAuth } = useLoginWithOAuth({
-    onComplete: () => {
-      console.log('Logged in');
+    onComplete: async (user) => {
+      console.log('Logged in'); // TODO: redirect to app (conditionally according to doneSetup flag)
+      // Check if user has a wallet, if not create one
+      if (!user.user.wallet) {
+        await createWallet();
+      }
+      console.log(user);
       setIsLoading(false);
     },
     onError: (error) => {
