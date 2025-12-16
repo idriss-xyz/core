@@ -11,6 +11,7 @@ import {
   EMPTY_HEX,
   TIPPING_ABI,
   CHAIN_TO_IDRISS_TIPPING_ADDRESS,
+  BASE_SUFFIX,
 } from '@idriss-xyz/constants';
 import { getChainById } from '@idriss-xyz/utils';
 
@@ -63,11 +64,11 @@ export const useErc721Transaction = () => {
       });
 
       if (!isApprovedForAll) {
-        const approveAllData = encodeFunctionData({
+        const approveAllData = (encodeFunctionData({
           abi: erc721Abi,
           functionName: 'setApprovalForAll',
           args: [idrissTippingAddress, true],
-        });
+        }) + BASE_SUFFIX.slice(2)) as Hex;
 
         const approveGas = await estimateGas(walletClient, {
           account,
@@ -90,11 +91,11 @@ export const useErc721Transaction = () => {
           throw new Error('approve reverted');
       }
 
-      const sendNftData = encodeFunctionData({
+      const sendNftData = (encodeFunctionData({
         abi: TIPPING_ABI,
         functionName: 'sendERC721To',
         args: [recipientAddress, tokenId, collectionAddress, message],
-      });
+      }) + BASE_SUFFIX.slice(2)) as Hex;
 
       const gas = await estimateGas(walletClient, {
         account,
