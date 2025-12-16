@@ -584,8 +584,8 @@ importers:
         specifier: ^4.5.0
         version: 4.9.12
       next:
-        specifier: 15.0.5
-        version: 15.0.5(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.1)
+        specifier: ^15.0.5
+        version: 15.5.7(@babel/core@7.25.9)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.1)
       pg:
         specifier: ^8.13.1
         version: 8.13.1
@@ -12287,13 +12287,13 @@ snapshots:
 
   '@aws-crypto/supports-web-crypto@5.2.0':
     dependencies:
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@aws-crypto/util@5.2.0':
     dependencies:
       '@aws-sdk/types': 3.840.0
       '@smithy/util-utf8': 2.3.0
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@aws-sdk/client-lambda@3.857.0':
     dependencies:
@@ -12543,7 +12543,7 @@ snapshots:
       '@aws-sdk/types': 3.840.0
       '@smithy/property-provider': 4.0.4
       '@smithy/types': 4.3.1
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@aws-sdk/credential-provider-http@3.844.0':
     dependencies:
@@ -12569,7 +12569,7 @@ snapshots:
       '@smithy/smithy-client': 4.4.9
       '@smithy/types': 4.3.1
       '@smithy/util-stream': 4.2.3
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@aws-sdk/credential-provider-ini@3.844.0':
     dependencies:
@@ -12603,7 +12603,7 @@ snapshots:
       '@smithy/property-provider': 4.0.4
       '@smithy/shared-ini-file-loader': 4.0.4
       '@smithy/types': 4.3.1
-      tslib: 2.8.0
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
 
@@ -12657,7 +12657,7 @@ snapshots:
       '@smithy/property-provider': 4.0.4
       '@smithy/shared-ini-file-loader': 4.0.4
       '@smithy/types': 4.3.1
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@aws-sdk/credential-provider-sso@3.844.0':
     dependencies:
@@ -12681,7 +12681,7 @@ snapshots:
       '@smithy/property-provider': 4.0.4
       '@smithy/shared-ini-file-loader': 4.0.4
       '@smithy/types': 4.3.1
-      tslib: 2.8.0
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
 
@@ -12703,7 +12703,7 @@ snapshots:
       '@aws-sdk/types': 3.840.0
       '@smithy/property-provider': 4.0.4
       '@smithy/types': 4.3.1
-      tslib: 2.8.0
+      tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
 
@@ -12944,7 +12944,7 @@ snapshots:
 
   '@aws-sdk/util-arn-parser@3.804.0':
     dependencies:
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@aws-sdk/util-endpoints@3.844.0':
     dependencies:
@@ -12964,7 +12964,7 @@ snapshots:
 
   '@aws-sdk/util-locate-window@3.804.0':
     dependencies:
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@aws-sdk/util-user-agent-browser@3.840.0':
     dependencies:
@@ -17194,16 +17194,16 @@ snapshots:
   '@smithy/abort-controller@4.0.4':
     dependencies:
       '@smithy/types': 4.3.1
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/chunked-blob-reader-native@4.0.0':
     dependencies:
       '@smithy/util-base64': 4.0.0
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/chunked-blob-reader@5.0.0':
     dependencies:
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/config-resolver@4.1.4':
     dependencies:
@@ -17243,7 +17243,7 @@ snapshots:
       '@smithy/property-provider': 4.0.4
       '@smithy/types': 4.3.1
       '@smithy/url-parser': 4.0.4
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/eventstream-codec@4.0.4':
     dependencies:
@@ -17273,7 +17273,7 @@ snapshots:
     dependencies:
       '@smithy/eventstream-codec': 4.0.4
       '@smithy/types': 4.3.1
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/fetch-http-handler@5.1.0':
     dependencies:
@@ -17403,7 +17403,7 @@ snapshots:
   '@smithy/property-provider@4.0.4':
     dependencies:
       '@smithy/types': 4.3.1
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/protocol-http@5.1.2':
     dependencies:
@@ -17414,12 +17414,12 @@ snapshots:
     dependencies:
       '@smithy/types': 4.3.1
       '@smithy/util-uri-escape': 4.0.0
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/querystring-parser@4.0.4':
     dependencies:
       '@smithy/types': 4.3.1
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/service-error-classification@4.0.6':
     dependencies:
@@ -17428,7 +17428,7 @@ snapshots:
   '@smithy/shared-ini-file-loader@4.0.4':
     dependencies:
       '@smithy/types': 4.3.1
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/signature-v4@5.1.2':
     dependencies:
@@ -17439,7 +17439,7 @@ snapshots:
       '@smithy/util-middleware': 4.0.4
       '@smithy/util-uri-escape': 4.0.0
       '@smithy/util-utf8': 4.0.0
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/smithy-client@4.4.6':
     dependencies:
@@ -17493,11 +17493,11 @@ snapshots:
   '@smithy/util-buffer-from@4.0.0':
     dependencies:
       '@smithy/is-array-buffer': 4.0.0
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/util-config-provider@4.0.0':
     dependencies:
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/util-defaults-mode-browser@4.0.22':
     dependencies:
@@ -17543,7 +17543,7 @@ snapshots:
 
   '@smithy/util-hex-encoding@4.0.0':
     dependencies:
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/util-middleware@4.0.4':
     dependencies:
@@ -17574,7 +17574,7 @@ snapshots:
   '@smithy/util-utf8@2.3.0':
     dependencies:
       '@smithy/util-buffer-from': 2.2.0
-      tslib: 2.8.0
+      tslib: 2.8.1
 
   '@smithy/util-utf8@4.0.0':
     dependencies:
@@ -20903,26 +20903,6 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-plugin-import@2.31.0)(eslint@8.57.1):
-    dependencies:
-      '@nolyfill/is-core-module': 1.0.39
-      debug: 4.4.1
-      enhanced-resolve: 5.17.1
-      eslint: 8.57.1
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
-      fast-glob: 3.3.2
-      get-tsconfig: 4.8.1
-      is-bun-module: 1.2.1
-      is-glob: 4.0.3
-    optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
-    transitivePeerDependencies:
-      - '@typescript-eslint/parser'
-      - eslint-import-resolver-node
-      - eslint-import-resolver-webpack
-      - supports-color
-    optional: true
-
   eslint-module-utils@2.12.0(@typescript-eslint/parser@8.11.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1):
     dependencies:
       debug: 3.2.7
@@ -20941,7 +20921,7 @@ snapshots:
       '@typescript-eslint/parser': 8.19.1(eslint@8.57.1)(typescript@5.6.3)
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-plugin-import@2.31.0)(eslint@8.57.1)
+      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
 
