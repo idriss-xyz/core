@@ -8,10 +8,13 @@ class EncryptionService {
   private constructor() {
     const encryptionKey = process.env.ENCRYPTION_KEY;
     if (!encryptionKey) {
-      throw new Error('ENCRYPTION_KEY environment variable is required');
+      throw new Error('ENCRYPTION_KEY environment variable not set');
     }
-    // Ensure key is exactly 32 bytes for AES-256
-    this.key = crypto.scryptSync(encryptionKey, 'salt', 32);
+    this.key = Buffer.from(encryptionKey, 'hex');
+
+    if (this.key.length !== 32) {
+      throw new Error('ENCRYPTION_KEY must be 32 bytes (64 hex chars)');
+    }
   }
 
   public static getInstance(): EncryptionService {
@@ -22,8 +25,8 @@ class EncryptionService {
   }
 
   public encrypt(text: string): string {
-    const iv = crypto.randomBytes(16);
-    const cipher = crypto.createCipher(this.algorithm, this.key);
+    const iv = crypto.randomBytes(12);
+    const cipher = crypto.createCipheriv(this.algorithm, this.key, iv);
     cipher.setAAD(Buffer.from('twitch-tokens'));
 
     let encrypted = cipher.update(text, 'utf8', 'hex');
@@ -31,7 +34,6 @@ class EncryptionService {
 
     const authTag = cipher.getAuthTag();
 
-    // Combine iv, authTag, and encrypted data
     return `${iv.toString('hex')}:${authTag.toString('hex')}:${encrypted}`;
   }
 
@@ -41,7 +43,7 @@ class EncryptionService {
     const iv = Buffer.from(ivHex, 'hex');
     const authTag = Buffer.from(authTagHex, 'hex');
 
-    const decipher = crypto.createDecipher(this.algorithm, this.key);
+    const decipher = crypto.createDecipheriv(this.algorithm, this.key, iv);
     decipher.setAAD(Buffer.from('twitch-tokens'));
     decipher.setAuthTag(authTag);
 
