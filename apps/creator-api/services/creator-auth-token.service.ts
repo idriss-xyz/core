@@ -1,4 +1,5 @@
 import { AppDataSource, TwitchTokens } from '@idriss-xyz/db';
+import { encryptionService } from './encryption.service';
 
 class CreatorAuthTokenService {
   private static instance: CreatorAuthTokenService;
@@ -31,12 +32,15 @@ class CreatorAuthTokenService {
       return null;
     }
 
-    // Check if token is still valid
-    const isTokenValid = await this.validateAccessToken(
+    // Decrypt the access token before validation
+    const decryptedAccessToken = encryptionService.decrypt(
       creatorTokens.accessToken,
     );
+
+    // Check if token is still valid
+    const isTokenValid = await this.validateAccessToken(decryptedAccessToken);
     if (isTokenValid) {
-      return creatorTokens.accessToken;
+      return decryptedAccessToken;
     }
 
     // Token expired, refresh it
@@ -51,6 +55,11 @@ class CreatorAuthTokenService {
     }
 
     try {
+      // Decrypt the refresh token before using it
+      const decryptedRefreshToken = encryptionService.decrypt(
+        twitchTokens.refreshToken,
+      );
+
       const response = await fetch('https://id.twitch.tv/oauth2/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -58,7 +67,7 @@ class CreatorAuthTokenService {
           client_id: process.env.TWITCH_CLIENT_ID!,
           client_secret: process.env.TWITCH_CLIENT_SECRET!,
           grant_type: 'refresh_token',
-          refresh_token: twitchTokens.refreshToken,
+          refresh_token: decryptedRefreshToken,
         }),
       });
 
@@ -74,12 +83,18 @@ class CreatorAuthTokenService {
         refresh_token?: string;
       };
 
+      // Encrypt the new tokens before saving
+      const updateData: Partial<TwitchTokens> = {
+        accessToken: encryptionService.encrypt(data.access_token),
+      };
+
+      if (data.refresh_token) {
+        updateData.refreshToken = encryptionService.encrypt(data.refresh_token);
+      }
+
       // Update the tokens
       const twitchTokensRepo = AppDataSource.getRepository(TwitchTokens);
-      await twitchTokensRepo.update(twitchTokens.twitchId, {
-        accessToken: data.access_token,
-        refreshToken: data.refresh_token,
-      });
+      await twitchTokensRepo.update(twitchTokens.twitchId, updateData);
 
       return data.access_token;
     } catch (error) {

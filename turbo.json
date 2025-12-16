@@ -141,7 +141,8 @@
         "OPENSEA_API_KEY",
         "TWITCH_BOT_CLIENT_ID",
         "TWITCH_BOT_CLIENT_SECRET",
-        "TWITCH_BOT_USER_ID"
+        "TWITCH_BOT_USER_ID",
+        "ENCRYPTION_KEY"
       ]
     },
     "@idriss-xyz/creator-api#prod": {
@@ -171,7 +172,8 @@
         "OPENSEA_API_KEY",
         "TWITCH_BOT_CLIENT_ID",
         "TWITCH_BOT_CLIENT_SECRET",
-        "TWITCH_BOT_USER_ID"
+        "TWITCH_BOT_USER_ID",
+        "ENCRYPTION_KEY"
       ]
     },
     "@idriss-xyz/creator-api#test": {

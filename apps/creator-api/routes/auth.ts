@@ -13,6 +13,7 @@ import {
   fetchUserFollowedChannels,
   FollowedChannel,
 } from '@idriss-xyz/utils/server';
+import { encryptionService } from '../services/encryption.service';
 
 const router = Router();
 
@@ -75,10 +76,10 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
 
     // store twitch oauth token
     const twitchTokensRepo = AppDataSource.getRepository(TwitchTokens);
-    twitchTokensRepo.save({
+    await twitchTokensRepo.save({
       twitchId: twitchUser.id,
-      accessToken: access_token,
-      refreshToken: refresh_token,
+      accessToken: encryptionService.encrypt(access_token),
+      refreshToken: encryptionService.encrypt(refresh_token),
     });
 
     const payload = {
