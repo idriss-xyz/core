@@ -6,15 +6,8 @@
     "build:tailwind": "postcss tailwind.css -o src/shared/ui/providers/tailwind.build.css",
     "dev": "pnpm build:tailwind && rspack --mode=development",
     "build": "pnpm build:tailwind && rspack --mode=production",
-    "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
-    "format:fix": "prettier --write --config ../../prettier.config.mjs --ignore-path .prettierignore .",
-    "lint": "eslint src --max-warnings=0",
-    "lint:fix": "eslint src --max-warnings=0 --fix",
-    "circular-dependencies": "depcruise --config .dependency-cruiser.cjs src",
-    "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.json --ignoreFiles=.stories",
     "architecture-graph": "depcruise src --include-only ^src --output-type archi | dot -T svg -Grankdir=TD > architecture/graph.svg",
-    "architecture-graph:folders": "depcruise src --include-only ^src --output-type ddot | dot -T svg -Grankdir=TD > architecture/folders-graph.svg",
-    "type-check": "tsc --noEmit"
+    "architecture-graph:folders": "depcruise src --include-only ^src --output-type ddot | dot -T svg -Grankdir=TD > architecture/folders-graph.svg"
   },
   "dependencies": {
     "@ebay/nice-modal-react": "^1.2.13",

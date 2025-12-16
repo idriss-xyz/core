@@ -1,5 +1,4 @@
 'use client';
-/* eslint-disable @next/next/no-img-element */
 import { classes } from '@idriss-xyz/ui/utils';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { motion, AnimatePresence } from 'framer-motion';

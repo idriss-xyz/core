@@ -121,7 +121,6 @@ export const CollectibleGallery = ({
 
     setSelectedCollections(startSelection, false);
     setHasInitialized(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collectibles, uniqueCollections, initialSelectedCollections]);
 
   // Toggle handler now uses composite key and the new setter (replace body)

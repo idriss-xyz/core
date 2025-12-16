@@ -8,8 +8,8 @@
     "prepare-fonts": "node ./prepare-fonts.cjs",
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
     "format:fix": "prettier --write --config ../../prettier.config.mjs --ignore-path .prettierignore .",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "type-check": "tsc --noEmit",
     "circular-dependencies": "depcruise --config .dependency-cruiser.cjs src",
     "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.unused-exports.json"
@@ -39,7 +39,7 @@
     "jwt-decode": "^4.0.0",
     "lodash": "^4.17.21",
     "mipd": "^0.0.7",
-    "next": "15.5.7",
+    "next": "16.0.10",
     "pino-pretty": "^13.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -66,7 +66,7 @@
     "@types/react-dom": "^18.3.1",
     "dependency-cruiser": "^16.4.2",
     "dotenv-safe": "^9.1.0",
-    "eslint-config-next": "15.0.1",
+    "eslint-config-next": "16.0.10",
     "eslint-import-resolver-typescript": "^3.6.3",
     "ts-unused-exports": "^10.1.0",
     "typescript": "^5.6.3"
