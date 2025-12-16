@@ -25,6 +25,7 @@
     "@idriss-xyz/utils": "workspace:*",
     "dotenv": "^16.4.5",
     "hono": "^4.5.0",
+    "next": "^15.0.7",
     "pg": "^8.13.1",
     "ponder": "^0.13.13",
     "viem": "^2.21.3"
