@@ -75,49 +75,11 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
 
     // store twitch oauth token
     const twitchTokensRepo = AppDataSource.getRepository(TwitchTokens);
-    twitchTokensRepo.create({
+    twitchTokensRepo.save({
       twitchId: twitchUser.id,
       accessToken: access_token,
       refreshToken: refresh_token,
     });
-
-    let followed: FollowedChannel[];
-    try {
-      followed = await fetchUserFollowedChannels(
-        access_token,
-        twitchUser.id,
-        30,
-      );
-    } catch (err) {
-      console.error('fetchUserFollowedChannels failed:', err);
-      followed = [];
-    }
-    try {
-      const followsRepo = AppDataSource.getRepository(CreatorFollowedChannel);
-      const creatorRepo = AppDataSource.getRepository(Creator);
-      const creator = await creatorRepo.findOne({
-        where: { twitchId: twitchUser.id },
-      });
-
-      if (creator && followed.length) {
-        // store follow data
-        await followsRepo.delete({ creator: { id: creator.id } });
-        await followsRepo.insert(
-          followed.map((c) =>
-            followsRepo.create({
-              creator,
-              channelTwitchId: c.broadcasterId,
-              channelName: c.login,
-              channelDisplayName: c.name,
-              channelProfileImageUrl: c.profileImage,
-              game: c.game,
-            }),
-          ),
-        );
-      }
-    } catch (err) {
-      console.error('Storing followed channels failed:', err);
-    }
 
     const payload = {
       sub: twitchUser.id, // Twitch's unique user ID
