@@ -158,8 +158,8 @@ importers:
         specifier: ^11.6.0
         version: 11.6.0
       next:
-        specifier: 15.0.5
-        version: 15.0.5(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.1)
+        specifier: ^15.0.5
+        version: 15.5.7(@babel/core@7.25.9)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.1)
       siwe:
         specifier: ^3.0.0
         version: 3.0.0(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))

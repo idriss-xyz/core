@@ -31,7 +31,7 @@
     "jwk-to-pem": "^2.0.7",
     "multer": "^2.0.1",
     "music-metadata": "^11.6.0",
-    "next": "15.0.5",
+    "next": "^15.0.5",
     "siwe": "^3.0.0",
     "socket.io": "^4.8.1",
     "typeorm": "^0.3.20",
