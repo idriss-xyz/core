@@ -44,4 +44,4 @@ export { AddDisplayTopDonor1762624664000 } from './1762624664000-AddDisplayTopDo
 export { CreatorProfileViewUpdate1762797156607 } from './1762797156607-CreatorProfileViewUpdate';
 export { AddGameToCreatorFollowedChannel1763232396000 } from './1763232396000-add-game-to-creator-followed-channel';
 export { AddEnvironmentTable1764948355300 } from './1764948355300-AddEnvironmentTable';
-export { AddTwitchTokenToCreator1765223740053 } from './1765223740053-AddTwitchTokenToCreator';
+export { AddTwitchTokensTable1765834598920 } from './1765834598920-AddTwitchTokensTable';

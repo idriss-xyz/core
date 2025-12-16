@@ -33,7 +33,6 @@
     "music-metadata": "^11.6.0",
     "siwe": "^3.0.0",
     "socket.io": "^4.8.1",
-    "tmi.js": "^1.8.5",
     "typeorm": "^0.3.20",
     "viem": "^2.31.7"
   },
@@ -44,7 +43,6 @@
     "@types/jwk-to-pem": "^2.0.3",
     "@types/multer": "^2.0.0",
     "@types/socket.io": "^3.0.2",
-    "@types/tmi.js": "^1.8.6",
     "dependency-cruiser": "^16.4.2",
     "ts-node": "^10.9.2",
     "ts-unused-exports": "^10.1.0",

@@ -1,4 +1,4 @@
-import { AppDataSource, Creator } from '@idriss-xyz/db';
+import { AppDataSource, TwitchTokens } from '@idriss-xyz/db';
 
 class CreatorAuthTokenService {
   private static instance: CreatorAuthTokenService;
@@ -21,30 +21,32 @@ class CreatorAuthTokenService {
     return response.ok ? ((await response.json()) as string) : null;
   }
 
-  public async getValidAuthToken(creatorId: string): Promise<string | null> {
-    const creatorRepo = AppDataSource.getRepository(Creator);
-    const creator = await creatorRepo.findOne({
-      where: { privyId: creatorId },
+  public async getValidAuthToken(twitchId: string): Promise<string | null> {
+    const twitchTokensRepo = AppDataSource.getRepository(TwitchTokens);
+    const creatorTokens = await twitchTokensRepo.findOne({
+      where: { twitchId: twitchId },
     });
 
-    if (!creator?.twitchOauthToken) {
+    if (!creatorTokens?.accessToken) {
       return null;
     }
 
     // Check if token is still valid
     const isTokenValid = await this.validateAccessToken(
-      creator.twitchOauthToken,
+      creatorTokens.accessToken,
     );
     if (isTokenValid) {
-      return creator.twitchOauthToken;
+      return creatorTokens.accessToken;
     }
 
     // Token expired, refresh it
-    return this.refreshAuthToken(creator);
+    return this.refreshAuthToken(creatorTokens);
   }
 
-  private async refreshAuthToken(creator: Creator): Promise<string | null> {
-    if (!creator.twitchRefreshToken) {
+  private async refreshAuthToken(
+    twitchTokens: TwitchTokens,
+  ): Promise<string | null> {
+    if (!twitchTokens.refreshToken) {
       return null;
     }
 
@@ -56,13 +58,13 @@ class CreatorAuthTokenService {
           client_id: process.env.TWITCH_CLIENT_ID!,
           client_secret: process.env.TWITCH_CLIENT_SECRET!,
           grant_type: 'refresh_token',
-          refresh_token: creator.twitchRefreshToken,
+          refresh_token: twitchTokens.refreshToken,
         }),
       });
 
       if (!response.ok) {
         console.error(
-          `Token refresh failed for creator ${creator.privyId}: ${response.status}`,
+          `Token refresh failed for creator ${twitchTokens.twitchId}: ${response.status}`,
         );
         return null;
       }
@@ -72,17 +74,17 @@ class CreatorAuthTokenService {
         refresh_token?: string;
       };
 
-      // Update the creator with new tokens
-      const creatorRepo = AppDataSource.getRepository(Creator);
-      await creatorRepo.update(creator.id, {
-        twitchOauthToken: data.access_token,
-        twitchRefreshToken: data.refresh_token,
+      // Update the tokens
+      const twitchTokensRepo = AppDataSource.getRepository(TwitchTokens);
+      await twitchTokensRepo.update(twitchTokens.twitchId, {
+        accessToken: data.access_token,
+        refreshToken: data.refresh_token,
       });
 
       return data.access_token;
     } catch (error) {
       console.error(
-        `Error refreshing token for creator ${creator.privyId}:`,
+        `Error refreshing token for creator ${twitchTokens.twitchId}:`,
         error,
       );
       return null;

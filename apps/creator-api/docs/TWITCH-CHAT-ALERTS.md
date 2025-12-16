@@ -46,7 +46,7 @@ And also a new endpoint
 ```ts
 // moderator-status.ts
 router.get(
-  '/:creatorName',
+  '/',
   tightCors,
   verifyToken(),
   async (req: Request, res: Response) => {

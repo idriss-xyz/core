@@ -103,7 +103,7 @@ const errorSaveSettingsToast: Omit<ToastData, 'id'> = {
   autoClose: true,
 };
 
-async function fetchModerationStatus(creatorName: string): Promise<boolean> {
+async function fetchModerationStatus(): Promise<boolean> {
   try {
     const authToken = await getAccessToken();
     if (!authToken) {
@@ -111,16 +111,13 @@ async function fetchModerationStatus(creatorName: string): Promise<boolean> {
       return false;
     }
 
-    const response = await fetch(
-      `${CREATOR_API_URL}/moderator-status/${creatorName}`,
-      {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-        },
+    const response = await fetch(`${CREATOR_API_URL}/moderator-status/`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
       },
-    );
+    });
 
     if (response.ok) {
       const data = (await response.json()) as { isModerator: boolean };
@@ -412,7 +409,7 @@ export default function StreamAlerts() {
 
   useEffect(() => {
     if (creator?.name) {
-      void fetchModerationStatus(creator.name).then(setIsModerator);
+      void fetchModerationStatus().then(setIsModerator);
     }
   }, [creator?.name]);
 

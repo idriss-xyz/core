@@ -8,23 +8,12 @@ import { AppDataSource, Creator } from '@idriss-xyz/db';
 
 const router = Router();
 router.get(
-  '/:creatorName',
+  '/',
   tightCors,
   verifyToken(),
   async (req: Request, res: Response) => {
     try {
-      const { creatorName } = req.params;
       const userId = req.user.id;
-
-      // Get valid auth token for the creator
-      const authToken = await creatorAuthTokenService.getValidAuthToken(userId);
-
-      if (!authToken) {
-        res.status(401).json({
-          error: 'No valid Twitch auth token found for creator',
-        });
-        return;
-      }
 
       const creatorRepo = AppDataSource.getRepository(Creator);
       const creator = await creatorRepo.findOne({
@@ -34,6 +23,18 @@ router.get(
       if (!creator?.twitchId) {
         res.status(500).json({
           error: 'No valid Twitch id found for creator',
+        });
+        return;
+      }
+
+      // Get valid auth token for the creator
+      const authToken = await creatorAuthTokenService.getValidAuthToken(
+        creator.twitchId,
+      );
+
+      if (!authToken) {
+        res.status(401).json({
+          error: 'No valid Twitch auth token found for creator',
         });
         return;
       }

@@ -63,7 +63,7 @@ export async function startDbListener(io: Server) {
 
         // Check moderation status and send appropriate follow-up message
         const authToken = await creatorAuthTokenService.getValidAuthToken(
-          creator.privyId,
+          creator.twitchId,
         );
         if (authToken) {
           const isModerator = await getModerationStatus(

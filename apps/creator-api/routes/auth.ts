@@ -3,7 +3,12 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { URLSearchParams } from 'url';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
-import { AppDataSource, Creator, CreatorFollowedChannel } from '@idriss-xyz/db';
+import {
+  AppDataSource,
+  Creator,
+  CreatorFollowedChannel,
+  TwitchTokens,
+} from '@idriss-xyz/db';
 import {
   fetchUserFollowedChannels,
   FollowedChannel,
@@ -27,22 +32,6 @@ router.get('/twitch', (req, res) => {
   const authUrl = `https://id.twitch.tv/oauth2/authorize?${new URLSearchParams({
     client_id: TWITCH_CLIENT_ID!,
     redirect_uri: API_CALLBACK_URI,
-    response_type: 'code',
-    scope: 'user:read:email user:read:follows moderation:read',
-    ...(state && { state }),
-  })}`;
-  res.redirect(authUrl);
-});
-
-router.get('/twitch/add-moderation', (req, res) => {
-  const { callback } = req.query;
-
-  // Store the callback in the state parameter to retrieve it later
-  const state = callback ? encodeURIComponent(callback as string) : '';
-
-  const authUrl = `https://id.twitch.tv/oauth2/authorize?${new URLSearchParams({
-    client_id: TWITCH_CLIENT_ID!,
-    redirect_uri: `${CREATOR_API_URL}/auth/twitch/callback`,
     response_type: 'code',
     scope: 'user:read:email user:read:follows moderation:read',
     ...(state && { state }),
@@ -85,11 +74,12 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
     }
 
     // store twitch oauth token
-    const creatorRepo = AppDataSource.getRepository(Creator);
-    await creatorRepo.update(
-      { twitchId: twitchUser.id },
-      { twitchOauthToken: access_token, twitchRefreshToken: refresh_token },
-    );
+    const twitchTokensRepo = AppDataSource.getRepository(TwitchTokens);
+    twitchTokensRepo.create({
+      twitchId: twitchUser.id,
+      accessToken: access_token,
+      refreshToken: refresh_token,
+    });
 
     let followed: FollowedChannel[];
     try {
@@ -104,6 +94,7 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
     }
     try {
       const followsRepo = AppDataSource.getRepository(CreatorFollowedChannel);
+      const creatorRepo = AppDataSource.getRepository(Creator);
       const creator = await creatorRepo.findOne({
         where: { twitchId: twitchUser.id },
       });

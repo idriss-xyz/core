@@ -84,12 +84,6 @@ export class Creator {
   @Column({ type: 'boolean', name: 'display_top_donor', default: true })
   displayTopDonor!: boolean;
 
-  @Column({ type: 'text', name: 'twitch_oauth_token', nullable: true })
-  twitchOauthToken!: string;
-
-  @Column({ type: 'text', name: 'twitch_refresh_token', nullable: true })
-  twitchRefreshToken!: string;
-
   @OneToMany(
     () => {
       return CreatorNetwork;
