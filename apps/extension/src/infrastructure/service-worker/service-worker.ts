@@ -115,12 +115,12 @@ export class ServiceWorker {
   ): tab is chrome.tabs.Tab & { id: number } => {
     return Boolean(
       tab?.id &&
-        tab.url &&
-        tab.url?.length > 0 &&
-        !tab.url?.startsWith('edge') &&
-        !tab.url?.startsWith('chrome') &&
-        !tab.url?.startsWith('edge') &&
-        !tab.url?.startsWith('about'),
+      tab.url &&
+      tab.url?.length > 0 &&
+      !tab.url?.startsWith('edge') &&
+      !tab.url?.startsWith('chrome') &&
+      !tab.url?.startsWith('edge') &&
+      !tab.url?.startsWith('about'),
     );
   };
 }
