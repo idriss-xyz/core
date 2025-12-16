@@ -296,3 +296,43 @@ export async function fetchUserFollowedChannels(
     return DEFAULT_FOLLOWED_CHANNELS;
   }
 }
+
+// ts-unused-exports:disable-next-line
+export async function getModerationStatus(
+  creatorTwitchId: string,
+  userAccessToken: string,
+) {
+  try {
+    const clientId = process.env.TWITCH_CLIENT_ID;
+    if (!clientId) {
+      throw new Error('Missing TWITCH_CLIENT_ID env var');
+    }
+
+    const headers = {
+      'Authorization': `Bearer ${userAccessToken}`,
+      'Client-Id': clientId,
+    };
+
+    const botUserId = process.env.TWITCH_BOT_USER_ID;
+    if (!botUserId) {
+      throw new Error('Missing TWITCH_BOT_USER_ID env var');
+    }
+
+    const response = await fetch(
+      `${TWITCH_BASE_URL}/moderation/moderators?broadcaster_id=${creatorTwitchId}&user_id=${botUserId}`,
+      {
+        headers,
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(`Twitch API error: ${response.status}`);
+    }
+    const moderators = (await response.json()) as { data: object[] };
+    const isModerator = moderators.data.length > 0;
+    return isModerator;
+  } catch (error) {
+    console.error('Error fetching moderation status:', error);
+    return null;
+  }
+}

@@ -7,6 +7,7 @@ import {
   CreatorAddress,
   CreatorProfileView,
   TwitchInfo,
+  CreatorFollowedChannel,
 } from '@idriss-xyz/db';
 import { randomBytes } from 'crypto';
 import { Request } from 'express';
@@ -23,8 +24,11 @@ import { ILike } from 'typeorm';
 import {
   fetchTwitchStreamStatus,
   fetchTwitchUserInfo,
+  fetchUserFollowedChannels,
+  FollowedChannel,
   getTwitchInfoForCreatorCreation,
 } from '@idriss-xyz/utils/server';
+import { creatorAuthTokenService } from './creator-auth-token.service';
 
 interface EnrichedCreatorProfile extends CreatorProfileView {
   streamStatus?: boolean;
@@ -143,6 +147,53 @@ class CreatorProfileService {
       return network;
     });
     await networkRepository.save(networkEntities);
+
+    // Save followed channels
+    let followed: FollowedChannel[];
+    const authToken = await creatorAuthTokenService.getValidAuthToken(
+      creator.twitchId,
+    );
+
+    if (!authToken) {
+      throw new Error('Could not find valid auth token for the creator');
+    }
+
+    try {
+      followed = await fetchUserFollowedChannels(
+        authToken,
+        creator.twitchId,
+        10,
+      );
+    } catch (err) {
+      console.error('fetchUserFollowedChannels failed:', err);
+      followed = [];
+    }
+    try {
+      const followsRepo = AppDataSource.getRepository(CreatorFollowedChannel);
+      const creatorRepo = AppDataSource.getRepository(Creator);
+      const creator = await creatorRepo.findOne({
+        where: { twitchId: savedCreator.twitchId },
+      });
+
+      if (creator && followed.length) {
+        // store follow data
+        await followsRepo.delete({ creator: { id: creator.id } });
+        await followsRepo.insert(
+          followed.map((c) =>
+            followsRepo.create({
+              creator,
+              channelTwitchId: c.broadcasterId,
+              channelName: c.login,
+              channelDisplayName: c.name,
+              channelProfileImageUrl: c.profileImage,
+              game: c.game,
+            }),
+          ),
+        );
+      }
+    } catch (err) {
+      console.error('Storing followed channels failed:', err);
+    }
 
     return {
       savedCreator,

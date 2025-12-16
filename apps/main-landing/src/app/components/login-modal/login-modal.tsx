@@ -33,6 +33,7 @@ export const LoginModal = () => {
 
   return (
     <Modal
+      // z-[2147483647] is used to hide privy login modal behind our own (in case css rules fail)
       className="z-[2147483647] flex min-h-[420px] w-[500px] flex-col items-center justify-center gap-y-6 rounded-xl border border-black/20 bg-white p-6 text-center"
       isOpened={isLoginModalOpen}
       onClose={() => {
