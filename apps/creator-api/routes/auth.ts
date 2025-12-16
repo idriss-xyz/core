@@ -3,11 +3,17 @@ import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { URLSearchParams } from 'url';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
-import { AppDataSource, Creator, CreatorFollowedChannel } from '@idriss-xyz/db';
+import {
+  AppDataSource,
+  Creator,
+  CreatorFollowedChannel,
+  TwitchTokens,
+} from '@idriss-xyz/db';
 import {
   fetchUserFollowedChannels,
   FollowedChannel,
 } from '@idriss-xyz/utils/server';
+import { encryptionService } from '../services/encryption.service';
 
 const router = Router();
 
@@ -28,7 +34,7 @@ router.get('/twitch', (req, res) => {
     client_id: TWITCH_CLIENT_ID!,
     redirect_uri: API_CALLBACK_URI,
     response_type: 'code',
-    scope: 'user:read:email user:read:follows',
+    scope: 'user:read:email user:read:follows moderation:read',
     ...(state && { state }),
   })}`;
   res.redirect(authUrl);
@@ -54,7 +60,7 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       }),
     );
 
-    const { access_token } = tokenResponse.data;
+    const { access_token, refresh_token } = tokenResponse.data;
 
     const userResponse = await axios.get('https://api.twitch.tv/helix/users', {
       headers: {
@@ -68,42 +74,13 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       throw new Error('Failed to fetch user profile from Twitch.');
     }
 
-    let followed: FollowedChannel[];
-    try {
-      followed = await fetchUserFollowedChannels(
-        access_token,
-        twitchUser.id,
-        10,
-      );
-    } catch (err) {
-      console.error('fetchUserFollowedChannels failed:', err);
-      followed = [];
-    }
-    try {
-      const creatorRepo = AppDataSource.getRepository(Creator);
-      const followsRepo = AppDataSource.getRepository(CreatorFollowedChannel);
-      const creator = await creatorRepo.findOne({
-        where: { twitchId: twitchUser.id },
-      });
-
-      if (creator && followed.length) {
-        await followsRepo.delete({ creator: { id: creator.id } });
-        await followsRepo.insert(
-          followed.map((c) =>
-            followsRepo.create({
-              creator,
-              channelTwitchId: c.broadcasterId,
-              channelName: c.login,
-              channelDisplayName: c.name,
-              channelProfileImageUrl: c.profileImage,
-              game: c.game,
-            }),
-          ),
-        );
-      }
-    } catch (err) {
-      console.error('Storing followed channels failed:', err);
-    }
+    // store twitch oauth token
+    const twitchTokensRepo = AppDataSource.getRepository(TwitchTokens);
+    await twitchTokensRepo.save({
+      twitchId: twitchUser.id,
+      accessToken: encryptionService.encrypt(access_token),
+      refreshToken: encryptionService.encrypt(refresh_token),
+    });
 
     const payload = {
       sub: twitchUser.id, // Twitch's unique user ID

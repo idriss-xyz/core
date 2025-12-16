@@ -138,7 +138,11 @@
         "AWS_LAMBDA_FAUCET_NAME",
         "AWS_LAMBDA_REWARDS_NAME",
         "FAUCET_ADDRESS",
-        "OPENSEA_API_KEY"
+        "OPENSEA_API_KEY",
+        "TWITCH_BOT_CLIENT_ID",
+        "TWITCH_BOT_CLIENT_SECRET",
+        "TWITCH_BOT_USER_ID",
+        "ENCRYPTION_KEY"
       ]
     },
     "@idriss-xyz/creator-api#prod": {
@@ -165,7 +169,11 @@
         "AWS_LAMBDA_FAUCET_NAME",
         "AWS_LAMBDA_REWARDS_NAME",
         "FAUCET_ADDRESS",
-        "OPENSEA_API_KEY"
+        "OPENSEA_API_KEY",
+        "TWITCH_BOT_CLIENT_ID",
+        "TWITCH_BOT_CLIENT_SECRET",
+        "TWITCH_BOT_USER_ID",
+        "ENCRYPTION_KEY"
       ]
     },
     "@idriss-xyz/creator-api#test": {
