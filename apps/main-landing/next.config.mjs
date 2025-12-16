@@ -1,14 +1,10 @@
 import path from 'node:path';
 import * as url from 'node:url';
 
-import { BRAND_GUIDELINE_LINK } from '@idriss-xyz/constants';
-import withBundleAnalyzer from '@next/bundle-analyzer';
-import { config } from 'dotenv-safe';
-import type { NextConfig } from 'next';
-
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
+const BRAND_GUIDELINE_LINK = 'https://docs.idriss.xyz/resources/brand';
 
-const loadEnvironmentConfig = () => {
+const loadEnvironmentConfig = async () => {
   // Skip dotenv-safe in CI environment
   if (process.env.CI) {
     return;
@@ -21,6 +17,7 @@ const loadEnvironmentConfig = () => {
   };
 
   try {
+    const { config } = await import('dotenv-safe');
     config({
       path: path.resolve(__dirname, environmentFile[environment]),
       allowEmptyValues: true,
@@ -31,9 +28,18 @@ const loadEnvironmentConfig = () => {
   }
 };
 
-loadEnvironmentConfig();
+// Load env config asynchronously but don't await at module level
+void loadEnvironmentConfig();
 
-const nextConfig: NextConfig = {
+const nextConfig = {
+  turbopack: {
+    rules: {
+      '*.mp3': {
+        loaders: ['file-loader'],
+        as: '*.js',
+      },
+    },
+  },
   generateBuildId: () => {
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     return process.env.RAILWAY_GIT_COMMIT_SHA ?? `build-${Date.now()}`;
@@ -234,4 +240,4 @@ const nextConfig: NextConfig = {
 };
 
 // eslint-disable-next-line import/no-default-export
-export default withBundleAnalyzer({ enabled: false })(nextConfig);
+export default nextConfig;
