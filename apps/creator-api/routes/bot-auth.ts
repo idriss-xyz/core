@@ -89,12 +89,18 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
     const environmentRepository = AppDataSource.getRepository(Environment);
 
     await environmentRepository.upsert(
-      { key: 'bot_access_token', value: encryptionService.encrypt(access_token) },
+      {
+        key: 'bot_access_token',
+        value: encryptionService.encrypt(access_token),
+      },
       ['key'],
     );
 
     await environmentRepository.upsert(
-      { key: 'bot_refresh_token', value: encryptionService.encrypt(refresh_token) },
+      {
+        key: 'bot_refresh_token',
+        value: encryptionService.encrypt(refresh_token),
+      },
       ['key'],
     );
 

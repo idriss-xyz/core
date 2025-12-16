@@ -60,7 +60,9 @@ class TwitchBotService {
       throw new Error('Bot refresh token not found in database');
     }
 
-    const decryptedRefreshToken = encryptionService.decrypt(refreshTokenRecord.value);
+    const decryptedRefreshToken = encryptionService.decrypt(
+      refreshTokenRecord.value,
+    );
 
     const response = await fetch('https://id.twitch.tv/oauth2/token', {
       method: 'POST',
@@ -77,12 +79,18 @@ class TwitchBotService {
 
     // Update encrypted tokens in database
     await environmentRepository.upsert(
-      { key: 'bot_access_token', value: encryptionService.encrypt(access_token) },
+      {
+        key: 'bot_access_token',
+        value: encryptionService.encrypt(access_token),
+      },
       ['key'],
     );
 
     await environmentRepository.upsert(
-      { key: 'bot_refresh_token', value: encryptionService.encrypt(refresh_token) },
+      {
+        key: 'bot_refresh_token',
+        value: encryptionService.encrypt(refresh_token),
+      },
       ['key'],
     );
 
