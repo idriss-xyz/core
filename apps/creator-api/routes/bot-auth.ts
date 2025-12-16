@@ -3,6 +3,7 @@ import axios from 'axios';
 import { URLSearchParams } from 'url';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
 import { AppDataSource, Environment } from '@idriss-xyz/db';
+import { encryptionService } from '../services/encryption.service';
 
 const router = Router();
 
@@ -84,16 +85,16 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       }
     }
 
-    // Store tokens in database
+    // Store encrypted tokens in database
     const environmentRepository = AppDataSource.getRepository(Environment);
 
     await environmentRepository.upsert(
-      { key: 'bot_access_token', value: access_token },
+      { key: 'bot_access_token', value: encryptionService.encrypt(access_token) },
       ['key'],
     );
 
     await environmentRepository.upsert(
-      { key: 'bot_refresh_token', value: refresh_token },
+      { key: 'bot_refresh_token', value: encryptionService.encrypt(refresh_token) },
       ['key'],
     );
 

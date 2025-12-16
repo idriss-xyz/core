@@ -1,4 +1,5 @@
 import { AppDataSource, Environment } from '@idriss-xyz/db';
+import { encryptionService } from './encryption.service';
 
 class TwitchBotService {
   async sendMessage(creatorTwitchId: string, message: string) {
@@ -30,7 +31,7 @@ class TwitchBotService {
       throw new Error('Bot access token not found in database');
     }
 
-    let accessToken = tokenRecord.value;
+    let accessToken = encryptionService.decrypt(tokenRecord.value);
 
     // Validate token
     const validateResponse = await fetch(
@@ -59,6 +60,8 @@ class TwitchBotService {
       throw new Error('Bot refresh token not found in database');
     }
 
+    const decryptedRefreshToken = encryptionService.decrypt(refreshTokenRecord.value);
+
     const response = await fetch('https://id.twitch.tv/oauth2/token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -66,20 +69,20 @@ class TwitchBotService {
         client_id: process.env.TWITCH_BOT_CLIENT_ID!,
         client_secret: process.env.TWITCH_BOT_CLIENT_SECRET!,
         grant_type: 'refresh_token',
-        refresh_token: refreshTokenRecord.value,
+        refresh_token: decryptedRefreshToken,
       }),
     });
 
     const { access_token, refresh_token } = await response.json();
 
-    // Update tokens in database
+    // Update encrypted tokens in database
     await environmentRepository.upsert(
-      { key: 'bot_access_token', value: access_token },
+      { key: 'bot_access_token', value: encryptionService.encrypt(access_token) },
       ['key'],
     );
 
     await environmentRepository.upsert(
-      { key: 'bot_refresh_token', value: refresh_token },
+      { key: 'bot_refresh_token', value: encryptionService.encrypt(refresh_token) },
       ['key'],
     );
 

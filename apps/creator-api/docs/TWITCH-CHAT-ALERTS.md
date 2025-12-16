@@ -58,7 +58,7 @@ router.get(
 ## Important Setup
 
 **Authorize bot**:
-Some steps should be followed on every backend deploy to give our app permission to write on chat on bot account's behalf through code:
+Some steps should be followed once on feature deploy to give our app permission to write on chat on bot account's behalf through code:
 
 1. Be logged in with the bot account (current idriss_xyz account).
 2. Navigate to `CREATOR_API_URL/bot-auth/twitch`

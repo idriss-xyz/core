@@ -162,7 +162,7 @@ class CreatorProfileService {
       followed = await fetchUserFollowedChannels(
         authToken,
         creator.twitchId,
-        30,
+        10,
       );
     } catch (err) {
       console.error('fetchUserFollowedChannels failed:', err);
