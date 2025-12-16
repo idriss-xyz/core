@@ -158,8 +158,8 @@ importers:
         specifier: ^11.6.0
         version: 11.6.0
       next:
-        specifier: 15.0.6
-        version: 15.0.6(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.1)
+        specifier: ^15.0.6
+        version: 15.5.9(@babel/core@7.25.9)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.1)
       siwe:
         specifier: ^3.0.0
         version: 3.0.0(ethers@5.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10))
@@ -584,8 +584,8 @@ importers:
         specifier: ^4.5.0
         version: 4.9.12
       next:
-        specifier: 15.0.6
-        version: 15.0.6(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.1)
+        specifier: ^15.0.6
+        version: 15.5.9(@babel/core@7.25.9)(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.1)
       pg:
         specifier: ^8.13.1
         version: 8.13.1
@@ -3228,9 +3228,6 @@ packages:
 
   '@next/bundle-analyzer@15.0.1':
     resolution: {integrity: sha512-i/nCRBGBEkESPDpXJc+6SPLFDItnvTTJSaxiOvuNqHmQjQognRl3BANkKb3nWYy0V5rgzygxu++X349Z4dhs4Q==}
-
-  '@next/env@15.0.6':
-    resolution: {integrity: sha512-rZibc2hQig468lV1oT9wEb96z4rcYO6j9XbzCRMYr1xXFLOCB2aUBgO+qHTaJwlDgEcOcX6hmWaqUgXn+CXOXQ==}
 
   '@next/env@15.0.7':
     resolution: {integrity: sha512-g/v9G2Xmv9T6w/DcRdcdVkLuAHnGt5fcJ3C33PmPrrdtUrwrjXcT4jXasdedSbw+koXa4YeEA3nPgy6q2wmk2A==}
@@ -9177,28 +9174,6 @@ packages:
 
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
-
-  next@15.0.6:
-    resolution: {integrity: sha512-srsIn0zBpspm1wO5omzPQJ5E28kujrnjqwYHQR8XGZ7fijiBT9SPk3Aa+Ff/HPybgr8EZNyF7TVzH9/M9IvziQ==}
-    engines: {node: ^18.18.0 || ^19.8.0 || >= 20.0.0}
-    deprecated: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/security-update-2025-12-11 for more details.
-    hasBin: true
-    peerDependencies:
-      '@opentelemetry/api': ^1.1.0
-      '@playwright/test': ^1.41.2
-      babel-plugin-react-compiler: '*'
-      react: ^18.2.0 || 19.0.0-rc-66855b96-20241106 || ^19.0.0
-      react-dom: ^18.2.0 || 19.0.0-rc-66855b96-20241106 || ^19.0.0
-      sass: ^1.3.0
-    peerDependenciesMeta:
-      '@opentelemetry/api':
-        optional: true
-      '@playwright/test':
-        optional: true
-      babel-plugin-react-compiler:
-        optional: true
-      sass:
-        optional: true
 
   next@15.0.7:
     resolution: {integrity: sha512-Vl6fLEuOP1MgtEmDrY51BQr6Bl8oC8vDSHdA10xZWPPZa6e+dOwYNDLWHjvTktNLZkKYySpsW3Yzy4Lo+JORkw==}
@@ -15222,8 +15197,6 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@next/env@15.0.6': {}
-
   '@next/env@15.0.7': {}
 
   '@next/env@15.5.9': {}
@@ -20928,26 +20901,6 @@ snapshots:
       - eslint-import-resolver-webpack
       - supports-color
 
-  eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-plugin-import@2.31.0)(eslint@8.57.1):
-    dependencies:
-      '@nolyfill/is-core-module': 1.0.39
-      debug: 4.4.1
-      enhanced-resolve: 5.17.1
-      eslint: 8.57.1
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
-      fast-glob: 3.3.2
-      get-tsconfig: 4.8.1
-      is-bun-module: 1.2.1
-      is-glob: 4.0.3
-    optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
-    transitivePeerDependencies:
-      - '@typescript-eslint/parser'
-      - eslint-import-resolver-node
-      - eslint-import-resolver-webpack
-      - supports-color
-    optional: true
-
   eslint-module-utils@2.12.0(@typescript-eslint/parser@8.11.0(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1):
     dependencies:
       debug: 3.2.7
@@ -20966,7 +20919,7 @@ snapshots:
       '@typescript-eslint/parser': 8.19.1(eslint@8.57.1)(typescript@5.6.3)
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-plugin-import@2.31.0)(eslint@8.57.1)
+      eslint-import-resolver-typescript: 3.6.3(@typescript-eslint/parser@8.19.1(eslint@8.57.1)(typescript@5.6.3))(eslint-import-resolver-node@0.3.9)(eslint-plugin-import@2.31.0)(eslint@8.57.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -23053,33 +23006,6 @@ snapshots:
   negotiator@0.6.3: {}
 
   neo-async@2.6.2: {}
-
-  next@15.0.6(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.1):
-    dependencies:
-      '@next/env': 15.0.6
-      '@swc/counter': 0.1.3
-      '@swc/helpers': 0.5.13
-      busboy: 1.6.0
-      caniuse-lite: 1.0.30001669
-      postcss: 8.4.31
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      styled-jsx: 5.1.6(@babel/core@7.25.9)(react@18.3.1)
-    optionalDependencies:
-      '@next/swc-darwin-arm64': 15.0.5
-      '@next/swc-darwin-x64': 15.0.5
-      '@next/swc-linux-arm64-gnu': 15.0.5
-      '@next/swc-linux-arm64-musl': 15.0.5
-      '@next/swc-linux-x64-gnu': 15.0.5
-      '@next/swc-linux-x64-musl': 15.0.5
-      '@next/swc-win32-arm64-msvc': 15.0.5
-      '@next/swc-win32-x64-msvc': 15.0.5
-      '@opentelemetry/api': 1.9.0
-      sass: 1.85.1
-      sharp: 0.33.5
-    transitivePeerDependencies:
-      - '@babel/core'
-      - babel-plugin-macros
 
   next@15.0.7(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(sass@1.85.1):
     dependencies:
