@@ -32,6 +32,7 @@ const loadEnvironmentConfig = async () => {
 void loadEnvironmentConfig();
 
 const nextConfig = {
+  serverExternalPackages: ['pino', 'thread-stream', 'pino-pretty'],
   turbopack: {
     rules: {
       '*.mp3': {
