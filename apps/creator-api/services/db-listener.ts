@@ -57,7 +57,7 @@ export async function startDbListener(io: Server) {
 
         // Send first message on twitch chat
         await twitchBotService.sendMessage(
-          creator?.twitchId,
+          creator.twitchId,
           `<3 ${donation.fromUser.displayName ?? 'anon'} just donated ${formatFiatValue(donation.tradeValue)}`,
         );
 
@@ -65,29 +65,25 @@ export async function startDbListener(io: Server) {
         const authToken = await creatorAuthTokenService.getValidAuthToken(
           creator.twitchId,
         );
-        if (authToken) {
-          const isModerator = await getModerationStatus(
-            creator.name,
-            authToken,
-          );
+        console.log('authtoken: ', authToken);
+        const isModerator = await getModerationStatus(creator.name, authToken);
+        console.log('isModerator: ', isModerator);
 
-          if (isModerator === false) {
-            // Send moderation warning only once per creator
-            const creatorKey = creator.twitchId;
-            if (!moderationWarningSent.get(creatorKey)) {
-              await twitchBotService.sendMessage(
-                creator.twitchId,
-                'To enable full chat alerts, mod this bot with: /mod idriss_xyz',
-              );
-              moderationWarningSent.set(creatorKey, true);
-            }
-          } else if (isModerator === true) {
-            // Send support message when creator has moderated the bot
+        if (isModerator === false || isModerator == null) {
+          // Send moderation warning only once per creator
+          if (!moderationWarningSent.get(creator.twitchId)) {
             await twitchBotService.sendMessage(
               creator.twitchId,
-              `Support the stream → idriss.xyz/${donation.toUser.displayName}`,
+              'To enable full chat alerts, mod this bot with: /mod idriss_xyz',
             );
+            moderationWarningSent.set(creator.twitchId, true);
           }
+        } else if (isModerator === true) {
+          // Send support message when creator has moderated the bot
+          await twitchBotService.sendMessage(
+            creator.twitchId,
+            `Support the stream → idriss.xyz/${donation.toUser.displayName}`,
+          );
         }
       }
     } catch (error) {
