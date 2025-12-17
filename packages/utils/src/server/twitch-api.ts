@@ -300,8 +300,14 @@ export async function fetchUserFollowedChannels(
 // ts-unused-exports:disable-next-line
 export async function getModerationStatus(
   creatorTwitchId: string,
-  userAccessToken: string,
+  userAccessToken: string | null,
 ) {
+  if (!userAccessToken) {
+    console.warn(
+      `No access token to fetch moderation status for twitch account ${creatorTwitchId}`,
+    );
+    return null;
+  }
   try {
     const clientId = process.env.TWITCH_CLIENT_ID;
     if (!clientId) {
