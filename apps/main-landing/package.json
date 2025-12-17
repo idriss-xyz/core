@@ -2,7 +2,7 @@
   "name": "@idriss-xyz/main-landing",
   "private": true,
   "scripts": {
-    "dev": "pnpm run prepare-fonts && next dev",
+    "dev": "pnpm run prepare-fonts && next dev --webpack",
     "build": "pnpm run prepare-fonts && next build --webpack",
     "start": "next start",
     "prepare-fonts": "node ./prepare-fonts.cjs",
