@@ -32,15 +32,6 @@ const loadEnvironmentConfig = async () => {
 void loadEnvironmentConfig();
 
 const nextConfig = {
-  serverExternalPackages: ['pino', 'thread-stream', 'pino-pretty'],
-  turbopack: {
-    rules: {
-      '*.mp3': {
-        loaders: ['file-loader'],
-        as: '*.js',
-      },
-    },
-  },
   generateBuildId: () => {
     // eslint-disable-next-line turbo/no-undeclared-env-vars
     return process.env.RAILWAY_GIT_COMMIT_SHA ?? `build-${Date.now()}`;

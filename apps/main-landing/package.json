@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm run prepare-fonts && next dev",
-    "build": "pnpm run prepare-fonts && next build",
+    "build": "pnpm run prepare-fonts && next build --webpack",
     "start": "next start",
     "prepare-fonts": "node ./prepare-fonts.cjs",
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
