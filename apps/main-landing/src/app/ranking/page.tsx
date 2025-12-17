@@ -1,5 +1,4 @@
 'use client';
-/* eslint-disable @next/next/no-img-element */
 import '@rainbow-me/rainbowkit/styles.css';
 
 import { useRouter } from 'next/navigation';

@@ -2,8 +2,6 @@
 module.exports = {
   root: true,
   extends: [
-    'next/core-web-vitals',
-    'next/typescript',
     '@idriss-xyz/eslint-config/base',
   ],
   overrides: [
@@ -11,6 +9,8 @@ module.exports = {
       files: [
         '*.stories.tsx',
         'vite.config.ts',
+        'next.config.ts',
+        'next-env.d.ts',
         '**/*.cjs',
         '**/*.mjs',
         '**/.*.cjs',
@@ -21,8 +21,9 @@ module.exports = {
       ],
       rules: {
         'import/no-default-export': 'off',
-        '@next/next/no-img-element': 'off',
         'tailwindcss/no-custom-classname': 'off',
+        'unicorn/prevent-abbreviations': 'off',
+        '@typescript-eslint/triple-slash-reference': 'off',
       },
     },
   ],

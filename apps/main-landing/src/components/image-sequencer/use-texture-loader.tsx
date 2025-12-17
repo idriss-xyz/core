@@ -119,7 +119,6 @@ export const useTextureLoader = (
       }
     };
     // adding textures to the dep array will cause refetch on each render
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gl, images, onError, placeholderTexture]);
 
   return { textures, placeholderTexture, isLoading };

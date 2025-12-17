@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 import { MobileNotSupported } from '@idriss-xyz/ui/mobile-not-supported';
 import { Button } from '@idriss-xyz/ui/button';

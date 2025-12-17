@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 import { Icon, IconName } from '@idriss-xyz/ui/icon';
 import { ReactNode } from 'react';
