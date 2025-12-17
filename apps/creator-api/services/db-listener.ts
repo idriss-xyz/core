@@ -54,37 +54,29 @@ export async function startDbListener(io: Server) {
         const overlayWS = io.of('/overlay');
         const userId = creator.privyId.toLowerCase();
         overlayWS.to(userId).emit('newDonation', donation);
-
-        // Send first message on twitch chat
-        await twitchBotService.sendMessage(
-          creator.twitchId,
-          `<3 ${donation.fromUser.displayName ?? 'anon'} just donated ${formatFiatValue(donation.tradeValue)}`,
-        );
+        let renderedMessage = `<3 ${donation.fromUser.displayName ? `@${donation.fromUser.displayName}` : 'anon'} just donated ${formatFiatValue(donation.tradeValue)}.`;
 
         // Check moderation status and send appropriate follow-up message
         const authToken = await creatorAuthTokenService.getValidAuthToken(
           creator.twitchId,
         );
-        console.log('authtoken: ', authToken);
-        const isModerator = await getModerationStatus(creator.name, authToken);
-        console.log('isModerator: ', isModerator);
+        const isModerator = await getModerationStatus(
+          creator.twitchId,
+          authToken,
+        );
 
         if (isModerator === false || isModerator == null) {
           // Send moderation warning only once per creator
           if (!moderationWarningSent.get(creator.twitchId)) {
-            await twitchBotService.sendMessage(
-              creator.twitchId,
-              'To enable full chat alerts, mod this bot with: /mod idriss_xyz',
-            );
+            renderedMessage +=
+              ' To enable full chat alerts, mod this bot with: /mod idriss_xyz';
             moderationWarningSent.set(creator.twitchId, true);
           }
         } else if (isModerator === true) {
-          // Send support message when creator has moderated the bot
-          await twitchBotService.sendMessage(
-            creator.twitchId,
-            `Support the stream → idriss.xyz/${donation.toUser.displayName}`,
-          );
+          renderedMessage += ` Support the stream → idriss.xyz/${donation.toUser.displayName}`;
         }
+
+        await twitchBotService.sendMessage(creator.twitchId, renderedMessage);
       }
     } catch (error) {
       console.error('Error handling new_donation notification:', error);

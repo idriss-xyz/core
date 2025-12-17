@@ -3,20 +3,33 @@ import { encryptionService } from './encryption.service';
 
 class TwitchBotService {
   async sendMessage(creatorTwitchId: string, message: string) {
+    if (!process.env.TWITCH_BOT_CLIENT_ID) {
+      throw new Error(
+        `Error sending bot message. TWITCH_BOT_CLIENT_ID not set.`,
+      );
+    }
     const accessToken = await this.getValidAccessToken();
-    await fetch('https://api.twitch.tv/helix/chat/messages', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${accessToken}`,
-        'Client-Id': process.env.TWITCH_BOT_CLIENT_ID ?? '',
-        'Content-Type': 'application/json',
+    const messageResponse = await fetch(
+      'https://api.twitch.tv/helix/chat/messages',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Client-Id': process.env.TWITCH_BOT_CLIENT_ID,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          broadcaster_id: creatorTwitchId,
+          sender_id: process.env.TWITCH_BOT_USER_ID,
+          message: message,
+        }),
       },
-      body: JSON.stringify({
-        broadcaster_id: creatorTwitchId,
-        sender_id: process.env.TWITCH_BOT_USER_ID,
-        message: message,
-      }),
-    });
+    );
+    if (!messageResponse.ok) {
+      throw new Error(
+        `Error sending bot message. ${messageResponse.statusText}`,
+      );
+    }
   }
 
   private async getValidAccessToken(): Promise<string> {

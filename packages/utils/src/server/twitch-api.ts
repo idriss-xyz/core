@@ -332,7 +332,9 @@ export async function getModerationStatus(
     );
 
     if (!response.ok) {
-      throw new Error(`Twitch API error: ${response.status}`);
+      throw new Error(
+        `Twitch API moderation status error: ${response.statusText}`,
+      );
     }
     const moderators = (await response.json()) as { data: object[] };
     const isModerator = moderators.data.length > 0;
