@@ -5,6 +5,7 @@ import { ILike } from 'typeorm';
 import { createAddressToCreatorMap, formatFiatValue } from '@idriss-xyz/utils';
 import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
 import { twitchBotService } from './twitch-bot.service';
+import { toUnicodeItalic } from '../utils/font-utils';
 
 export async function startDbListener(io: Server) {
   const creatorRepository = AppDataSource.getRepository(Creator);
@@ -56,7 +57,9 @@ export async function startDbListener(io: Server) {
             ? `@${donation.fromUser.displayName}`
             : 'anon'
         } just donated ${formatFiatValue(donation.tradeValue)}${
-          donation.comment ? ` with a message: ${donation.comment}.` : '.'
+          donation.comment
+            ? ` with a message: ${toUnicodeItalic(donation.comment)}.`
+            : '.'
         } Support the stream → idriss.xyz/${donation.toUser.displayName} <3`;
 
         await twitchBotService.sendMessage(creator.twitchId, renderedMessage);
