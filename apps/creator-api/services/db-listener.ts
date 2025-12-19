@@ -5,11 +5,7 @@ import { ILike } from 'typeorm';
 import { createAddressToCreatorMap, formatFiatValue } from '@idriss-xyz/utils';
 import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
 import { twitchBotService } from './twitch-bot.service';
-import { creatorAuthTokenService } from './creator-auth-token.service';
-import { getModerationStatus } from '@idriss-xyz/utils/server';
-
-// Track which creators have already received the moderation warning
-const moderationWarningSent = new Map<string, boolean>();
+import { toUnicodeItalic } from '../utils/font-utils';
 
 export async function startDbListener(io: Server) {
   const creatorRepository = AppDataSource.getRepository(Creator);
@@ -53,28 +49,23 @@ export async function startDbListener(io: Server) {
       if (creator) {
         const overlayWS = io.of('/overlay');
         const userId = creator.privyId.toLowerCase();
+
         overlayWS.to(userId).emit('newDonation', donation);
-        let renderedMessage = `<3 ${donation.fromUser.displayName ? `@${donation.fromUser.displayName}` : 'anon'} just donated ${formatFiatValue(donation.tradeValue)}.`;
 
-        // Check moderation status and send appropriate follow-up message
-        const authToken = await creatorAuthTokenService.getValidAuthToken(
-          creator.twitchId,
-        );
-        const isModerator = await getModerationStatus(
-          creator.twitchId,
-          authToken,
-        );
+        const assetValue =
+          donation.kind === 'nft'
+            ? donation.collectionShortName
+            : formatFiatValue(donation.tradeValue);
 
-        if (isModerator === false || isModerator == null) {
-          // Send moderation warning only once per creator
-          if (!moderationWarningSent.get(creator.twitchId)) {
-            renderedMessage +=
-              ' To enable full chat alerts, mod this bot with: /mod idriss_xyz';
-            moderationWarningSent.set(creator.twitchId, true);
-          }
-        } else if (isModerator === true) {
-          renderedMessage += ` Support the stream → idriss.xyz/${donation.toUser.displayName}`;
-        }
+        const renderedMessage = `${
+          donation.fromUser.displayName
+            ? `@${donation.fromUser.displayName}`
+            : 'anon'
+        } just donated ${assetValue}${
+          donation.comment
+            ? ` with a message: ${toUnicodeItalic(donation.comment)}.`
+            : '.'
+        } Support the stream → idriss.xyz/${donation.toUser.displayName} <3`;
 
         await twitchBotService.sendMessage(creator.twitchId, renderedMessage);
       }
