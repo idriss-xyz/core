@@ -52,11 +52,16 @@ export async function startDbListener(io: Server) {
 
         overlayWS.to(userId).emit('newDonation', donation);
 
+        const assetValue =
+          donation.kind === 'nft'
+            ? donation.collectionShortName
+            : formatFiatValue(donation.tradeValue);
+
         const renderedMessage = `${
           donation.fromUser.displayName
             ? `@${donation.fromUser.displayName}`
             : 'anon'
-        } just donated ${formatFiatValue(donation.tradeValue)}${
+        } just donated ${assetValue}${
           donation.comment
             ? ` with a message: ${toUnicodeItalic(donation.comment)}.`
             : '.'
