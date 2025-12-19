@@ -54,7 +54,7 @@ export async function startDbListener(io: Server) {
 
         const assetValue =
           donation.kind === 'nft'
-            ? donation.collectionShortName
+            ? donation.name
             : formatFiatValue(donation.tradeValue);
 
         const renderedMessage = `${
