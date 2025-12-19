@@ -31,6 +31,8 @@ import SkeletonSetup from '../loading';
 import { Select } from '../select';
 import { File } from '../file-upload/file';
 
+import { ModAlert } from './mod-alert';
+
 const UpgradeBox: React.FC = () => {
   return (
     <div className="relative flex flex-row items-center gap-4 rounded-lg bg-white/80 p-4">
@@ -500,17 +502,6 @@ export default function StreamAlerts() {
                         className="p-0.5 text-neutral-600"
                       />
                     </div>
-                    {!isModerator && (
-                      /* Replace hidden for flex to show */
-                      <div className="hidden items-center gap-2 rounded-md bg-mint-500/10 p-4 text-label7">
-                        <Icon name="InfoCircle" size={20} />
-                        <div>
-                          Type{' '}
-                          <span className="font-bold">/mod idriss_xyz</span> in
-                          your Twitch chat to enable additional chat alerts
-                        </div>
-                      </div>
-                    )}
                   </div>
                   <div className="flex flex-col gap-2">
                     {isAcceptingToken && isAcceptingCollectibles ? (
@@ -682,6 +673,7 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
+                {!isModerator && <ModAlert />}
               </>
             )}
           </FormFieldWrapper>
