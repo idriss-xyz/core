@@ -673,10 +673,11 @@ export default function StreamAlerts() {
                     );
                   }}
                 />
-                {!isModerator && <ModAlert />}
               </>
             )}
           </FormFieldWrapper>
+
+          {!isModerator && <ModAlert />}
 
           {/* TTS form fields */}
           <FormFieldWrapper>
