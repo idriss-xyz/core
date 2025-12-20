@@ -6,6 +6,8 @@ import { createAddressToCreatorMap, formatFiatValue } from '@idriss-xyz/utils';
 import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
 import { twitchBotService } from './twitch-bot.service';
 import { toUnicodeItalic } from '../utils/font-utils';
+import { getModerationStatus } from '@idriss-xyz/utils/server';
+import { creatorAuthTokenService } from './creator-auth-token.service';
 
 export async function startDbListener(io: Server) {
   const creatorRepository = AppDataSource.getRepository(Creator);
@@ -57,6 +59,12 @@ export async function startDbListener(io: Server) {
             ? donation.name
             : formatFiatValue(donation.tradeValue);
 
+        // Check moderation status and send appropriate follow-up message
+        const authToken = await creatorAuthTokenService.getValidAuthToken(
+          creator.twitchId,
+        );
+        const isModerator = await getModerationStatus(creator.name, authToken);
+
         const renderedMessage = `${
           donation.fromUser.displayName
             ? `@${donation.fromUser.displayName}`
@@ -65,7 +73,7 @@ export async function startDbListener(io: Server) {
           donation.comment
             ? ` with a message: ${toUnicodeItalic(donation.comment)}.`
             : '.'
-        } Support the stream → idriss.xyz/${donation.toUser.displayName} <3`;
+        } ${isModerator ? `Support the stream → idriss.xyz/${donation.toUser.displayName} <3` : ''}`;
 
         await twitchBotService.sendMessage(creator.twitchId, renderedMessage);
       }
