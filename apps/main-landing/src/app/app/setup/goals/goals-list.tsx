@@ -120,15 +120,21 @@ export function GoalsList({
                 <CardHeader className="flex w-5/6 items-center gap-[6px] text-label2">
                   <Icon name="Goal" size={20} className="w-[20px]" />
                   <span className="w-fit text-label2">{goal.name}</span>
-                  {isExpired && (
-                    <Badge
-                      type="info"
-                      variant="subtle"
-                      className="w-fit capitalize"
-                    >
-                      Expired
-                    </Badge>
-                  )}
+                  <Badge
+                    type={isExpired ? 'info' : 'success'}
+                    variant="subtle"
+                    className="w-fit lowercase"
+                  >
+                    {progressPercentage >= 100 ? (
+                      <p className="capitalize">Completed</p>
+                    ) : isExpired ? (
+                      <p className="capitalize">Expired</p>
+                    ) : (
+                      <p className="lowercase">
+                        {getTimeRemaining(goal.endDate)}
+                      </p>
+                    )}
+                  </Badge>
                 </CardHeader>
                 <span className="w-1/6 text-right text-label3 text-black">
                   {formatFiatValue(Number(cappedProgress))}
