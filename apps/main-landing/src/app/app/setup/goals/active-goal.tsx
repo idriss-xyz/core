@@ -44,11 +44,11 @@ export default function ActiveGoal() {
       <Card className="flex flex-col gap-4 border p-4 text-label4 shadow-none">
         {/* Header section*/}
         <div className="flex items-center justify-between">
-          <CardHeader className="flex items-center gap-[6px] text-label2">
-            <Icon name="Goal" size={20} />
-            <span className="text-label2">{goal.name}</span>
+          <CardHeader className="flex w-5/6 items-center gap-[6px] text-label2">
+            <Icon name="Goal" size={20} className="w-[20px]" />
+            <span className="w-fit text-label2">{goal.name}</span>
           </CardHeader>
-          <div className="flex gap-2">
+          <div className="flex w-1/6 justify-end gap-2">
             <span className="text-neutral-600">End date</span>
             <span className="text-neutral-900">
               {new Date(Number(goal.endDate)).toLocaleDateString('en-GB')}
