@@ -31,7 +31,7 @@ export default function InvitesPage() {
         />
         <GeneralStatCard
           header="Invite rank"
-          stat={`#${inviteRank === 0 ? '-' : inviteRank}`}
+          stat={`${inviteRank === 0 ? '-' : `#${inviteRank}`}`}
         />
         <GeneralStatCard
           header="Network earnings"
