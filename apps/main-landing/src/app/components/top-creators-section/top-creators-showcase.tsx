@@ -41,6 +41,24 @@ const creators = [
     },
   },
   {
+    name: 'Jambre',
+    followers: '25.6K',
+    image: JambreCard.src,
+    platform: {
+      icon: (
+        <IconButton
+          asLink
+          isExternal
+          href="https://www.twitch.tv/jambre"
+          iconName="TwitchOutlinedBold"
+          size="extra"
+          intent="tertiary"
+          className="size-6 text-mint-200 md:size-8"
+        />
+      ),
+    },
+  },
+  {
     name: 'ExcelSorPH',
     followers: '2.8K',
     image: ExcelsorphCard.src,
@@ -248,24 +266,6 @@ const creators = [
           asLink
           isExternal
           href="https://www.twitch.tv/fenohs"
-          iconName="TwitchOutlinedBold"
-          size="extra"
-          intent="tertiary"
-          className="size-6 text-mint-200 md:size-8"
-        />
-      ),
-    },
-  },
-  {
-    name: 'Jambre',
-    followers: '25.6K',
-    image: JambreCard.src,
-    platform: {
-      icon: (
-        <IconButton
-          asLink
-          isExternal
-          href="https://www.twitch.tv/jambre"
           iconName="TwitchOutlinedBold"
           size="extra"
           intent="tertiary"
