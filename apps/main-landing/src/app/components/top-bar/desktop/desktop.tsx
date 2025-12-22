@@ -149,10 +149,6 @@ export const Desktop = ({
     return null;
   };
 
-  console.log('redrender desktop:');
-  console.log('!creator', !creator);
-  console.log('creator.isDonor', creator?.isDonor);
-
   // Mobile landing content
   const MobileLandingContent = () => {
     if (isLanding) {
