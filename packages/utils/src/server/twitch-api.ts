@@ -124,9 +124,6 @@ export async function fetchTwitchUserInfo(
         data?: { game_id?: string; game_name?: string }[];
       };
 
-      console.log('Game');
-      console.log(channelJson);
-
       const channel = channelJson.data?.[0];
 
       if (channel?.game_id) {
