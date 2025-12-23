@@ -26,9 +26,9 @@ pnpm extension:prod
 Results will appear in buildResults directory: ./buildResults/firefox and ./buildResults/chromium
 
 
-### Build (Landing page / IDRISS Creators / Vault)
+### Build (Landing page / IDRISS App / Vault)
 
-To compile and run the landing page and IDRISS Creators locally, run these commands in separate terminals:
+To compile and run the landing page and IDRISS App locally, run these commands in separate terminals:
 
 ```bash
 pnpm main-landing:dev

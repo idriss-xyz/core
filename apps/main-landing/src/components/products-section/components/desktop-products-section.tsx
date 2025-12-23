@@ -283,7 +283,7 @@ export const DesktopProductsSection = ({
         <div className="w-[0.5px]">
           <div
             ref={firstSectionAnchorReference}
-            id="creators"
+            id="streamers"
             className="my-10 h-screen"
           />
         </div>

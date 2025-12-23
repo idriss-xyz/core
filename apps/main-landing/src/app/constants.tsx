@@ -79,7 +79,7 @@ export const siteMap: SiteMapItem[] = [
     name: 'Ranking',
     path: 'ranking',
     children: [
-      { name: 'Top creators', path: 'top-creators' },
+      { name: 'Top streamers', path: 'top-sreamers' },
       { name: 'Top fans', path: 'top-fans' },
     ],
   },

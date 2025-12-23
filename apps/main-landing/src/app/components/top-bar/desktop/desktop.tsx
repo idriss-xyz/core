@@ -93,7 +93,7 @@ export const Desktop = ({
                                   asLink
                                   className="uppercase"
                                 >
-                                  Top creators
+                                  Top streamers
                                 </Button>
                               </Link>
                             </span>
