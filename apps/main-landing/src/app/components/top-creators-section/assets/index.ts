@@ -11,3 +11,4 @@ export { default as AlliestraszaCard } from './alliestrasza-card.jpg';
 export { default as PandappleCard } from './pandapple-card.jpg';
 export { default as HamHocks42Card } from './HamHocks42.webp';
 export { default as SequinoxTVCard } from './SequinoxTV.webp';
+export { default as JambreCard } from './jambre-card.png';

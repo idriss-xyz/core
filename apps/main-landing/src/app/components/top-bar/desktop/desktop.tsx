@@ -214,7 +214,7 @@ export const Desktop = ({
       ) : (
         <div className="flex items-center gap-x-2">
           <MobileMenu />
-          {(!creator || creator.isDonor) && (
+          {creator?.isDonor && (
             <Button
               asLink
               isExternal

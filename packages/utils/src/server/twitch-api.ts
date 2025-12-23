@@ -129,7 +129,7 @@ export async function fetchTwitchUserInfo(
       if (channel?.game_id) {
         game = {
           name: channel.game_name ?? '',
-          url: `https://static-cdn.jtvnw.net/ttv-boxart/${channel.game_id}-285x380.jpg`,
+          url: `https://static-cdn.jtvnw.net/ttv-boxart/${channel.game_id}-144x192.jpg`,
         };
       }
     }
@@ -272,7 +272,7 @@ export async function fetchUserFollowedChannels(
         if (c?.game_id) {
           game = {
             name: c.game_name ?? '',
-            url: `https://static-cdn.jtvnw.net/ttv-boxart/${c.game_id}-285x380.jpg`,
+            url: `https://static-cdn.jtvnw.net/ttv-boxart/${c.game_id}-144x192.jpg`,
           };
         }
       }
