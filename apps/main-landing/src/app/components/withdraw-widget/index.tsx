@@ -608,6 +608,7 @@ export const WithdrawWidget = ({
                           {...field}
                           className="mb-3 px-6"
                           label="Send to"
+                          labelHelper="Send only to a wallet or exchange that supports this asset and network, or funds may be lost."
                           placeholder="External wallet address"
                           error={!!error}
                           helperText={error?.message}
