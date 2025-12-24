@@ -27,7 +27,7 @@ const theme: HubTheme = {
 export default function RoninHub() {
   return (
     <HubPage
-      title="Ronin Creators"
+      title="Streamer hub"
       bannerImage={RONIN_BANNER.src}
       groups={data as HubStreamer[]}
       theme={theme}

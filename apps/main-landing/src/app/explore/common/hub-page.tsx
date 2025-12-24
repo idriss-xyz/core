@@ -114,7 +114,6 @@ export default function HubPage({
                   alt=""
                   className="absolute inset-0 size-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/20" />
                 <div className="absolute left-1/2 top-1/2 flex h-[86px] w-[512px] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-4.5 px-4">
                   <h4 className="text-heading4 uppercase text-white">
                     {title}
