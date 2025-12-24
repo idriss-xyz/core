@@ -18,6 +18,7 @@ export interface HubTheme {
   filterActiveBorder: string;
   filterActiveBg: string;
   cardTheme: CardTheme;
+  titleClass?: string;
 }
 
 interface Properties {
@@ -25,6 +26,8 @@ interface Properties {
   bannerImage: string;
   groups: HubStreamer[];
   theme: HubTheme;
+  align?: 'center' | 'left';
+  partnerLogo?: string;
 }
 
 const split = (v?: string) => {
@@ -43,6 +46,8 @@ export default function HubPage({
   bannerImage,
   groups,
   theme,
+  align = 'center',
+  partnerLogo,
 }: Properties) {
   const [active, setActive] = useState('All');
   const [query, setQuery] = useState('');
@@ -114,26 +119,98 @@ export default function HubPage({
                   alt=""
                   className="absolute inset-0 size-full object-cover"
                 />
-                <div className="absolute left-1/2 top-1/2 flex h-[86px] w-[512px] -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-4.5 px-4">
-                  <h4 className="text-heading4 uppercase text-white">
-                    {title}
-                  </h4>
-                  <Input
-                    className="w-full"
-                    placeholder="Search streamers or games"
-                    value={query}
-                    onChange={(inputEvent) => {
-                      setQuery(inputEvent.target.value);
-                      setActive('All');
-                    }}
-                    prefixElement={
-                      <Icon
-                        name="Search"
-                        size={16}
-                        className="text-[#757575]"
+                <div
+                  className={classes(
+                    'absolute flex flex-col gap-4.5 px-4',
+                    align === 'center'
+                      ? 'left-1/2 top-1/2 h-[86px] w-[512px] -translate-x-1/2 -translate-y-1/2 items-center'
+                      : 'left-12 top-1/2 -translate-y-1/2 items-start',
+                  )}
+                >
+                  {align === 'center' ? (
+                    // Center alignment layout
+                    <>
+                      {partnerLogo ? (
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={partnerLogo}
+                            alt="Partner logo"
+                            className="h-8"
+                          />
+                          <h4
+                            className={classes(
+                              'text-heading4 uppercase text-white',
+                              theme.titleClass,
+                            )}
+                          >
+                            {title}
+                          </h4>
+                        </div>
+                      ) : (
+                        <h4
+                          className={classes(
+                            'text-heading4 uppercase text-white',
+                            theme.titleClass,
+                          )}
+                        >
+                          {title}
+                        </h4>
+                      )}
+                      <Input
+                        className="w-full"
+                        placeholder="Search streamers or games"
+                        value={query}
+                        onChange={(inputEvent) => {
+                          setQuery(inputEvent.target.value);
+                          setActive('All');
+                        }}
+                        prefixElement={
+                          <Icon
+                            name="Search"
+                            size={16}
+                            className="text-[#757575]"
+                          />
+                        }
                       />
-                    }
-                  />
+                    </>
+                  ) : (
+                    // Left alignment layout
+                    <>
+                      <div className="flex items-center gap-4">
+                        {partnerLogo && (
+                          <img
+                            src={partnerLogo}
+                            alt="Partner logo"
+                            className="h-8"
+                          />
+                        )}
+                        <h4
+                          className={classes(
+                            'text-heading4 uppercase text-white',
+                            theme.titleClass,
+                          )}
+                        >
+                          {title}
+                        </h4>
+                      </div>
+                      <Input
+                        className="w-[512px]"
+                        placeholder="Search streamers or games"
+                        value={query}
+                        onChange={(inputEvent) => {
+                          setQuery(inputEvent.target.value);
+                          setActive('All');
+                        }}
+                        prefixElement={
+                          <Icon
+                            name="Search"
+                            size={16}
+                            className="text-[#757575]"
+                          />
+                        }
+                      />
+                    </>
+                  )}
                 </div>
               </div>
             </Card>

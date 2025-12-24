@@ -425,6 +425,12 @@ export default {
           'top': '0',
           'left': '0',
         },
+        '.gradient-text-blue': {
+          'background-image':
+            'linear-gradient(94deg, #FFF 47.38%, #004DE5 118.14%)',
+          'background-clip': 'text',
+          'color': 'transparent',
+        },
         '.side-blur': {
           'mask-image':
             'linear-gradient(to right, transparent, black 60px, black calc(100% - 60px), transparent)',

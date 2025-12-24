@@ -2,6 +2,7 @@ import HubPage, { HubTheme } from '../common/hub-page';
 import type { HubStreamer } from '../types';
 
 import RONIN_BANNER from './banner.png';
+import RONIN_LOGO from './logo.png';
 import data from './data.json';
 
 const theme: HubTheme = {
@@ -11,6 +12,7 @@ const theme: HubTheme = {
   filterText: 'text-neutralGreen-900',
   filterActiveBorder: 'border-neutralGreen-900',
   filterActiveBg: 'bg-blue-400',
+  titleClass: 'gradient-text-blue',
   cardTheme: {
     backgroundClass: 'bg-white',
     followersTextClass: 'text-neutralGreen-900',
@@ -28,6 +30,8 @@ export default function RoninHub() {
   return (
     <HubPage
       title="Streamer hub"
+      align="left"
+      partnerLogo={RONIN_LOGO.src}
       bannerImage={RONIN_BANNER.src}
       groups={data as HubStreamer[]}
       theme={theme}
