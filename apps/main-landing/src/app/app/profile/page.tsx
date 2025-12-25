@@ -151,7 +151,7 @@ export default function ProfilePage() {
               {profileImageUrl ? (
                 <Image
                   src={profileImageUrl}
-                  alt={creator?.name ?? 'Creator profile picture'}
+                  alt={creator?.name ?? 'Streamer profile picture'}
                   width={profileImageSize}
                   height={profileImageSize}
                   className="rounded-full border-2 border-white bg-gray-200"
