@@ -1,10 +1,22 @@
 'use client';
 
+import { Badge } from '@idriss-xyz/ui/badge';
 import { Button } from '@idriss-xyz/ui/button';
 import { Icon, IconName } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 
 import type { HubStreamerUser } from '../types';
+
+const split = (v?: string) => {
+  return v
+    ? v
+        .split(',')
+        .map((t) => {
+          return t.trim();
+        })
+        .filter(Boolean)
+    : [];
+};
 
 export interface CardTheme {
   borderClass?: string;
@@ -76,12 +88,26 @@ export default function HubItemCard({ streamer, theme }: Properties) {
         'px-2 pb-4 pt-2 shadow-sm',
       )}
     >
-      <div className="flex aspect-square w-full items-center justify-center overflow-hidden rounded-[16px] bg-[#D9D9D9]">
+      <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[16px] bg-[#D9D9D9]">
         <img
           src={streamer.profilePictureUrl}
           alt={streamer.name}
           className="size-full object-cover"
         />
+
+        {/* Badges positioned on top of image */}
+        <div className="absolute left-2 top-2 flex flex-wrap gap-2">
+          {split(streamer.filters)[0] && (
+            <Badge type="info" variant="subtle" className="w-fit uppercase">
+              {split(streamer.filters)[0]}
+            </Badge>
+          )}
+          {split(streamer.languages)[0] && (
+            <Badge type="neutral" variant="subtle" className="w-fit uppercase">
+              {split(streamer.languages)[0]}
+            </Badge>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col gap-4">
