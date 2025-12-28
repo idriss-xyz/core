@@ -753,6 +753,7 @@ router.get('/list/all', async (req: Request, res: Response) => {
       donationUrl: creator.donationUrl,
       twitchUrl: `https://twitch.tv/${creator.displayName}`,
       donor: creator.isDonor,
+      mail: creator.receiveEmails ? creator.email : '',
     }));
 
     res.json(creatorList);
