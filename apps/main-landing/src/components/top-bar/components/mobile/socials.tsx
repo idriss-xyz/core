@@ -15,11 +15,6 @@ const SOCIALS: { label: string; iconName: IconName; link: string }[] = [
     link: SOCIAL_LINK.X,
   },
   {
-    label: 'Go to Farcaster',
-    iconName: 'Farcaster',
-    link: SOCIAL_LINK.WARPCAST,
-  },
-  {
     label: 'Go to Discord',
     iconName: 'Discord',
     link: SOCIAL_LINK.DISCORD,
