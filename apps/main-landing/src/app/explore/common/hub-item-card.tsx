@@ -34,9 +34,14 @@ export interface CardTheme {
 interface Properties {
   streamer: HubStreamerUser;
   theme: CardTheme;
+  isLive?: boolean;
 }
 
-export default function HubItemCard({ streamer, theme }: Properties) {
+export default function HubItemCard({
+  streamer,
+  theme,
+  isLive = false,
+}: Properties) {
   const hasFollowers = !!streamer.stats?.followers;
   const showBorder = streamer.featured;
 
@@ -97,6 +102,11 @@ export default function HubItemCard({ streamer, theme }: Properties) {
 
         {/* Badges positioned on top of image */}
         <div className="absolute left-2 top-2 flex flex-wrap gap-2">
+          {isLive && (
+            <Badge type="danger" variant="solid" className="w-fit uppercase">
+              LIVE
+            </Badge>
+          )}
           {split(streamer.filters)[0] && (
             <Badge type="info" variant="subtle" className="w-fit uppercase">
               {split(streamer.filters)[0]}

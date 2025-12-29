@@ -8,6 +8,7 @@ import { classes } from '@idriss-xyz/ui/utils';
 
 import { TopBar } from '../../components/top-bar';
 import type { HubStreamer, HubStreamerUser } from '../types';
+import { useGetBatchTwitchStreamStatus } from '../../app/commands/get-batch-twitch-stream-status';
 
 import HubItemCard, { CardTheme } from './hub-item-card';
 
@@ -51,6 +52,23 @@ export default function HubPage({
 }: Properties) {
   const [active, setActive] = useState('All');
   const [query, setQuery] = useState('');
+
+  // Get all streamer names for batch fetching
+  const allStreamerNames = useMemo(() => {
+    return groups.flatMap((g) => {
+      return g.users.map((u) => {
+        return u.name;
+      });
+    });
+  }, [groups]);
+
+  // Fetch live statuses
+  const { data: streamStatusData } = useGetBatchTwitchStreamStatus(
+    { names: allStreamerNames },
+    { enabled: allStreamerNames.length > 0 },
+  );
+
+  const liveStatuses = streamStatusData?.liveStatuses ?? {};
 
   /* filter + search ------------------------------------------------------ */
   const filters = useMemo(() => {
@@ -232,6 +250,7 @@ export default function HubPage({
                               key={u.id}
                               streamer={u}
                               theme={theme.cardTheme}
+                              isLive={liveStatuses[u.name] ?? false}
                             />
                           );
                         })}
