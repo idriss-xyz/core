@@ -49,7 +49,7 @@ export default function TopCreators() {
           data: address ?? null,
           isFetching: false,
         }}
-        title="Top Streamers"
+        title="Top Creators"
         variant="creatorsDashboard"
         className="overflow-hidden px-0 shadow-lg"
         activeFilter={activeFilter}
