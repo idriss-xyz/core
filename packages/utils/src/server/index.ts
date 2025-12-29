@@ -2,6 +2,7 @@
 export {
   fetchTwitchUserInfo,
   fetchTwitchStreamStatus,
+  batchFetchTwitchStreamStatus,
   fetchTwitchUserFollowersCount,
   fetchUserFollowedChannels,
   getTwitchInfoForCreatorCreation,

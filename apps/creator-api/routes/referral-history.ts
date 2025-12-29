@@ -8,6 +8,7 @@ import {
   fetchTwitchStreamStatus,
   fetchTwitchUserFollowersCount,
   fetchTwitchUserInfo,
+  batchFetchTwitchStreamStatus,
   InvitedStreamersData,
   DEFAULT_FOLLOWED_CHANNELS,
 } from '@idriss-xyz/utils/server';
@@ -71,20 +72,23 @@ router.get(
         followersByCreatorId.set(r.referred.id, r.numberOfFollowers ?? 0),
       );
 
+      // Batch fetch stream statuses for all successful invites
+      const successfulInviteNames = streamers.map((s) => s.displayName);
+      const streamStatusMap = await batchFetchTwitchStreamStatus(
+        successfulInviteNames,
+      );
+
       const successfulInvitesUsers: InvitedStreamersData[] = await Promise.all(
         streamers.map(
           async ({ id, displayName, profilePictureUrl, joinedAt }) => {
-            const [streamInfo, userInfo] = await Promise.all([
-              fetchTwitchStreamStatus(displayName),
-              fetchTwitchUserInfo(displayName),
-            ]);
+            const userInfo = await fetchTwitchUserInfo(displayName);
 
             return {
               displayName,
               profilePictureUrl: profilePictureUrl ?? '',
               numberOfFollowers: followersByCreatorId.get(id) ?? 0,
               joinDate: joinedAt,
-              streamStatus: streamInfo.isLive,
+              streamStatus: streamStatusMap[displayName]?.isLive ?? false,
               game: userInfo?.game ?? null,
             };
           },
@@ -161,17 +165,20 @@ router.get(
                 game: r.game,
               }));
 
+      // Batch fetch stream statuses for all suggested invitees
+      const suggestedNames = baseList.map((c) => c.displayName);
+      const suggestedStreamStatusMap =
+        await batchFetchTwitchStreamStatus(suggestedNames);
+
       const suggestedInvitees = await Promise.all(
         baseList.map(async (c) => {
-          const [stream, followers] = await Promise.all([
-            fetchTwitchStreamStatus(c.displayName),
-            fetchTwitchUserFollowersCount(c.displayName),
-          ]);
+          const followers = await fetchTwitchUserFollowersCount(c.displayName);
 
           return {
             ...c,
             numberOfFollowers: followers?.total ?? c.numberOfFollowers,
-            streamStatus: stream.isLive,
+            streamStatus:
+              suggestedStreamStatusMap[c.displayName]?.isLive ?? false,
           };
         }),
       );

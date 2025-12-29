@@ -172,6 +172,56 @@ export async function fetchTwitchStreamStatus(
   }
 }
 
+// ts-unused-exports:disable-next-line
+export async function batchFetchTwitchStreamStatus(
+  names: string[],
+): Promise<Record<string, TwitchStreamInfo>> {
+  if (names.length === 0) return {};
+
+  try {
+    const headers = await getHeaders();
+    const url = new URL(`${TWITCH_BASE_URL}/streams`);
+
+    // Add each name as a user_login parameter
+    for (const name of names) {
+      url.searchParams.append('user_login', name);
+    }
+
+    const response = await fetch(url.toString(), { headers });
+
+    if (!response.ok) {
+      throw new Error(`Twitch API error: ${response.status}`);
+    }
+
+    const data = (await response.json()) as {
+      data: { user_login: string }[];
+    };
+
+    // Create a map with all names set to false initially
+    const result: Record<string, TwitchStreamInfo> = {};
+    for (const name of names) {
+      result[name] = { isLive: false };
+    }
+
+    // Set live status to true for streamers that are currently live
+    for (const stream of data.data) {
+      if (stream.user_login) {
+        result[stream.user_login] = { isLive: true };
+      }
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Error batch fetching Twitch stream status:', error);
+    // Return all as offline on error
+    const result: Record<string, TwitchStreamInfo> = {};
+    for (const name of names) {
+      result[name] = { isLive: false };
+    }
+    return result;
+  }
+}
+
 // Reference: https://dev.twitch.tv/docs/api/reference/#get-channel-followers
 // ts-unused-exports:disable-next-line
 export async function fetchTwitchUserFollowersCount(
