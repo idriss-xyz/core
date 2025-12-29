@@ -5,10 +5,9 @@ import { In } from 'typeorm';
 import { verifyToken } from '../middleware/auth.middleware';
 import { tightCors } from '../config/cors';
 import {
-  fetchTwitchStreamStatus,
   fetchTwitchUserFollowersCount,
-  fetchTwitchUserInfo,
   batchFetchTwitchStreamStatus,
+  batchFetchTwitchUserInfo,
   InvitedStreamersData,
   DEFAULT_FOLLOWED_CHANNELS,
 } from '@idriss-xyz/utils/server';
@@ -72,27 +71,26 @@ router.get(
         followersByCreatorId.set(r.referred.id, r.numberOfFollowers ?? 0),
       );
 
-      // Batch fetch stream statuses for all successful invites
+      // Batch fetch stream statuses and user info for all successful invites
       const successfulInviteNames = streamers.map((s) => s.displayName);
-      const streamStatusMap = await batchFetchTwitchStreamStatus(
-        successfulInviteNames,
-      );
+      const [streamStatusMap, userInfoMap] = await Promise.all([
+        batchFetchTwitchStreamStatus(successfulInviteNames),
+        batchFetchTwitchUserInfo(successfulInviteNames),
+      ]);
 
-      const successfulInvitesUsers: InvitedStreamersData[] = await Promise.all(
-        streamers.map(
-          async ({ id, displayName, profilePictureUrl, joinedAt }) => {
-            const userInfo = await fetchTwitchUserInfo(displayName);
+      const successfulInvitesUsers: InvitedStreamersData[] = streamers.map(
+        ({ id, displayName, profilePictureUrl, joinedAt }) => {
+          const userInfo = userInfoMap[displayName];
 
-            return {
-              displayName,
-              profilePictureUrl: profilePictureUrl ?? '',
-              numberOfFollowers: followersByCreatorId.get(id) ?? 0,
-              joinDate: joinedAt,
-              streamStatus: streamStatusMap[displayName]?.isLive ?? false,
-              game: userInfo?.game ?? null,
-            };
-          },
-        ),
+          return {
+            displayName,
+            profilePictureUrl: profilePictureUrl ?? '',
+            numberOfFollowers: followersByCreatorId.get(id) ?? 0,
+            joinDate: joinedAt,
+            streamStatus: streamStatusMap[displayName]?.isLive ?? false,
+            game: userInfo?.game ?? null,
+          };
+        },
       );
 
       let networkEarnings = 0;

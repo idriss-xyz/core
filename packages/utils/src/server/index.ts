@@ -1,6 +1,7 @@
 // ts-unused-exports:disable-next-line
 export {
   fetchTwitchUserInfo,
+  batchFetchTwitchUserInfo,
   fetchTwitchStreamStatus,
   batchFetchTwitchStreamStatus,
   fetchTwitchUserFollowersCount,
