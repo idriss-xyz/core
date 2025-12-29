@@ -5,6 +5,7 @@ import { classes } from '../../utils';
 import { Icon } from '../icon';
 import { Input } from '../input';
 import { NumericInput } from '../numeric-input';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 
 type InputProperties = ComponentProps<typeof Input>;
 type InputUnion = InputProperties extends infer T
@@ -19,6 +20,7 @@ type Properties = InputUnion & {
   helperText?: string;
   numeric?: boolean;
   decimalScale?: number;
+  labelHelper?: string;
   onChange: (value: string) => void;
 };
 
@@ -32,6 +34,7 @@ export const Field = forwardRef(
       numeric,
       decimalScale,
       placeholderTooltip,
+      labelHelper,
       onChange,
       ...inputProperties
     }: Properties,
@@ -40,9 +43,28 @@ export const Field = forwardRef(
     return (
       <RadixForm.Field name={name} ref={reference} className={className}>
         {label && (
-          <RadixForm.Label className="mb-2 block text-label4 text-neutralGreen-700">
-            {label}
-          </RadixForm.Label>
+          <div className="mb-2 flex items-center gap-1">
+            <RadixForm.Label className="text-label4 text-neutralGreen-900">
+              {label}
+            </RadixForm.Label>
+            {labelHelper && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Icon
+                    name="HelpCircle"
+                    size={16}
+                    className="text-neutral-600"
+                  />
+                </TooltipTrigger>
+                <TooltipContent
+                  side="right"
+                  className="z-portal max-w-72 bg-black text-left text-white"
+                >
+                  <p className="text-label6">{labelHelper}</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </div>
         )}
         <RadixForm.Control asChild>
           {numeric ? (

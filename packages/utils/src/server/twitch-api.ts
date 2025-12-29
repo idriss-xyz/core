@@ -128,7 +128,7 @@ export async function fetchTwitchUserInfo(
       if (channel?.game_id) {
         game = {
           name: channel.game_name ?? '',
-          url: `https://static-cdn.jtvnw.net/ttv-boxart/${channel.game_id}-285x380.jpg`,
+          url: `https://static-cdn.jtvnw.net/ttv-boxart/${channel.game_id}-144x192.jpg`,
         };
       }
     }
@@ -412,7 +412,7 @@ export async function fetchUserFollowedChannels(
         if (c?.game_id) {
           game = {
             name: c.game_name ?? '',
-            url: `https://static-cdn.jtvnw.net/ttv-boxart/${c.game_id}-285x380.jpg`,
+            url: `https://static-cdn.jtvnw.net/ttv-boxart/${c.game_id}-144x192.jpg`,
           };
         }
       }
@@ -434,5 +434,53 @@ export async function fetchUserFollowedChannels(
   } catch (error) {
     console.error('Error fetching followed channels:', error);
     return DEFAULT_FOLLOWED_CHANNELS;
+  }
+}
+
+// ts-unused-exports:disable-next-line
+export async function getModerationStatus(
+  creatorTwitchId: string,
+  userAccessToken: string | null,
+) {
+  if (!userAccessToken) {
+    console.warn(
+      `No access token to fetch moderation status for twitch account ${creatorTwitchId}`,
+    );
+    return null;
+  }
+  try {
+    const clientId = process.env.TWITCH_CLIENT_ID;
+    if (!clientId) {
+      throw new Error('Missing TWITCH_CLIENT_ID env var');
+    }
+
+    const headers = {
+      'Authorization': `Bearer ${userAccessToken}`,
+      'Client-Id': clientId,
+    };
+
+    const botUserId = process.env.TWITCH_BOT_USER_ID;
+    if (!botUserId) {
+      throw new Error('Missing TWITCH_BOT_USER_ID env var');
+    }
+
+    const response = await fetch(
+      `${TWITCH_BASE_URL}/moderation/moderators?broadcaster_id=${creatorTwitchId}&user_id=${botUserId}`,
+      {
+        headers,
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Twitch API moderation status error: ${response.statusText}`,
+      );
+    }
+    const moderators = (await response.json()) as { data: object[] };
+    const isModerator = moderators.data.length > 0;
+    return isModerator;
+  } catch (error) {
+    console.error('Error fetching moderation status:', error);
+    return null;
   }
 }

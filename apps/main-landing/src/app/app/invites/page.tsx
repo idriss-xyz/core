@@ -29,7 +29,10 @@ export default function InvitesPage() {
           successfulInvites={successfulInvites}
           successfulInvitesUsers={successfulInvitesUsers}
         />
-        <GeneralStatCard header="Invite rank" stat={`#${inviteRank}`} />
+        <GeneralStatCard
+          header="Invite rank"
+          stat={inviteRank === 0 ? '-' : `#${inviteRank}`}
+        />
         <GeneralStatCard
           header="Network earnings"
           stat={formatFiatValue(networkEarnings)}

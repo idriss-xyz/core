@@ -9,6 +9,7 @@ import {
   AppDataSource,
   Creator,
   fetchDonationsByFromAddress,
+  fetchDonations,
 } from '@idriss-xyz/db';
 import { enrichDonationsWithCreatorInfo } from '../utils/calculate-stats';
 import { createAddressToCreatorMap } from '@idriss-xyz/utils';
@@ -134,6 +135,7 @@ router.get('/csv', async (req: Request, res: Response) => {
         amountFormatted,
         tradeValueUSD: d.tradeValue ?? '',
         fromAddress: d.fromAddress ?? '',
+        fromUserName: d.fromUser?.displayName ?? 'anon',
         toAddress: d.toAddress ?? '',
         toUserName: d.toUser?.displayName ?? '',
       };
@@ -156,6 +158,95 @@ router.get('/csv', async (req: Request, res: Response) => {
     res.setHeader(
       'Content-Disposition',
       `attachment; filename=${name}-donations.csv`,
+    );
+    res.status(200).send(csvContent);
+  } catch (error) {
+    console.error('CSV export error:', error);
+    res.status(500).json({ error: 'Failed to generate CSV' });
+  }
+});
+
+router.get('/csv/all', async (req: Request, res: Response) => {
+  const { secret } = req.query;
+  if (secret !== process.env.SECRET_PASSWORD) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
+  }
+
+  try {
+    const grouped = await fetchDonations();
+    const donations = Object.values(grouped).flat();
+
+    if (donations.length === 0) {
+      res.status(200).send('No donations');
+      return;
+    }
+
+    // ── add creator meta data (same helpers already used above) ─────
+    const creators = await AppDataSource.getRepository(Creator).find({
+      relations: ['associatedAddresses'],
+    });
+    const addressToCreatorMap = createAddressToCreatorMap(creators);
+    enrichDonationsWithCreatorInfo(donations, addressToCreatorMap);
+
+    // ── build CSV rows (logic identical to /csv route) ──────────────
+    const rows = donations.map((d) => {
+      const isToken = d.kind === 'token';
+      let amountFormatted = '';
+
+      if (isToken) {
+        if (d.amountRaw && d.token?.decimals !== undefined) {
+          try {
+            amountFormatted = formatUnits(
+              BigInt(d.amountRaw),
+              d.token.decimals,
+            );
+          } catch {
+            amountFormatted = '';
+          }
+        }
+      } else {
+        amountFormatted = d.quantity !== undefined ? String(d.quantity) : '';
+      }
+
+      const timestampUTC = d.timestamp
+        ? new Date(d.timestamp).toISOString()
+        : '';
+
+      return {
+        transactionHash: d.transactionHash,
+        network: d.network ?? '',
+        timestamp: d.timestamp,
+        timestampUTC,
+        assetType: d.kind ?? '',
+        assetSymbolOrName: isToken ? (d.token?.symbol ?? '') : (d.name ?? ''),
+        rawAmount: isToken ? (d.amountRaw ?? '') : (d.quantity ?? ''),
+        amountFormatted,
+        tradeValueUSD: d.tradeValue ?? '',
+        fromAddress: d.fromAddress ?? '',
+        fromUserName: d.fromUser?.displayName ?? 'anon',
+        toAddress: d.toAddress ?? '',
+        toUserName: d.toUser?.displayName ?? '',
+        comment: d.comment,
+      };
+    });
+
+    const header = Object.keys(rows[0]).join(',');
+    const csvLines = rows.map((r) =>
+      Object.values(r)
+        .map((v) =>
+          v === null || v === undefined
+            ? ''
+            : `"${String(v).replace(/"/g, '""')}"`,
+        )
+        .join(','),
+    );
+    const csvContent = [header, ...csvLines].join('\n');
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader(
+      'Content-Disposition',
+      'attachment; filename=all-donations.csv',
     );
     res.status(200).send(csvContent);
   } catch (error) {

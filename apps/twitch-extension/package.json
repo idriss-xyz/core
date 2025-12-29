@@ -7,8 +7,8 @@
     "postbuild": "node ./scripts/prepare-for-upload.js",
     "format": "prettier --check --config ../../prettier.config.mjs --ignore-path .prettierignore .",
     "format:fix": "prettier --write --config ../../prettier.config.mjs --ignore-path .prettierignore .",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "type-check": "tsc --noEmit",
     "circular-dependencies": "depcruise --config .dependency-cruiser.cjs src",
     "unused-exports": "./node_modules/.bin/ts-unused-exports ./tsconfig.unused-exports.json"
@@ -19,12 +19,12 @@
     "@idriss-xyz/ui": "workspace:*",
     "@types/lodash": "^4.17.12",
     "lodash": "^4.17.21",
-    "next": "15.0.1",
+    "next": "16.0.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.1",
     "socket.io-client": "4.8.1",
-    "viem": "^2.31.7"
+    "viem": "^2.38.0"
   },
   "devDependencies": {
     "@idriss-xyz/eslint-config": "workspace:*",
@@ -33,7 +33,7 @@
     "@idriss-xyz/utils": "workspace:*",
     "@types/react": "^18.3.11",
     "dependency-cruiser": "^16.4.2",
-    "eslint-config-next": "15.0.1",
+    "eslint-config-next": "16.0.10",
     "glob": "^11.0.1",
     "ts-unused-exports": "^10.1.0",
     "typescript": "^5.6.3"

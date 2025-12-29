@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 import { Link } from '@idriss-xyz/ui/link';
 import { Button } from '@idriss-xyz/ui/button';

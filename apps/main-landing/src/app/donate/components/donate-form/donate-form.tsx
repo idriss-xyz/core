@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
@@ -190,7 +189,6 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
         formMethods.setValue('type', 'token');
         setActiveTab('token');
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
       defaultChainId,
       selectedTokenSymbol,

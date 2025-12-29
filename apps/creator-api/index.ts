@@ -30,6 +30,8 @@ import dripRouter from './routes/drip';
 import siweRouter from './routes/siwe';
 import donationGoalRouter from './routes/donation-goal';
 import twitchStreamStatusRouter from './routes/twitch-stream-status';
+import botAuthRouter from './routes/bot-auth';
+import moderatorStatusRouter from './routes/moderator-status';
 import { AppDataSource, Creator, initializeDatabase } from '@idriss-xyz/db';
 import { isAllowedOrigin, openCors } from './config/cors';
 import { MAIN_LANDING_LINK } from '@idriss-xyz/constants';
@@ -64,6 +66,8 @@ app.use('/creator-profile-from-referral', creatorProfileFromReferral);
 app.use('/siwe', siweRouter);
 app.use('/donation-goal', donationGoalRouter);
 app.use('/twitch-stream-status', twitchStreamStatusRouter);
+app.use('/bot-auth', botAuthRouter);
+app.use('/moderator-status', moderatorStatusRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;

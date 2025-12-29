@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@idriss-xyz/constants": "workspace:*",
-    "viem": "^2.31.7"
+    "viem": "^2.38.0"
   },
   "devDependencies": {
     "@idriss-xyz/eslint-config": "workspace:*",

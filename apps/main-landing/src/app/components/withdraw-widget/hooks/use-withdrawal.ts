@@ -12,6 +12,7 @@ import {
   NULL_ADDRESS,
   DUMMY_RECIPIENT,
   TokenBalance,
+  BASE_SUFFIX,
 } from '@idriss-xyz/constants';
 import { calculateTokensToSend, getChainById } from '@idriss-xyz/utils';
 
@@ -116,11 +117,12 @@ export const useWithdrawal = ({
         : {
             from: activeWallet.address,
             to: tokenAddress,
-            data: encodeFunctionData({
-              abi: ERC20_ABI,
-              functionName: 'transfer',
-              args: [DUMMY_RECIPIENT, tokensToSend],
-            }),
+            data:
+              encodeFunctionData({
+                abi: ERC20_ABI,
+                functionName: 'transfer',
+                args: [DUMMY_RECIPIENT, tokensToSend],
+              }) + BASE_SUFFIX.slice(2),
           };
 
       try {
@@ -225,11 +227,12 @@ export const useWithdrawal = ({
         : {
             to: tokenAddress,
             value: '0',
-            data: encodeFunctionData({
-              abi: ERC20_ABI,
-              functionName: 'transfer',
-              args: [withdrawalAddress, tokensToSend],
-            }),
+            data:
+              encodeFunctionData({
+                abi: ERC20_ABI,
+                functionName: 'transfer',
+                args: [withdrawalAddress, tokensToSend],
+              }) + BASE_SUFFIX.slice(2),
             chainId: chainId,
           };
 

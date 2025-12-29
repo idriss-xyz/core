@@ -121,7 +121,7 @@ export default function GoalOverlay({
               <div className="flex grow items-center py-2">
                 <h2
                   className={classes(
-                    'text-center text-heading5 text-neutralGreen-900',
+                    'text-left text-heading5 text-neutralGreen-900',
                   )}
                 >
                   {activeGoal.name}

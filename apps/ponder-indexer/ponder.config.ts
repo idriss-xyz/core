@@ -44,6 +44,7 @@ export default createConfig({
       pollingInterval: 3000,
       rpc: fallback([
         http('https://ronin.drpc.org'),
+        http('https://api.roninchain.com/rpc'),
         http(
           `https://ronin-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_API_KEY}`,
         ),

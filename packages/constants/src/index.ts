@@ -65,6 +65,7 @@ export {
   PriceHistoryQuery,
   NETWORK_TO_ALCHEMY,
   ALCHEMY_NATIVE_TOKENS,
+  BASE_SUFFIX,
 } from './constants';
 
 export type { TokenSymbol } from './constants';

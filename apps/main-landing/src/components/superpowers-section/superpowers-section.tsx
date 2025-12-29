@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { classes } from '@idriss-xyz/ui/utils';
 
 import { ProductTile } from './components/product-tile';

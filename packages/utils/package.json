@@ -27,6 +27,6 @@
     "@idriss-xyz/constants": "workspace:*",
     "@solana/web3.js": "^1.98.0",
     "@swc/helpers": "^0.5.13",
-    "viem": "^2.31.7"
+    "viem": "^2.38.0"
   }
 }
