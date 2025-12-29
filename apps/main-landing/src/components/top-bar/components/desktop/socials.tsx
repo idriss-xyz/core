@@ -9,11 +9,6 @@ const SOCIALS: { label: string; iconName: IconName; link: string }[] = [
     iconName: 'TwitterX',
     link: SOCIAL_LINK.X,
   },
-  {
-    label: 'Go to Farcaster',
-    iconName: 'Farcaster',
-    link: SOCIAL_LINK.WARPCAST,
-  },
 ];
 
 type Properties = {

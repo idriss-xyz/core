@@ -12,7 +12,6 @@ export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
 
 export const SOCIAL_LINK = {
   X: 'https://x.com/idriss_xyz',
-  WARPCAST: 'https://warpcast.com/idriss',
   DISCORD: 'https://discord.com/invite/RJhJKamjw5',
   INSTAGRAM: 'https://www.instagram.com/idriss_xyz',
   TIKTOK: 'https://www.tiktok.com/@idriss_xyz',
