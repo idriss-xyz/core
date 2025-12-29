@@ -73,8 +73,7 @@ export async function getTwitchInfoForCreatorCreation(creatorName: string) {
       console.warn(`No Twitch user found for creator: ${creatorName}`);
       return null;
     }
-
-    const followersInfo = await fetchTwitchUserFollowersCount(creatorName);
+    const followersInfo = await fetchTwitchUserFollowersCount(userInfo.id);
 
     return {
       twitchId: userInfo.id,
@@ -225,14 +224,13 @@ export async function batchFetchTwitchStreamStatus(
 // Reference: https://dev.twitch.tv/docs/api/reference/#get-channel-followers
 // ts-unused-exports:disable-next-line
 export async function fetchTwitchUserFollowersCount(
-  name: string,
+  id: string,
 ): Promise<TwitchUserFollowersInfo | null> {
   try {
     const headers = await getHeaders();
-    const userInfo = await fetchTwitchUserInfo(name);
 
     const response = await fetch(
-      `${TWITCH_BASE_URL}/channels/followers?broadcaster_id=${userInfo?.id}`,
+      `${TWITCH_BASE_URL}/channels/followers?broadcaster_id=${id}`,
       {
         headers,
       },

@@ -147,6 +147,7 @@ router.get(
           ? DEFAULT_FOLLOWED_CHANNELS.filter(
               (d) => !existingSet.has(d.broadcasterId),
             ).map((d) => ({
+              id: d.broadcasterId,
               displayName: d.name,
               profilePictureUrl: d.profileImage,
               numberOfFollowers: d.followers,
@@ -157,6 +158,7 @@ router.get(
           : followed
               .filter((r) => !existingSet.has(r.channelTwitchId))
               .map((r) => ({
+                id: r.channelTwitchId,
                 displayName: r.channelDisplayName ?? r.channelName,
                 profilePictureUrl: r.channelProfileImageUrl ?? '',
                 numberOfFollowers: 0,
@@ -172,7 +174,7 @@ router.get(
 
       const suggestedInvitees = await Promise.all(
         baseList.map(async (c) => {
-          const followers = await fetchTwitchUserFollowersCount(c.displayName);
+          const followers = await fetchTwitchUserFollowersCount(c.id);
 
           return {
             ...c,
