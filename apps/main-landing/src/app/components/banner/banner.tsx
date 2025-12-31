@@ -1,6 +1,6 @@
 'use client';
 import { Button } from '@idriss-xyz/ui/button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { classes } from '@idriss-xyz/ui/utils';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
@@ -52,6 +52,9 @@ import {
   banner49,
   banner50,
   banner51,
+  banner52,
+  banner53,
+  banner54,
 } from './assets';
 import { FilterOption } from './utils';
 
@@ -60,19 +63,11 @@ type Banner = {
   type: string;
 };
 
-const shuffleArray = (array: Banner[]): Banner[] => {
-  const shuffled = [...array];
-  for (let index = shuffled.length - 1; index > 0; index--) {
-    const index_ = Math.floor(Math.random() * (index + 1));
-    const temporary = shuffled[index]!;
-    shuffled[index] = shuffled[index_]!;
-    shuffled[index_] = temporary;
-  }
-  return shuffled;
-};
-
 const banners: Banner[] = [
   { src: banner1.src, type: 'unbranded' },
+  { src: banner52.src, type: 'unbranded' },
+  { src: banner53.src, type: 'unbranded' },
+  { src: banner54.src, type: 'unbranded' },
   { src: banner2.src, type: 'parallel' },
   { src: banner3.src, type: 'parallel' },
   { src: banner4.src, type: 'parallel' },
@@ -126,14 +121,6 @@ interface Properties {
 
 export const Banner = ({ filter }: Properties) => {
   const [selectedBannerSource, setSelectedBannerSource] = useState<string>();
-  const [shuffledBanners, setShuffledBanners] = useState(banners);
-
-  useEffect(() => {
-    setSelectedBannerSource(undefined);
-    if (filter === 'All') {
-      setShuffledBanners(shuffleArray(banners));
-    }
-  }, [filter]);
 
   const handleDownload = () => {
     if (!selectedBannerSource) {
@@ -150,7 +137,7 @@ export const Banner = ({ filter }: Properties) => {
 
   const filteredBanners =
     filter === 'All'
-      ? shuffledBanners
+      ? banners
       : banners.filter((banner) => {
           return banner.type === filter.toLowerCase();
         });
