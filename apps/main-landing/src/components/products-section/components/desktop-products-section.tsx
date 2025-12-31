@@ -19,7 +19,7 @@ type Properties = {
 };
 
 const getSectionNumberByName = (key: string) => {
-  return key === 'creators' ? 0 : undefined;
+  return key === 'streamers' ? 0 : undefined;
 };
 
 const CIRCLE_IMAGE_NUMBER_START_GAP = 38;
