@@ -44,3 +44,6 @@ export { default as banner48 } from './Banner_48.png';
 export { default as banner49 } from './Banner_49.png';
 export { default as banner50 } from './Banner_50.png';
 export { default as banner51 } from './Banner_51.png';
+export { default as banner52 } from './Banner_52.png';
+export { default as banner53 } from './Banner_53.png';
+export { default as banner54 } from './Banner_54.png';
