@@ -29,7 +29,7 @@ const aeonikPro = localFont({
 export const metadata: Metadata = {
   title: 'IDRISS',
   description:
-    'Our apps bring the power of crypto and AI to your browsing experience, empower creators through digital ownership, and help find what’s true on the internet.',
+    'Our apps bring the power of crypto and AI to your browsing experience, empower streamers through digital ownership, and help find what’s true on the internet.',
 };
 
 // ts-unused-exports:disable-next-line

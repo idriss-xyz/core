@@ -82,7 +82,7 @@ export const Leaderboard = ({
     },
     {
       id: 'donor',
-      name: perspective === 'creator' ? 'Creator' : 'Donor',
+      name: perspective === 'creator' ? 'Streamer' : 'Donor',
       accessor: (item, index) => {
         return (
           <LeaderboardItemDonor
@@ -118,7 +118,7 @@ export const Leaderboard = ({
     },
     {
       id: 'donorSince',
-      name: perspective === 'creator' ? 'Creator since' : 'Donor since',
+      name: perspective === 'creator' ? 'Streamer since' : 'Donor since',
       accessor: (item) => {
         return <TimeAgoCell timestamp={item.donorSince} />;
       },

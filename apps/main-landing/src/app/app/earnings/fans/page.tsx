@@ -92,7 +92,7 @@ export default function TopDonors() {
         <div className="relative m-4 gap-4 rounded-lg bg-white/80 p-6 backdrop-blur-sm">
           <div className="flex flex-col gap-4">
             <span className="text-label4 uppercase">
-              Check your rank among all creators
+              Check your rank among all streamers
             </span>
             <span className="text-display5 uppercase gradient-text">
               View earnings leaderboard
@@ -102,7 +102,7 @@ export default function TopDonors() {
             asLink
             size="medium"
             intent="secondary"
-            href="/app/ranking/top-creators"
+            href="/app/ranking/top-streamers"
             suffixIconName="IdrissArrowRight"
             className="absolute left-[497px] top-8 uppercase"
           >

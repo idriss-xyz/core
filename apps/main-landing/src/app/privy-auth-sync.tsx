@@ -84,7 +84,7 @@ export function PrivyAuthSync() {
         let newCreatorProfilePic: string | null = null;
         let newCreatorEmail: string | null = null;
         let isDonor = false;
-        // set isDonor when callback is not the normal creators landing signup
+        // set isDonor when callback is not the normal app landing signup
         // (ex. a donate page like "/daniel0ar")
         if (callbackUrl && !isHomeCallback(callbackUrl)) {
           isDonor = true;

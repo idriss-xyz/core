@@ -19,7 +19,7 @@ type Properties = {
 };
 
 const getSectionNumberByName = (key: string) => {
-  return key === 'creators' ? 0 : undefined;
+  return key === 'streamers' ? 0 : undefined;
 };
 
 const CIRCLE_IMAGE_NUMBER_START_GAP = 38;
@@ -283,7 +283,7 @@ export const DesktopProductsSection = ({
         <div className="w-[0.5px]">
           <div
             ref={firstSectionAnchorReference}
-            id="creators"
+            id="streamers"
             className="my-10 h-screen"
           />
         </div>

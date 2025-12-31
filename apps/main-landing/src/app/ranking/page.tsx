@@ -46,7 +46,7 @@ function RankingContent() {
 
         <div className="grid grid-cols-1 items-start gap-x-10">
           <LeaderboardStandalone
-            heading="Top creators"
+            heading="Top streamers"
             onDonorClick={onDonorClick}
             leaderboard={creatorRanking.data ?? []}
             leaderboardError={creatorRanking.isError}

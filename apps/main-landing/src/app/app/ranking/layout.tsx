@@ -13,10 +13,10 @@ export default function RankingLayout({
 
   const rankingTabs: TabItem[] = [
     {
-      name: 'Top creators',
-      href: '/app/ranking/top-creators',
+      name: 'Top streamers',
+      href: '/app/ranking/top-streamers',
       iconName: 'Gamepad2',
-      isActive: pathname === '/app/ranking/top-creators',
+      isActive: pathname === '/app/ranking/top-streamers',
     },
     {
       name: 'Top fans',

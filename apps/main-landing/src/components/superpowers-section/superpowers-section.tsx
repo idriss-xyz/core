@@ -42,7 +42,7 @@ export const SuperpowersSection = () => {
                   '4xl:text-body1',
                 )}
               >
-                Helping creators earn more onchain.
+                Helping streamers earn more onchain.
               </p>
             </div>
             <div
