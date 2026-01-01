@@ -70,9 +70,8 @@ router.post(
     }
 
     const referred = savedCreator;
-
     const twitchUserFollowersInfo = await fetchTwitchUserFollowersCount(
-      referred.name,
+      referred.twitchId,
     );
     const followersCount = twitchUserFollowersInfo
       ? twitchUserFollowersInfo.total

@@ -4,6 +4,7 @@ import {
   forwardRef,
   ForwardedRef,
 } from 'react';
+import { VariantProps } from 'class-variance-authority';
 
 import { classes } from '../../utils';
 import { Icon, IconName } from '../icon';
@@ -33,6 +34,7 @@ type Properties = ButtonOrAnchorProperties &
     prefixIconClassName?: string;
     suffixIconName?: IconName;
     suffixIconClassName?: string;
+    colorScheme?: VariantProps<typeof button>['colorScheme'];
   };
 
 export const Button = forwardRef(
@@ -46,6 +48,7 @@ export const Button = forwardRef(
       suffixIconName,
       prefixIconClassName,
       suffixIconClassName,
+      colorScheme,
       ...properties
     }: Properties,
     reference,
@@ -59,6 +62,7 @@ export const Button = forwardRef(
         isLoading: isLoading,
         withPrefixIcon: Boolean(prefixIconName),
         withSuffixIcon: Boolean(suffixIconName),
+        colorScheme,
       }),
     );
 
@@ -87,7 +91,12 @@ export const Button = forwardRef(
             )}
           />
         )}
-        <Glow intent={intent} size={size} loading={isLoading} />
+        <Glow
+          intent={intent}
+          size={size}
+          loading={isLoading}
+          colorScheme={colorScheme}
+        />
       </>
     );
 

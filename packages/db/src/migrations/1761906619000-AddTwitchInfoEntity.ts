@@ -22,8 +22,7 @@ async function getTwitchInfoForCreator(creatorName: string) {
       console.warn(`No Twitch user found for creator: ${creatorName}`);
       return null;
     }
-
-    const followersInfo = await fetchTwitchUserFollowersCount(creatorName);
+    const followersInfo = await fetchTwitchUserFollowersCount(userInfo.id);
 
     return {
       twitchId: userInfo.id,

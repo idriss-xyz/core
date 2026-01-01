@@ -85,6 +85,25 @@ export const Desktop = ({
                               <Link
                                 passHref
                                 legacyBehavior
+                                href={INTERNAL_LINK.EXPLORE}
+                              >
+                                <Button
+                                  intent="tertiary"
+                                  size="large"
+                                  asLink
+                                  className="uppercase"
+                                >
+                                  Explore
+                                </Button>
+                              </Link>
+                            </span>
+                          </NavigationMenu.Link>
+
+                          <NavigationMenu.Link asChild>
+                            <span>
+                              <Link
+                                passHref
+                                legacyBehavior
                                 href={EXTERNAL_LINK.TOP_CREATORS}
                               >
                                 <Button

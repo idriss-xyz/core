@@ -73,8 +73,7 @@ export async function getTwitchInfoForCreatorCreation(creatorName: string) {
       console.warn(`No Twitch user found for creator: ${creatorName}`);
       return null;
     }
-
-    const followersInfo = await fetchTwitchUserFollowersCount(creatorName);
+    const followersInfo = await fetchTwitchUserFollowersCount(userInfo.id);
 
     return {
       twitchId: userInfo.id,
@@ -148,6 +147,98 @@ export async function fetchTwitchUserInfo(
   }
 }
 
+// ts-unused-exports:disable-next-line
+export async function batchFetchTwitchUserInfo(
+  names: string[],
+): Promise<Record<string, TwitchUserInfo>> {
+  if (names.length === 0) return {};
+
+  try {
+    const headers = await getHeaders();
+    const url = new URL(`${TWITCH_BASE_URL}/users`);
+
+    // Add each name as a login parameter
+    for (const name of names) {
+      url.searchParams.append('login', name);
+    }
+
+    const userResponse = await fetch(url.toString(), { headers });
+    if (!userResponse.ok) {
+      throw new Error(`Twitch API error: ${userResponse.status}`);
+    }
+
+    const userJson = (await userResponse.json()) as {
+      data?: TwitchUserBasic[];
+    };
+
+    const users = userJson.data ?? [];
+    const result: Record<string, TwitchUserInfo> = {};
+
+    // Batch fetch channel info for all users to get game data
+    const userIds = users.map((user) => {
+      return user.id;
+    });
+    const channelUrl = new URL(`${TWITCH_BASE_URL}/channels`);
+    for (const id of userIds) {
+      channelUrl.searchParams.append('broadcaster_id', id);
+    }
+
+    let channelData: {
+      broadcaster_id: string;
+      game_id?: string;
+      game_name?: string;
+    }[] = [];
+
+    if (userIds.length > 0) {
+      const channelResponse = await fetch(channelUrl.toString(), { headers });
+      if (channelResponse.ok) {
+        const channelJson = (await channelResponse.json()) as {
+          data?: {
+            broadcaster_id: string;
+            game_id?: string;
+            game_name?: string;
+          }[];
+        };
+        channelData = channelJson.data ?? [];
+      }
+    }
+
+    // Create a map of user ID to channel data
+    const channelMap = new Map(
+      channelData.map((channel) => {
+        return [channel.broadcaster_id, channel];
+      }),
+    );
+
+    // Build the result with game info
+    for (const user of users) {
+      const channel = channelMap.get(user.id);
+      let game: { name: string; url: string } | null = null;
+
+      if (channel?.game_id) {
+        game = {
+          name: channel.game_name ?? '',
+          url: `https://static-cdn.jtvnw.net/ttv-boxart/${channel.game_id}-285x380.jpg`,
+        };
+      }
+
+      result[user.login] = {
+        id: user.id,
+        login: user.login,
+        display_name: user.display_name,
+        profile_image_url: user.profile_image_url,
+        description: user.description,
+        game,
+      };
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Error batch fetching Twitch user info:', error);
+    return {};
+  }
+}
+
 // Reference: https://dev.twitch.tv/docs/api/reference/#get-stream-key
 // ts-unused-exports:disable-next-line
 export async function fetchTwitchStreamStatus(
@@ -172,17 +263,66 @@ export async function fetchTwitchStreamStatus(
   }
 }
 
+// ts-unused-exports:disable-next-line
+export async function batchFetchTwitchStreamStatus(
+  names: string[],
+): Promise<Record<string, TwitchStreamInfo>> {
+  if (names.length === 0) return {};
+
+  try {
+    const headers = await getHeaders();
+    const url = new URL(`${TWITCH_BASE_URL}/streams`);
+
+    // Add each name as a user_login parameter
+    for (const name of names) {
+      url.searchParams.append('user_login', name);
+    }
+
+    const response = await fetch(url.toString(), { headers });
+
+    if (!response.ok) {
+      throw new Error(`Twitch API error: ${response.status}`);
+    }
+
+    const data = (await response.json()) as {
+      data: { user_login: string }[];
+    };
+
+    // Create a map with all names set to false initially
+    const result: Record<string, TwitchStreamInfo> = {};
+    for (const name of names) {
+      result[name] = { isLive: false };
+    }
+
+    // Set live status to true for streamers that are currently live
+    for (const stream of data.data) {
+      if (stream.user_login) {
+        result[stream.user_login] = { isLive: true };
+      }
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Error batch fetching Twitch stream status:', error);
+    // Return all as offline on error
+    const result: Record<string, TwitchStreamInfo> = {};
+    for (const name of names) {
+      result[name] = { isLive: false };
+    }
+    return result;
+  }
+}
+
 // Reference: https://dev.twitch.tv/docs/api/reference/#get-channel-followers
 // ts-unused-exports:disable-next-line
 export async function fetchTwitchUserFollowersCount(
-  name: string,
+  id: string,
 ): Promise<TwitchUserFollowersInfo | null> {
   try {
     const headers = await getHeaders();
-    const userInfo = await fetchTwitchUserInfo(name);
 
     const response = await fetch(
-      `${TWITCH_BASE_URL}/channels/followers?broadcaster_id=${userInfo?.id}`,
+      `${TWITCH_BASE_URL}/channels/followers?broadcaster_id=${id}`,
       {
         headers,
       },

@@ -5,9 +5,9 @@ import { In } from 'typeorm';
 import { verifyToken } from '../middleware/auth.middleware';
 import { tightCors } from '../config/cors';
 import {
-  fetchTwitchStreamStatus,
   fetchTwitchUserFollowersCount,
-  fetchTwitchUserInfo,
+  batchFetchTwitchStreamStatus,
+  batchFetchTwitchUserInfo,
   InvitedStreamersData,
   DEFAULT_FOLLOWED_CHANNELS,
 } from '@idriss-xyz/utils/server';
@@ -71,24 +71,26 @@ router.get(
         followersByCreatorId.set(r.referred.id, r.numberOfFollowers ?? 0),
       );
 
-      const successfulInvitesUsers: InvitedStreamersData[] = await Promise.all(
-        streamers.map(
-          async ({ id, displayName, profilePictureUrl, joinedAt }) => {
-            const [streamInfo, userInfo] = await Promise.all([
-              fetchTwitchStreamStatus(displayName),
-              fetchTwitchUserInfo(displayName),
-            ]);
+      // Batch fetch stream statuses and user info for all successful invites
+      const successfulInviteNames = streamers.map((s) => s.displayName);
+      const [streamStatusMap, userInfoMap] = await Promise.all([
+        batchFetchTwitchStreamStatus(successfulInviteNames),
+        batchFetchTwitchUserInfo(successfulInviteNames),
+      ]);
 
-            return {
-              displayName,
-              profilePictureUrl: profilePictureUrl ?? '',
-              numberOfFollowers: followersByCreatorId.get(id) ?? 0,
-              joinDate: joinedAt,
-              streamStatus: streamInfo.isLive,
-              game: userInfo?.game ?? null,
-            };
-          },
-        ),
+      const successfulInvitesUsers: InvitedStreamersData[] = streamers.map(
+        ({ id, displayName, profilePictureUrl, joinedAt }) => {
+          const userInfo = userInfoMap[displayName];
+
+          return {
+            displayName,
+            profilePictureUrl: profilePictureUrl ?? '',
+            numberOfFollowers: followersByCreatorId.get(id) ?? 0,
+            joinDate: joinedAt,
+            streamStatus: streamStatusMap[displayName]?.isLive ?? false,
+            game: userInfo?.game ?? null,
+          };
+        },
       );
 
       let networkEarnings = 0;
@@ -143,6 +145,7 @@ router.get(
           ? DEFAULT_FOLLOWED_CHANNELS.filter(
               (d) => !existingSet.has(d.broadcasterId),
             ).map((d) => ({
+              id: d.broadcasterId,
               displayName: d.name,
               profilePictureUrl: d.profileImage,
               numberOfFollowers: d.followers,
@@ -153,6 +156,7 @@ router.get(
           : followed
               .filter((r) => !existingSet.has(r.channelTwitchId))
               .map((r) => ({
+                id: r.channelTwitchId,
                 displayName: r.channelDisplayName ?? r.channelName,
                 profilePictureUrl: r.channelProfileImageUrl ?? '',
                 numberOfFollowers: 0,
@@ -161,17 +165,20 @@ router.get(
                 game: r.game,
               }));
 
+      // Batch fetch stream statuses for all suggested invitees
+      const suggestedNames = baseList.map((c) => c.displayName);
+      const suggestedStreamStatusMap =
+        await batchFetchTwitchStreamStatus(suggestedNames);
+
       const suggestedInvitees = await Promise.all(
         baseList.map(async (c) => {
-          const [stream, followers] = await Promise.all([
-            fetchTwitchStreamStatus(c.displayName),
-            fetchTwitchUserFollowersCount(c.displayName),
-          ]);
+          const followers = await fetchTwitchUserFollowersCount(c.id);
 
           return {
             ...c,
             numberOfFollowers: followers?.total ?? c.numberOfFollowers,
-            streamStatus: stream.isLive,
+            streamStatus:
+              suggestedStreamStatusMap[c.displayName]?.isLive ?? false,
           };
         }),
       );
