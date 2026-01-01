@@ -1,13 +1,5 @@
 'use client';
-import {
-  MutableRefObject,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import { useDebounce, usePrevious } from 'react-use';
+import { useEffect, useRef, useState } from 'react';
 import { classes } from '@idriss-xyz/ui/utils';
 
 import { ProductSection } from './product-section';
@@ -15,30 +7,11 @@ import { CreatorsSectionData } from './creators-section';
 
 type Properties = {
   className?: string;
-  isFirstRender: MutableRefObject<boolean>;
 };
 
-const getSectionNumberByName = (key: string) => {
-  return key === 'creators' ? 0 : undefined;
-};
+const CIRCLE_IMAGE = `extension-to-community-notes-circle-optimized/IDRISS_CIRCLE_0095.webp`;
 
-const CIRCLE_IMAGE_NUMBER_START_GAP = 38;
-const CIRCLE_IMAGES_COUNT = 113;
-const CREATORS_CIRCLE_INDEX = 57;
-
-const CIRCLE_IMAGES_BASE_NAME = `extension-to-community-notes-circle-optimized/IDRISS_CIRCLE_`;
-
-const circleImages = [...Array.from({ length: CIRCLE_IMAGES_COUNT }).keys()]
-  .map((_, index) => {
-    return `${CIRCLE_IMAGES_BASE_NAME}${(index + CIRCLE_IMAGE_NUMBER_START_GAP).toString().padStart(4, '0')}.webp`;
-  })
-  .reverse();
-
-const EXTENSION_CIRCLE_PLACEHOLDER = CIRCLE_IMAGES_BASE_NAME + '0150.webp';
-export const DesktopProductsSection = ({
-  className,
-  isFirstRender,
-}: Properties) => {
+export const DesktopProductsSection = ({ className }: Properties) => {
   const containerReference = useRef<HTMLDivElement>(null);
   const topOfContainerReference = useRef<HTMLDivElement>(null);
   const firstSectionAnchorReference = useRef<HTMLDivElement>(null);
@@ -47,81 +20,6 @@ export const DesktopProductsSection = ({
   const [isTopOfContainerFullyVisible, setIsTopOfContainerFullyVisible] =
     useState(false);
   const [isContainerVisible, setIsContainerVisible] = useState(false);
-  const [isContainerFillingScreen, setIsContainerFillingScreen] =
-    useState(false);
-  const windowHash =
-    typeof window === 'undefined' ? '' : window.location.hash.slice(1);
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(
-    (isFirstRender && getSectionNumberByName(windowHash)) ?? 0,
-  );
-
-  const [debouncedCurrentSectionIndex, setDebouncedCurrentSectionIndex] =
-    useState(0);
-  const previousSectionIndex = usePrevious(debouncedCurrentSectionIndex);
-
-  const [_] = useDebounce(
-    () => {
-      return setDebouncedCurrentSectionIndex(currentSectionIndex);
-    },
-    1000,
-    [currentSectionIndex],
-  );
-
-  const sectionsData = useMemo(() => {
-    return [CreatorsSectionData];
-  }, []);
-  const numberOfSections = sectionsData.length;
-
-  const animationDirection = useMemo(() => {
-    if (previousSectionIndex === undefined) {
-      return 'forward';
-    }
-
-    return previousSectionIndex < currentSectionIndex ? 'forward' : 'backward';
-  }, [currentSectionIndex, previousSectionIndex]);
-
-  const animationFps = useMemo(() => {
-    return previousSectionIndex !== undefined &&
-      Math.abs(currentSectionIndex - previousSectionIndex) > 1
-      ? 45
-      : 30;
-  }, [currentSectionIndex, previousSectionIndex]);
-
-  const animationStartIndex = useMemo(() => {
-    const sectionIndex =
-      previousSectionIndex === undefined
-        ? 0
-        : Math.min(previousSectionIndex, currentSectionIndex);
-
-    switch (sectionIndex) {
-      case 0: {
-        return CREATORS_CIRCLE_INDEX;
-      }
-      default: {
-        return CREATORS_CIRCLE_INDEX;
-      }
-    }
-  }, [currentSectionIndex, previousSectionIndex]);
-
-  const animationEndIndex = useMemo(() => {
-    const sectionIndex =
-      previousSectionIndex === undefined
-        ? currentSectionIndex
-        : Math.max(previousSectionIndex, currentSectionIndex);
-
-    switch (sectionIndex) {
-      case 0: {
-        return CREATORS_CIRCLE_INDEX;
-      }
-      default: {
-        return CREATORS_CIRCLE_INDEX;
-      }
-    }
-  }, [currentSectionIndex, previousSectionIndex]);
-
-  const selectedSectionData = useMemo(() => {
-    return sectionsData[debouncedCurrentSectionIndex] ?? CreatorsSectionData;
-  }, [debouncedCurrentSectionIndex, sectionsData]);
 
   useEffect(() => {
     const topOfContainerObserver = new IntersectionObserver(
@@ -134,7 +32,6 @@ export const DesktopProductsSection = ({
     const containerObserver = new IntersectionObserver(
       ([entry]) => {
         setIsContainerVisible((entry?.intersectionRatio ?? 0) > 0.25);
-        setIsContainerFillingScreen((entry?.intersectionRatio ?? 0) > 0.32);
       },
       {
         threshold: Array.from({ length: 101 }, (_, index) => {
@@ -193,66 +90,6 @@ export const DesktopProductsSection = ({
     };
   }, [isTopOfContainerFullyVisible, isContainerVisible]);
 
-  useLayoutEffect(() => {
-    const handleScroll = () => {
-      if (!containerReference.current) {
-        setCurrentSectionIndex(0);
-        return;
-      }
-
-      const { top } = containerReference.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const amountAboveViewport = Math.max(0, -top);
-      const normalizedPercentAbove =
-        amountAboveViewport / viewportHeight / numberOfSections;
-
-      const sectionId = Math.floor(
-        Math.min(
-          (normalizedPercentAbove * 100) / ((1 / (numberOfSections + 2)) * 100),
-          numberOfSections - 1,
-        ),
-      );
-
-      setCurrentSectionIndex(sectionId);
-    };
-
-    window.addEventListener('landingPageScroll', handleScroll);
-
-    return () => {
-      window.removeEventListener('landingPageScroll', handleScroll);
-    };
-  }, [numberOfSections]);
-
-  useEffect(() => {
-    let timeoutReference: NodeJS.Timeout;
-    const mainViewport = document.querySelector(
-      '#landing-page-scroll > [data-radix-scroll-area-viewport]',
-    ) as HTMLElement | undefined;
-
-    if (!isContainerFillingScreen && mainViewport) {
-      mainViewport.style.overflow = 'scroll';
-      return;
-    }
-
-    if (currentSectionIndex !== previousSectionIndex) {
-      const mainViewport = document.querySelector(
-        '#landing-page-scroll > [data-radix-scroll-area-viewport]',
-      ) as HTMLElement | undefined;
-      if (mainViewport) {
-        mainViewport.style.overflow = 'hidden';
-        timeoutReference = setTimeout(() => {
-          mainViewport.style.overflow = 'scroll';
-        }, 1700);
-      }
-    }
-
-    return () => {
-      if (timeoutReference) {
-        clearTimeout(timeoutReference);
-      }
-    };
-  }, [currentSectionIndex, previousSectionIndex, isContainerFillingScreen]);
-
   return (
     <section>
       <div ref={topOfContainerReference} className="h-px w-full" />
@@ -265,19 +102,14 @@ export const DesktopProductsSection = ({
             marginX={margin}
             marginY={margin / 2}
             borderRadius={borderRadius}
-            actions={selectedSectionData.actions}
-            activeOptionKey={selectedSectionData.defaultOptionKey}
-            description={selectedSectionData.info.description}
-            title={selectedSectionData.info.title}
-            features={selectedSectionData.info.features}
-            fadeOut={currentSectionIndex !== debouncedCurrentSectionIndex}
-            animated
-            animationDirection={animationDirection}
-            animationStartIndex={animationStartIndex}
-            animationEndIndex={animationEndIndex}
-            animationImages={circleImages}
-            animationFps={animationFps}
-            placeholderImage={EXTENSION_CIRCLE_PLACEHOLDER}
+            actions={CreatorsSectionData.actions}
+            activeOptionKey={CreatorsSectionData.defaultOptionKey}
+            description={CreatorsSectionData.info.description}
+            title={CreatorsSectionData.info.title}
+            features={CreatorsSectionData.info.features}
+            fadeOut={false}
+            animated={false}
+            circleImage={CIRCLE_IMAGE}
           />
         </div>
         <div className="w-[0.5px]">
