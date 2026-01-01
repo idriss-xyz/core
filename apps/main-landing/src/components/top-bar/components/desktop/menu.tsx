@@ -1,6 +1,5 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
-import Link from 'next/link';
 import { DOCUMENTATION_LINK_DAO } from '@idriss-xyz/constants';
 
 import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
@@ -16,22 +15,28 @@ export const Menu = ({ className }: Properties) => {
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
             <span>
-              <Link href={INTERNAL_LINK.CREATORS} passHref legacyBehavior>
-                <Button intent="tertiary" size="large" asLink>
-                  APP
-                </Button>
-              </Link>
+              <Button
+                intent="tertiary"
+                size="large"
+                href={INTERNAL_LINK.CREATORS}
+                asLink
+              >
+                APP
+              </Button>
             </span>
           </NavigationMenu.Link>
         </NavigationMenu.Item>
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
             <span>
-              <Link href={INTERNAL_LINK.TOKEN} passHref legacyBehavior>
-                <Button intent="tertiary" size="large" asLink>
-                  TOKEN
-                </Button>
-              </Link>
+              <Button
+                intent="tertiary"
+                size="large"
+                href={INTERNAL_LINK.TOKEN}
+                asLink
+              >
+                TOKEN
+              </Button>
             </span>
           </NavigationMenu.Link>
         </NavigationMenu.Item>
@@ -39,11 +44,15 @@ export const Menu = ({ className }: Properties) => {
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
             <span>
-              <Link href={EXTERNAL_LINK.VAULT} passHref legacyBehavior>
-                <Button intent="tertiary" size="large" asLink>
-                  VAULT
-                </Button>
-              </Link>
+              <Button
+                intent="tertiary"
+                size="large"
+                href={EXTERNAL_LINK.VAULT}
+                isExternal
+                asLink
+              >
+                VAULT
+              </Button>
             </span>
           </NavigationMenu.Link>
         </NavigationMenu.Item>
