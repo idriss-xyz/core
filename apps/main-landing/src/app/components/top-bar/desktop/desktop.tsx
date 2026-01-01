@@ -5,7 +5,6 @@ import { MAIN_LANDING_LINK } from '@idriss-xyz/constants';
 import { Dialog } from '@idriss-xyz/ui/dialog';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { VisuallyHidden } from '@idriss-xyz/ui/visually-hidden';
-import Link from 'next/link';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { classes } from '@idriss-xyz/ui/utils';
 import { MobileNotSupported } from '@idriss-xyz/ui/mobile-not-supported';
@@ -82,56 +81,43 @@ export const Desktop = ({
                         <div className="space-y-6">
                           <NavigationMenu.Link asChild>
                             <span>
-                              <Link
-                                passHref
-                                legacyBehavior
+                              <Button
+                                intent="tertiary"
+                                size="large"
                                 href={EXTERNAL_LINK.TOP_CREATORS}
+                                isExternal
+                                asLink
+                                className="uppercase"
                               >
-                                <Button
-                                  intent="tertiary"
-                                  size="large"
-                                  asLink
-                                  className="uppercase"
-                                >
-                                  Top creators
-                                </Button>
-                              </Link>
+                                Top creators
+                              </Button>
                             </span>
                           </NavigationMenu.Link>
                           <NavigationMenu.Link asChild>
                             <span>
-                              <Link
-                                passHref
-                                legacyBehavior
+                              <Button
+                                intent="tertiary"
+                                size="large"
                                 href={EXTERNAL_LINK.TOP_DONORS}
+                                isExternal
+                                asLink
+                                className="uppercase"
                               >
-                                <Button
-                                  intent="tertiary"
-                                  size="large"
-                                  asLink
-                                  className="uppercase"
-                                >
-                                  Top fans
-                                </Button>
-                              </Link>
+                                Top fans
+                              </Button>
                             </span>
                           </NavigationMenu.Link>
                           <NavigationMenu.Link asChild>
                             <span>
-                              <Link
-                                passHref
-                                legacyBehavior
+                              <Button
+                                intent="tertiary"
+                                size="large"
                                 href={INTERNAL_LINK.TOKEN}
+                                asLink
+                                className="uppercase"
                               >
-                                <Button
-                                  intent="tertiary"
-                                  size="large"
-                                  asLink
-                                  className="uppercase"
-                                >
-                                  Token
-                                </Button>
-                              </Link>
+                                Token
+                              </Button>
                             </span>
                           </NavigationMenu.Link>
                         </div>
