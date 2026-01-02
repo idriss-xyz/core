@@ -58,7 +58,7 @@ export const MobileSignupForm = ({ isOpen, onClose }: Properties) => {
       >
         <div className="flex w-full max-w-[320px] flex-col items-center gap-6">
           <p className="text-balance text-center text-heading5 text-neutralGreen-700">
-            Check your inbox! We&apos;ve sent you a link to continue on desktop.
+            Check your inbox. We&apos;ve sent you a link to continue on desktop.
           </p>
         </div>
       </MobileNotSupported>
