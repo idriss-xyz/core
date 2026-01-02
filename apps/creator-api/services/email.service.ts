@@ -85,27 +85,27 @@ function getSignupGuideEmailHtml(): string {
                 <tr>
                   <td style="padding: 0 8px;">
                     <a href="https://x.com/idriss_xyz" target="_blank">
-                      <img src="https://idriss.xyz/email-icons/x.png" width="20" height="20" alt="X" style="display: block;">
+                      <img src="https://idriss.xyz/email-icons/X.png" width="20" height="20" alt="X" style="display: block;">
                     </a>
                   </td>
                   <td style="padding: 0 8px;">
                     <a href="https://discord.com/invite/RJhJKamjw5" target="_blank">
-                      <img src="https://idriss.xyz/email-icons/discord.png" width="20" height="20" alt="Discord" style="display: block;">
+                      <img src="https://idriss.xyz/email-icons/Discord.png" width="20" height="20" alt="Discord" style="display: block;">
                     </a>
                   </td>
                   <td style="padding: 0 8px;">
                     <a href="https://instagram.com/idriss_xyz" target="_blank">
-                      <img src="https://idriss.xyz/email-icons/instagram.png" width="20" height="20" alt="Instagram" style="display: block;">
+                      <img src="https://idriss.xyz/email-icons/Instagram.png" width="20" height="20" alt="Instagram" style="display: block;">
                     </a>
                   </td>
                   <td style="padding: 0 8px;">
                     <a href="https://tiktok.com/@idriss_xyz" target="_blank">
-                      <img src="https://idriss.xyz/email-icons/tiktok.png" width="20" height="20" alt="TikTok" style="display: block;">
+                      <img src="https://idriss.xyz/email-icons/Tik-Tok.png" width="20" height="20" alt="TikTok" style="display: block;">
                     </a>
                   </td>
                   <td style="padding: 0 8px;">
                     <a href="https://www.youtube.com/@idriss_xyz" target="_blank">
-                      <img src="https://idriss.xyz/email-icons/youtube.png" width="20" height="20" alt="YouTube" style="display: block;">
+                      <img src="https://idriss.xyz/email-icons/YouTube.png" width="20" height="20" alt="YouTube" style="display: block;">
                     </a>
                   </td>
                 </tr>
