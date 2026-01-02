@@ -1,11 +1,14 @@
 import { Router, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import rateLimit from 'express-rate-limit';
+import { MoreThan } from 'typeorm';
 import { AppDataSource, MobileSignupEmail } from '@idriss-xyz/db';
 import { sendSignupGuideEmail } from '../services/email.service';
 import { tightCors } from '../config/cors';
 
 const router = Router();
+
+const DAILY_EMAIL_LIMIT = 1000;
 
 // Rate limit: 5 requests per IP per hour
 const mobileSignupLimiter = rateLimit({
@@ -15,6 +18,19 @@ const mobileSignupLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+async function getDailyEmailCount(): Promise<number> {
+  const mobileSignupRepo = AppDataSource.getRepository(MobileSignupEmail);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  return mobileSignupRepo.count({
+    where: {
+      emailSent: true,
+      emailSentAt: MoreThan(today),
+    },
+  });
+}
 
 router.post(
   '/',
@@ -43,6 +59,14 @@ router.post(
           message: 'Email registered successfully',
           alreadyRegistered: true,
         });
+        return;
+      }
+
+      // Check daily email limit
+      const dailyCount = await getDailyEmailCount();
+      if (dailyCount >= DAILY_EMAIL_LIMIT) {
+        console.warn(`[EMAIL] Daily limit of ${DAILY_EMAIL_LIMIT} emails reached`);
+        res.status(503).json({ error: 'Service temporarily unavailable' });
         return;
       }
 
