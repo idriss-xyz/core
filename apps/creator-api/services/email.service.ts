@@ -11,6 +11,11 @@ function getSignupGuideEmailHtml(): string {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Continue setting up IDRISS on desktop</title>
+  <style>
+    .cta-button:hover {
+      background-color: #2AD012 !important;
+    }
+  </style>
 </head>
 <body style="margin: 0; padding: 0; background-color: #F6F7F8; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #F6F7F8;">
@@ -25,6 +30,7 @@ function getSignupGuideEmailHtml(): string {
                 src="https://idriss.xyz/idriss-banner-image.png"
                 alt=""
                 width="520"
+                height="173"
                 style="display: block; width: 100%; max-width: 520px; height: auto;"
               />
             </td>
@@ -46,6 +52,7 @@ function getSignupGuideEmailHtml(): string {
                     <a
                       href="${SIGNUP_LINK}"
                       target="_blank"
+                      class="cta-button"
                       style="display: inline-block; background-color: #5FEB3C; color: #000A05; text-decoration: none; font-size: 14px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; padding: 16px 32px; border-radius: 12px;"
                     >
                       CONTINUE SETUP
@@ -78,27 +85,27 @@ function getSignupGuideEmailHtml(): string {
                 <tr>
                   <td style="padding: 0 8px;">
                     <a href="https://x.com/idriss_xyz" target="_blank">
-                      <img src="https://cdn.simpleicons.org/x/000000" width="20" height="20" alt="X" style="display: block;">
+                      <img src="https://idriss.xyz/email-icons/x.png" width="20" height="20" alt="X" style="display: block;">
                     </a>
                   </td>
                   <td style="padding: 0 8px;">
                     <a href="https://discord.com/invite/RJhJKamjw5" target="_blank">
-                      <img src="https://cdn.simpleicons.org/discord/000000" width="20" height="20" alt="Discord" style="display: block;">
+                      <img src="https://idriss.xyz/email-icons/discord.png" width="20" height="20" alt="Discord" style="display: block;">
                     </a>
                   </td>
                   <td style="padding: 0 8px;">
                     <a href="https://instagram.com/idriss_xyz" target="_blank">
-                      <img src="https://cdn.simpleicons.org/instagram/000000" width="20" height="20" alt="Instagram" style="display: block;">
+                      <img src="https://idriss.xyz/email-icons/instagram.png" width="20" height="20" alt="Instagram" style="display: block;">
                     </a>
                   </td>
                   <td style="padding: 0 8px;">
                     <a href="https://tiktok.com/@idriss_xyz" target="_blank">
-                      <img src="https://cdn.simpleicons.org/tiktok/000000" width="20" height="20" alt="TikTok" style="display: block;">
+                      <img src="https://idriss.xyz/email-icons/tiktok.png" width="20" height="20" alt="TikTok" style="display: block;">
                     </a>
                   </td>
                   <td style="padding: 0 8px;">
                     <a href="https://www.youtube.com/@idriss_xyz" target="_blank">
-                      <img src="https://cdn.simpleicons.org/youtube/000000" width="20" height="20" alt="YouTube" style="display: block;">
+                      <img src="https://idriss.xyz/email-icons/youtube.png" width="20" height="20" alt="YouTube" style="display: block;">
                     </a>
                   </td>
                 </tr>
@@ -149,7 +156,7 @@ export async function sendSignupGuideEmail(
     },
     Message: {
       Subject: {
-        Data: 'Finish setting up IDRISS on desktop',
+        Data: 'Continue setting up IDRISS on desktop',
         Charset: 'UTF-8',
       },
       Body: {
