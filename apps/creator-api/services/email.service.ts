@@ -10,17 +10,23 @@ function getSignupGuideEmailHtml(): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Continue Your IDRISS Signup</title>
+  <title>Continue setting up IDRISS on desktop</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #F6F7F8; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #F6F7F8;">
     <tr>
       <td align="center" style="padding: 40px 20px;">
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width: 520px; background-color: #FFFFFF; border-radius: 16px; overflow: hidden;">
-          <!-- Header -->
+
+          <!-- Header banner -->
           <tr>
-            <td style="background: linear-gradient(135deg, #E7F5E7 0%, #B8FB9B 100%); padding: 32px 40px; text-align: center;">
-              <img src="https://idriss.xyz/idriss-dark-logo.png" alt="IDRISS" width="120" style="display: inline-block;">
+            <td style="padding: 0; text-align: center;">
+              <img
+                src="https://idriss.xyz/idriss-banner-image.png"
+                alt=""
+                width="520"
+                style="display: block; width: 100%; max-width: 520px; height: auto;"
+              />
             </td>
           </tr>
 
@@ -28,64 +34,28 @@ function getSignupGuideEmailHtml(): string {
           <tr>
             <td style="padding: 40px;">
               <h1 style="margin: 0 0 16px 0; font-size: 24px; font-weight: 500; color: #000A05; line-height: 1.3;">
-                Continue on Desktop
+                Continue the setup
               </h1>
               <p style="margin: 0 0 24px 0; font-size: 16px; line-height: 1.6; color: #323D37;">
-                You requested a link to complete your IDRISS signup on desktop. Click the button below to pick up where you left off.
+                You requested a link to continue the setup on desktop. Click below to pick up where you left off.
               </p>
 
-              <!-- CTA Button -->
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                 <tr>
                   <td align="center" style="padding: 8px 0 32px 0;">
-                    <a href="${SIGNUP_LINK}" target="_blank" style="display: inline-block; background-color: #5FEB3C; color: #000A05; text-decoration: none; font-size: 14px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; padding: 16px 32px; border-radius: 12px;">
-                      CONTINUE SIGNUP
+                    <a
+                      href="${SIGNUP_LINK}"
+                      target="_blank"
+                      style="display: inline-block; background-color: #5FEB3C; color: #000A05; text-decoration: none; font-size: 14px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; padding: 16px 32px; border-radius: 12px;"
+                    >
+                      CONTINUE SETUP
                     </a>
                   </td>
                 </tr>
               </table>
 
-              <!-- Steps -->
-              <div style="background-color: #FAFFF5; border-radius: 12px; padding: 24px; margin-bottom: 24px;">
-                <p style="margin: 0 0 16px 0; font-size: 14px; font-weight: 500; color: #000A05;">
-                  How to get started:
-                </p>
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td style="padding: 8px 0; vertical-align: top;">
-                      <table role="presentation" cellspacing="0" cellpadding="0">
-                        <tr>
-                          <td style="width: 28px; height: 28px; background-color: #5FEB3C; border-radius: 50%; text-align: center; vertical-align: middle; font-size: 14px; font-weight: 500; color: #000A05;">1</td>
-                          <td style="padding-left: 12px; font-size: 14px; color: #323D37; line-height: 1.5;">Click the button above on your desktop or laptop</td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 8px 0; vertical-align: top;">
-                      <table role="presentation" cellspacing="0" cellpadding="0">
-                        <tr>
-                          <td style="width: 28px; height: 28px; background-color: #5FEB3C; border-radius: 50%; text-align: center; vertical-align: middle; font-size: 14px; font-weight: 500; color: #000A05;">2</td>
-                          <td style="padding-left: 12px; font-size: 14px; color: #323D37; line-height: 1.5;">Login with Twitch</td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 8px 0; vertical-align: top;">
-                      <table role="presentation" cellspacing="0" cellpadding="0">
-                        <tr>
-                          <td style="width: 28px; height: 28px; background-color: #5FEB3C; border-radius: 50%; text-align: center; vertical-align: middle; font-size: 14px; font-weight: 500; color: #000A05;">3</td>
-                          <td style="padding-left: 12px; font-size: 14px; color: #323D37; line-height: 1.5;">Complete your profile and start receiving tips</td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-
               <p style="margin: 0; font-size: 14px; color: #656D69; line-height: 1.5;">
-                If you didn't request this email, you can safely ignore it.
+                If you did not request this email, you can safely ignore it.
               </p>
             </td>
           </tr>
@@ -96,11 +66,47 @@ function getSignupGuideEmailHtml(): string {
               <p style="margin: 0 0 8px 0; font-size: 12px; color: #8F94A2;">
                 © ${new Date().getFullYear()} IDRISS. All rights reserved.
               </p>
+
               <p style="margin: 0; font-size: 12px;">
-                <a href="https://idriss.xyz" style="color: #176410; text-decoration: none;">idriss.xyz</a>
+                <a href="https://idriss.xyz" style="color: #176410; text-decoration: none;">
+                  idriss.xyz
+                </a>
               </p>
+
+              <!-- Social icons -->
+              <table role="presentation" cellspacing="0" cellpadding="0" align="center" style="margin: 16px auto 12px auto;">
+                <tr>
+                  <td style="padding: 0 8px;">
+                    <a href="https://x.com/idriss_xyz" target="_blank">
+                      <img src="https://cdn.simpleicons.org/x/000000" width="20" height="20" alt="X" style="display: block;">
+                    </a>
+                  </td>
+                  <td style="padding: 0 8px;">
+                    <a href="https://discord.com/invite/RJhJKamjw5" target="_blank">
+                      <img src="https://cdn.simpleicons.org/discord/000000" width="20" height="20" alt="Discord" style="display: block;">
+                    </a>
+                  </td>
+                  <td style="padding: 0 8px;">
+                    <a href="https://instagram.com/idriss_xyz" target="_blank">
+                      <img src="https://cdn.simpleicons.org/instagram/000000" width="20" height="20" alt="Instagram" style="display: block;">
+                    </a>
+                  </td>
+                  <td style="padding: 0 8px;">
+                    <a href="https://tiktok.com/@idriss_xyz" target="_blank">
+                      <img src="https://cdn.simpleicons.org/tiktok/000000" width="20" height="20" alt="TikTok" style="display: block;">
+                    </a>
+                  </td>
+                  <td style="padding: 0 8px;">
+                    <a href="https://www.youtube.com/@idriss_xyz" target="_blank">
+                      <img src="https://cdn.simpleicons.org/youtube/000000" width="20" height="20" alt="YouTube" style="display: block;">
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
             </td>
           </tr>
+
         </table>
       </td>
     </tr>
