@@ -1,12 +1,25 @@
 import { Router, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
+import rateLimit from 'express-rate-limit';
 import { AppDataSource, MobileSignupEmail } from '@idriss-xyz/db';
 import { sendSignupGuideEmail } from '../services/email.service';
+import { tightCors } from '../config/cors';
 
 const router = Router();
 
+// Rate limit: 5 requests per IP per hour
+const mobileSignupLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 5,
+  message: { error: 'Too many requests, please try again later.' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 router.post(
   '/',
+  tightCors,
+  mobileSignupLimiter,
   [body('email').isEmail().normalizeEmail()],
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
