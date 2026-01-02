@@ -20,7 +20,7 @@ function getSignupGuideEmailHtml(): string {
           <!-- Header -->
           <tr>
             <td style="background: linear-gradient(135deg, #E7F5E7 0%, #B8FB9B 100%); padding: 32px 40px; text-align: center;">
-              <img src="https://idriss.xyz/idriss-dark-logo.svg" alt="IDRISS" width="120" style="display: inline-block;">
+              <img src="https://idriss.xyz/idriss-dark-logo.png" alt="IDRISS" width="120" style="display: inline-block;">
             </td>
           </tr>
 
@@ -137,7 +137,7 @@ export async function sendSignupGuideEmail(
   recipientEmail: string,
 ): Promise<boolean> {
   const command = new SendEmailCommand({
-    Source: SES_FROM_EMAIL,
+    Source: `IDRISS <${SES_FROM_EMAIL}>`,
     Destination: {
       ToAddresses: [recipientEmail],
     },
@@ -164,7 +164,10 @@ export async function sendSignupGuideEmail(
     console.log(`[EMAIL] Signup guide sent to: ${recipientEmail}`);
     return true;
   } catch (error) {
-    console.error(`[EMAIL] Failed to send signup guide to ${recipientEmail}:`, error);
+    console.error(
+      `[EMAIL] Failed to send signup guide to ${recipientEmail}:`,
+      error,
+    );
     return false;
   }
 }
