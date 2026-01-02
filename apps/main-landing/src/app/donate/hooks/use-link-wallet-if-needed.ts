@@ -51,7 +51,7 @@ export function useLinkWalletIfNeeded(
       const message_ = new SiweMessage({
         domain: window.location.hostname,
         address,
-        statement: `Sign to confirm this wallet is yours and link it to your IDRISS account. This is a one-time free signature. By signing, you agree to our Terms of service (https://docs.idriss.xyz/resources/terms-of-service) & Privacy policy (https://docs.idriss.xyz/resources/privacy-policy).`,
+        statement: `Sign to confirm this wallet is yours and link it to your IDRISS account. This is a one-time free signature. By signing, you agree to our Terms of service (https://idriss.xyz/tos) & Privacy policy (https://idriss.xyz/pp).`,
         uri: window.location.origin,
         version: '1',
         chainId,
