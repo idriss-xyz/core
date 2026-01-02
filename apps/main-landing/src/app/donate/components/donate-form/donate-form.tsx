@@ -212,6 +212,7 @@ export const DonateForm = forwardRef<HTMLDivElement, Properties>(
       setSubmitError,
       donor?.name,
     );
+    console.log(donor?.name);
 
     const callbackOnSend = useDonationCallback(sfx);
 
