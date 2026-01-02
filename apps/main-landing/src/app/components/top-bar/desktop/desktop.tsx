@@ -7,7 +7,6 @@ import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { VisuallyHidden } from '@idriss-xyz/ui/visually-hidden';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { classes } from '@idriss-xyz/ui/utils';
-import { MobileNotSupported } from '@idriss-xyz/ui/mobile-not-supported';
 
 import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
 import { Socials as MobileSocials } from '@/components/top-bar/components/mobile/socials';
@@ -15,6 +14,7 @@ import { Socials as DesktopSocials } from '@/components/top-bar/components/deskt
 import { useAuth } from '@/app/context/auth-context';
 import { DonatePageAvatarMenu } from '@/app/[name]/donate-page-avatar-menu';
 import { useStartEarningNavigation } from '@/app/utils/';
+import { MobileSignupForm } from '@/app/components/mobile-signup-form';
 
 import { Menu } from './menu';
 import { Socials } from './socials';
@@ -158,21 +158,12 @@ export const Desktop = ({
               iconClassName={classes(isSticky && 'px-1 xs:px-2')}
             />
           </div>
-          {isMobileNotSupportedOpen && (
-            <MobileNotSupported
-              className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm"
-              onClose={() => {
-                return setIsMobileNotSupportedOpen(false);
-              }}
-            >
-              <p className="text-balance text-center text-heading5 text-neutralGreen-700">
-                This experience is designed for desktop.
-              </p>
-              <p className="text-balance text-center text-heading5 text-neutralGreen-700">
-                Please use a PC or a laptop.
-              </p>
-            </MobileNotSupported>
-          )}
+          <MobileSignupForm
+            isOpen={isMobileNotSupportedOpen}
+            onClose={() => {
+              return setIsMobileNotSupportedOpen(false);
+            }}
+          />
         </>
       );
     }
