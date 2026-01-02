@@ -1,7 +1,7 @@
 import { SendEmailCommand } from '@aws-sdk/client-ses';
 import { SES_CLIENT, SES_FROM_EMAIL } from '../config/aws-config';
 
-const SIGNUP_LINK = 'https://idriss.xyz/?login=true';
+const SIGNUP_LINK = 'https://idriss.xyz/?login=true&campaign=mobile_to_desktop';
 
 function getSignupGuideEmailHtml(): string {
   return `
