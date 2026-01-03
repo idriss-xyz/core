@@ -17,6 +17,7 @@
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.857.0",
     "@aws-sdk/client-s3": "^3.842.0",
+    "@aws-sdk/client-ses": "^3.958.0",
     "@idriss-xyz/constants": "workspace:*",
     "@idriss-xyz/db": "workspace:*",
     "@idriss-xyz/utils": "workspace:*",

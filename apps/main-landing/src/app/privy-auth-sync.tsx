@@ -7,6 +7,7 @@ import {
 import { useCallback, useEffect, useRef } from 'react';
 import { Hex } from 'viem';
 import { useRouter } from 'next/navigation';
+import { sendGAEvent } from '@next/third-parties/google';
 
 import {
   getCreatorProfile,
@@ -132,6 +133,7 @@ export function PrivyAuthSync() {
           throw new Error('Failed to fetch newly created profile.');
         }
 
+        sendGAEvent('event', 'signup_completed', { value: 1 });
         setCreator(newCreator);
         deleteCookie('referrerName');
         deleteCookie('referrerAddress');

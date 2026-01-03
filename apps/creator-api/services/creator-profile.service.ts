@@ -8,6 +8,7 @@ import {
   CreatorProfileView,
   TwitchInfo,
   CreatorFollowedChannel,
+  MobileSignupEmail,
 } from '@idriss-xyz/db';
 import { randomBytes } from 'crypto';
 import { Request } from 'express';
@@ -193,6 +194,19 @@ class CreatorProfileService {
       }
     } catch (err) {
       console.error('Storing followed channels failed:', err);
+    }
+
+    // Mark mobile signup email as converted if exists
+    if (creatorData.email) {
+      try {
+        const mobileSignupRepo = AppDataSource.getRepository(MobileSignupEmail);
+        await mobileSignupRepo.update(
+          { email: creatorData.email, convertedAt: undefined },
+          { convertedAt: new Date() },
+        );
+      } catch (err) {
+        // Silently ignore - email may not exist in mobile signup table
+      }
     }
 
     return {

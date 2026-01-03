@@ -1,5 +1,4 @@
 'use client';
-import { MobileNotSupported } from '@idriss-xyz/ui/mobile-not-supported';
 import { Button } from '@idriss-xyz/ui/button';
 import { classes } from '@idriss-xyz/ui/utils';
 import { RefObject, useState } from 'react';
@@ -10,6 +9,7 @@ import { useStartEarningNavigation } from '../utils';
 
 import { VideoPlayer } from './hero-section/video-player';
 import { LoginModal } from './login-modal';
+import { MobileSignupForm } from './mobile-signup-form';
 
 type Properties = {
   heroButtonReference?: RefObject<HTMLButtonElement>;
@@ -103,21 +103,12 @@ export const HeroSection = ({
         </div>
       </div>
       <LoginModal />
-      {isMobileNotSupportedOpen && (
-        <MobileNotSupported
-          className="bg-[#E7F5E6]/[0.6] backdrop-blur-sm"
-          onClose={() => {
-            return setIsMobileNotSupportedOpen(false);
-          }}
-        >
-          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
-            This experience is designed for desktop.
-          </p>
-          <p className="text-balance text-center text-heading5 text-neutralGreen-700">
-            Please use a PC or a laptop.
-          </p>
-        </MobileNotSupported>
-      )}
+      <MobileSignupForm
+        isOpen={isMobileNotSupportedOpen}
+        onClose={() => {
+          return setIsMobileNotSupportedOpen(false);
+        }}
+      />
     </header>
   );
 };

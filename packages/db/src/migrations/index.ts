@@ -45,3 +45,4 @@ export { CreatorProfileViewUpdate1762797156607 } from './1762797156607-CreatorPr
 export { AddGameToCreatorFollowedChannel1763232396000 } from './1763232396000-add-game-to-creator-followed-channel';
 export { AddEnvironmentTable1764948355300 } from './1764948355300-AddEnvironmentTable';
 export { AddTwitchTokensTable1765834598920 } from './1765834598920-AddTwitchTokensTable';
+export { AddMobileSignupEmail1767350491000 } from './1767350491000-AddMobileSignupEmail';
