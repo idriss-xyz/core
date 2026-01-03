@@ -26,13 +26,16 @@ function getSignupGuideEmailHtml(): string {
           <!-- Header banner -->
           <tr>
             <td style="padding: 0; text-align: center;">
-              <img
-                src="https://idriss.xyz/idriss-banner-image.png"
-                alt=""
-                width="520"
-                height="173"
-                style="display: block; width: 100%; max-width: 520px; height: auto;"
-              />
+              <a href="${SIGNUP_LINK}" target="_blank" style="display: block;">
+                <img
+                  src="https://idriss.xyz/idriss-banner-image.png"
+                  alt="IDRISS"
+                  width="520"
+                  height="173"
+                  border="0"
+                  style="display: block; width: 100%; max-width: 520px; height: auto;"
+                />
+              </a>
             </td>
           </tr>
 
