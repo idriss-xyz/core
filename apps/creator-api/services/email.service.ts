@@ -174,7 +174,6 @@ export async function sendSignupGuideEmail(
 
   try {
     await SES_CLIENT.send(command);
-    console.log(`[EMAIL] Signup guide sent to: ${recipientEmail}`);
     return true;
   } catch (error) {
     console.error(
