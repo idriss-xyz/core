@@ -4,7 +4,7 @@ This document describes the Donation Goals feature in the Creator API.
 
 ## Overview
 
-Donation Goals enable creators to set fundraising targets for specific time periods. The system tracks progress towards these goals by automatically associating incoming donations with active goals.
+Donation Goals enable streamers to set fundraising targets for specific time periods. The system tracks progress towards these goals by automatically associating incoming donations with active goals.
 
 ## Key Features
 

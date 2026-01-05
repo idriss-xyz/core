@@ -17,7 +17,7 @@ export const MobileProductsSection = ({ className }: Properties) => {
       )}
     >
       {/* -mt-5 was added to compensate the Tabs height */}
-      <section className={className} id="creators">
+      <section className={className} id="streamers">
         <CreatorsSection fadeOut={false} />
       </section>
     </div>

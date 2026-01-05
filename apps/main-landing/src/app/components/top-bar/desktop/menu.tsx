@@ -22,7 +22,7 @@ export const Menu = ({ className }: Properties) => {
                 asLink
                 className="uppercase"
               >
-                Top creators
+                Top streamers
               </Button>
             </span>
           </NavigationMenu.Link>

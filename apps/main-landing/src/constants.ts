@@ -2,7 +2,7 @@ import { Hex, parseAbi } from 'viem';
 
 export const INTERNAL_LINK = {
   SUPERPOWERS: '/dao#apps',
-  CREATORS: '/dao#creators',
+  CREATORS: '/dao#streamers',
   TOKEN: '/dao#token',
 };
 

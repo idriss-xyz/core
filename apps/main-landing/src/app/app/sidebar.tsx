@@ -68,7 +68,7 @@ export function Sidebar() {
 
             <NavigationMenu.Item className={getLinkClasses('/app/ranking')}>
               <Link
-                href="/app/ranking/top-creators"
+                href="/app/ranking/top-streamers"
                 className="flex w-full items-center rounded-lg hover:text-mint-600"
               >
                 <Icon size={20} name="Trophy" className="mr-3 size-5" />
