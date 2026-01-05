@@ -157,6 +157,7 @@ export async function sendSignupGuideEmail(
     Destination: {
       ToAddresses: [recipientEmail],
     },
+    ReplyToAddresses: ['hello@idriss.xyz'],
     Message: {
       Subject: {
         Data: 'Continue setting up IDRISS on desktop',
