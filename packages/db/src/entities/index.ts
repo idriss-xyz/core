@@ -18,3 +18,4 @@ export { CreatorFollowedChannel } from './creator-followed-channel.entity';
 export { DonationGoal } from './donation-goal.entity';
 export { Environment } from './environment.entity';
 export { TwitchTokens } from './twitch-tokens.entity';
+export { MobileSignupEmail } from './mobile-signup-email.entity';

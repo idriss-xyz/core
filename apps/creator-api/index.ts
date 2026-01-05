@@ -31,6 +31,7 @@ import siweRouter from './routes/siwe';
 import donationGoalRouter from './routes/donation-goal';
 import botAuthRouter from './routes/bot-auth';
 import moderatorStatusRouter from './routes/moderator-status';
+import mobileSignupRouter from './routes/mobile-signup';
 import { AppDataSource, Creator, initializeDatabase } from '@idriss-xyz/db';
 import { isAllowedOrigin, openCors } from './config/cors';
 import { MAIN_LANDING_LINK } from '@idriss-xyz/constants';
@@ -66,6 +67,7 @@ app.use('/siwe', siweRouter);
 app.use('/donation-goal', donationGoalRouter);
 app.use('/bot-auth', botAuthRouter);
 app.use('/moderator-status', moderatorStatusRouter);
+app.use('/mobile-signup', mobileSignupRouter);
 
 const HOST = process.env.HOST;
 const PORT = Number(process.env.PORT) || 4000;
