@@ -46,10 +46,7 @@ export const ProductsSection = () => {
       {isMobile ? (
         <MobileProductsSection className="flex lg:hidden" />
       ) : (
-        <DesktopProductsSection
-          className="hidden lg:flex"
-          isFirstRender={isFirstRender}
-        />
+        <DesktopProductsSection className="hidden lg:flex" />
       )}
     </QueryProvider>
   );

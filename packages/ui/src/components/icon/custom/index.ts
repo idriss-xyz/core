@@ -1,5 +1,4 @@
 export { Discord } from './discord';
-export { Farcaster } from './farcaster';
 export { IdrissArrowRight } from './idriss-arrow-right';
 export { IdrissArrowLeft } from './idriss-arrow-left';
 export { Instagram } from './instagram';

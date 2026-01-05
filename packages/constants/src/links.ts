@@ -12,10 +12,9 @@ export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
 
 export const SOCIAL_LINK = {
   X: 'https://x.com/idriss_xyz',
-  WARPCAST: 'https://warpcast.com/idriss',
   DISCORD: 'https://discord.com/invite/RJhJKamjw5',
   INSTAGRAM: 'https://www.instagram.com/idriss_xyz',
-  TIKTOK: 'https://www.tiktok.com/@idriss_xyz_',
+  TIKTOK: 'https://www.tiktok.com/@idriss_xyz',
   YOUTUBE: 'https://www.youtube.com/@idriss_xyz',
 };
 export const ZAPPER_API_URL = 'https://public.zapper.xyz/graphql';

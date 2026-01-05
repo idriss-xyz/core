@@ -13,10 +13,6 @@ const SOCIALS: { iconName: IconName; link: string }[] = [
     link: SOCIAL_LINK.X,
   },
   {
-    iconName: 'Farcaster',
-    link: SOCIAL_LINK.WARPCAST,
-  },
-  {
     iconName: 'Tiktok',
     link: SOCIAL_LINK.TIKTOK,
   },

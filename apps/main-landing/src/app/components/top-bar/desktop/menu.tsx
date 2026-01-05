@@ -1,6 +1,5 @@
 import { Button } from '@idriss-xyz/ui/button';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
-import Link from 'next/link';
 
 import { EXTERNAL_LINK, INTERNAL_LINK } from '@/constants';
 
@@ -15,16 +14,16 @@ export const Menu = ({ className }: Properties) => {
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
             <span>
-              <Link href={EXTERNAL_LINK.TOP_CREATORS} passHref legacyBehavior>
-                <Button
-                  intent="tertiary"
-                  size="large"
-                  asLink
-                  className="uppercase"
-                >
-                  Top streamers
-                </Button>
-              </Link>
+              <Button
+                intent="tertiary"
+                size="large"
+                href={EXTERNAL_LINK.TOP_CREATORS}
+                isExternal
+                asLink
+                className="uppercase"
+              >
+                Top streamers
+              </Button>
             </span>
           </NavigationMenu.Link>
         </NavigationMenu.Item>
@@ -32,16 +31,16 @@ export const Menu = ({ className }: Properties) => {
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
             <span>
-              <Link href={EXTERNAL_LINK.TOP_DONORS} passHref legacyBehavior>
-                <Button
-                  intent="tertiary"
-                  size="large"
-                  asLink
-                  className="uppercase"
-                >
-                  Top fans
-                </Button>
-              </Link>
+              <Button
+                intent="tertiary"
+                size="large"
+                href={EXTERNAL_LINK.TOP_DONORS}
+                isExternal
+                asLink
+                className="uppercase"
+              >
+                Top fans
+              </Button>
             </span>
           </NavigationMenu.Link>
         </NavigationMenu.Item>
@@ -49,16 +48,15 @@ export const Menu = ({ className }: Properties) => {
         <NavigationMenu.Item>
           <NavigationMenu.Link asChild>
             <span>
-              <Link href={INTERNAL_LINK.TOKEN} passHref legacyBehavior>
-                <Button
-                  intent="tertiary"
-                  size="large"
-                  asLink
-                  className="uppercase"
-                >
-                  Token
-                </Button>
-              </Link>
+              <Button
+                intent="tertiary"
+                size="large"
+                href={INTERNAL_LINK.TOKEN}
+                asLink
+                className="uppercase"
+              >
+                Token
+              </Button>
             </span>
           </NavigationMenu.Link>
         </NavigationMenu.Item>

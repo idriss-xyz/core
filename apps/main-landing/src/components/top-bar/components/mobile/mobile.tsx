@@ -3,7 +3,6 @@ import { Dialog } from '@idriss-xyz/ui/dialog';
 import { IconButton } from '@idriss-xyz/ui/icon-button';
 import { VisuallyHidden } from '@idriss-xyz/ui/visually-hidden';
 import { Button } from '@idriss-xyz/ui/button';
-import Link from 'next/link';
 import { NavigationMenu } from '@idriss-xyz/ui/navigation-menu';
 import { DOCUMENTATION_LINK_DAO } from '@idriss-xyz/constants';
 
@@ -43,59 +42,45 @@ export const Mobile = () => {
                     <NavigationMenu.Item>
                       <NavigationMenu.Link asChild>
                         <span>
-                          <Link
+                          <Button
+                            intent="tertiary"
+                            size="large"
+                            onClick={close}
                             href={INTERNAL_LINK.CREATORS}
-                            passHref
-                            legacyBehavior
+                            asLink
                           >
-                            <Button
-                              intent="tertiary"
-                              size="large"
-                              onClick={close}
-                              asLink
-                            >
-                              APP
-                            </Button>
-                          </Link>
+                            APP
+                          </Button>
                         </span>
                       </NavigationMenu.Link>
                     </NavigationMenu.Item>
 
                     <NavigationMenu.Link asChild>
                       <span>
-                        <Link
+                        <Button
+                          intent="tertiary"
+                          size="large"
+                          onClick={close}
                           href={INTERNAL_LINK.TOKEN}
-                          passHref
-                          legacyBehavior
+                          asLink
                         >
-                          <Button
-                            intent="tertiary"
-                            size="large"
-                            onClick={close}
-                            asLink
-                          >
-                            TOKEN
-                          </Button>
-                        </Link>
+                          TOKEN
+                        </Button>
                       </span>
                     </NavigationMenu.Link>
 
                     <NavigationMenu.Link asChild>
                       <span>
-                        <Link
+                        <Button
+                          intent="tertiary"
+                          size="large"
+                          onClick={close}
                           href={EXTERNAL_LINK.VAULT}
-                          passHref
-                          legacyBehavior
+                          isExternal
+                          asLink
                         >
-                          <Button
-                            intent="tertiary"
-                            size="large"
-                            onClick={close}
-                            asLink
-                          >
-                            VAULT
-                          </Button>
-                        </Link>
+                          VAULT
+                        </Button>
                       </span>
                     </NavigationMenu.Link>
 

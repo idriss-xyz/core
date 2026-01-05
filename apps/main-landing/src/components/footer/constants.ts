@@ -63,12 +63,6 @@ export const SOCIALS: SectionItem[] = [
     prefixIconName: 'TwitterX',
   },
   {
-    link: SOCIAL_LINK.WARPCAST,
-    name: 'FARCASTER',
-    isExternal: true,
-    prefixIconName: 'Farcaster',
-  },
-  {
     link: SOCIAL_LINK.DISCORD,
     name: 'DISCORD',
     isExternal: true,

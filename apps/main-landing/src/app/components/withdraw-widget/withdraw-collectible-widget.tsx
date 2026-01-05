@@ -503,6 +503,7 @@ export const WithdrawCollectibleWidget = ({
                           placeholder="External wallet address"
                           error={!!error}
                           helperText={error?.message}
+                          labelHelper="Send only to a wallet or exchange that supports this asset and network, or funds may be lost."
                         />
                       );
                     }}

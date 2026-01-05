@@ -1,6 +1,11 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { CREATOR_API_URL } from '@idriss-xyz/constants';
+import {
+  CREATOR_API_URL,
+  PRIVACY_POLICY_LINK,
+  TERMS_OF_SERVICE_LINK,
+} from '@idriss-xyz/constants';
+import { ExternalLink } from '@idriss-xyz/ui/external-link';
 import { Modal } from '@idriss-xyz/ui/modal';
 import { Button } from '@idriss-xyz/ui/button';
 import {
@@ -97,7 +102,7 @@ export const DonateOptionsModal = () => {
             value={selectedOption}
             onChange={setSelectedOption}
           />
-          <div className="flex justify-center">
+          <div className="flex flex-col items-center gap-1.5">
             {selectedOption === 'guest' ? (
               <Button
                 onClick={handleSaveChoice}
@@ -119,6 +124,23 @@ export const DonateOptionsModal = () => {
                 Continue with Twitch
               </Button>
             )}
+            <span className="text-center text-label6 text-neutral-500">
+              By continuing, you agree to our{' '}
+              <ExternalLink
+                className="text-mint-600"
+                href={TERMS_OF_SERVICE_LINK}
+              >
+                Terms of service
+              </ExternalLink>{' '}
+              &{' '}
+              <ExternalLink
+                className="text-mint-600"
+                href={PRIVACY_POLICY_LINK}
+              >
+                Privacy policy
+              </ExternalLink>
+              .
+            </span>
           </div>
         </div>
       </div>

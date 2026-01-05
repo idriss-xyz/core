@@ -124,7 +124,7 @@ const nextConfig = {
       },
       {
         source: '/tiktok',
-        destination: 'https://www.tiktok.com/@idriss_xyz_',
+        destination: 'https://www.tiktok.com/@idriss_xyz',
         basePath: false,
         permanent: false,
       },
