@@ -65,9 +65,6 @@ router.post(
       // Check daily email limit
       const dailyCount = await getDailyEmailCount();
       if (dailyCount >= DAILY_EMAIL_LIMIT) {
-        console.warn(
-          `[EMAIL] Daily limit of ${DAILY_EMAIL_LIMIT} emails reached`,
-        );
         res.status(503).json({ error: 'Service temporarily unavailable' });
         return;
       }
