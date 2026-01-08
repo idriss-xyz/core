@@ -4,6 +4,7 @@ import { configureEnv } from './config/environment';
 configureEnv(mode, __dirname);
 
 import express, { Application, Request, Response } from 'express';
+import cookieParser from 'cookie-parser';
 import http from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
 import { connectedClients } from './services/socket-server';
@@ -39,6 +40,7 @@ import { startDbListener } from './services/db-listener';
 
 const app: Application = express();
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(openCors);
 

@@ -1,8 +1,18 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { CREATOR_API_URL } from '@idriss-xyz/constants';
 
 import { useAuth } from '../context/auth-context';
+
+interface TokenExchangeResponse {
+  token: string;
+  name: string;
+  displayName: string;
+  pfp: string;
+  email: string;
+  callbackUrl: string;
+}
 
 export function OAuthCallbackHandler() {
   const {
@@ -17,31 +27,59 @@ export function OAuthCallbackHandler() {
   } = useAuth();
   const router = useRouter();
   const searchParameters = useSearchParams();
-  const {
-    token: authToken,
-    name,
-    displayName,
-    pfp,
-    email,
-    login,
-    error,
-    callbackUrl,
-  } = Object.fromEntries(
-    [
-      'token',
-      'name',
-      'displayName',
-      'pfp',
-      'email',
-      'login',
-      'error',
-      'callbackUrl',
-    ].map((k) => {
+  const hasExchangedCode = useRef(false);
+
+  const { code, login, error, callbackUrl } = Object.fromEntries(
+    ['code', 'login', 'error', 'callbackUrl'].map((k) => {
       return [k, searchParameters.get(k)];
     }),
   );
 
   useEffect(() => {
+    const exchangeCodeForToken = async (authCode: string) => {
+      if (hasExchangedCode.current) return;
+      hasExchangedCode.current = true;
+
+      try {
+        const response = await fetch(`${CREATOR_API_URL}/auth/token`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ code: authCode }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to exchange authorization code');
+        }
+
+        const data: TokenExchangeResponse = await response.json();
+
+        setIsModalOpen(true);
+        if (data.name) {
+          localStorage.setItem(
+            'twitch_new_user_info',
+            JSON.stringify({
+              name: data.name,
+              displayName: data.displayName,
+              pfp: data.pfp,
+              email: data.email,
+            }),
+          );
+        }
+        if (data.callbackUrl) setCallbackUrl(data.callbackUrl);
+        setCustomAuthToken(data.token);
+        setOauthLoading(false);
+        setIsLoading(true);
+      } catch (error_) {
+        console.error('Failed to exchange code for token:', error_);
+        setIsModalOpen(true);
+        setOauthError(true);
+        setOauthLoading(false);
+        hasExchangedCode.current = false;
+      }
+    };
+
     if (login) {
       // Twitch has finished authenticating the user and failed
       setIsModalOpen(true);
@@ -54,28 +92,12 @@ export function OAuthCallbackHandler() {
       if (!oauthLoading) {
         setOauthLoading(false);
       }
-    } else if (authToken) {
-      // Twitch has finished authenticating the user and succeeded
-      setIsModalOpen(true);
-      if (name) {
-        localStorage.setItem(
-          'twitch_new_user_info',
-          JSON.stringify({ name, displayName, pfp, email }),
-        );
-      }
-      if (callbackUrl) setCallbackUrl(callbackUrl);
-      setCustomAuthToken(authToken);
-    }
-    if (authToken && !loading) {
-      setOauthLoading(false);
-      setIsLoading(true);
+    } else if (code) {
+      // Exchange the authorization code for a token
+      void exchangeCodeForToken(code);
     }
   }, [
-    authToken,
-    name,
-    displayName,
-    pfp,
-    email,
+    code,
     login,
     router,
     error,
