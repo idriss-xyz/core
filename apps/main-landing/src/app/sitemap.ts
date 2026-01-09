@@ -1,6 +1,9 @@
 import { MetadataRoute } from 'next';
 import { CREATOR_API_URL } from '@idriss-xyz/constants';
 
+import { getAllCompareSlugs } from './compare/content';
+import { getAllGuideSlugs } from './guides/content';
+
 type LeaderboardEntry = {
   displayName: string;
 };
@@ -107,5 +110,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
-  return [...staticPages, ...creatorPages, ...fanPages];
+  // Compare/answer pages for SEO
+  const compareSlugs = getAllCompareSlugs();
+  const comparePages: MetadataRoute.Sitemap = compareSlugs.map((slug) => {
+    return {
+      url: `${baseUrl}/compare/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    };
+  });
+
+  // Guide pages for SEO
+  const guideSlugs = getAllGuideSlugs();
+  const guidePagesList: MetadataRoute.Sitemap = guideSlugs.map((slug) => {
+    return {
+      url: `${baseUrl}/guides/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    };
+  });
+
+  return [
+    ...staticPages,
+    ...creatorPages,
+    ...fanPages,
+    ...comparePages,
+    ...guidePagesList,
+  ];
 }

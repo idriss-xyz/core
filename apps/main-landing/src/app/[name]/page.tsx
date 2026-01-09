@@ -77,15 +77,15 @@ export default async function CreatorProfile({ params }: Properties) {
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ProfilePage',
-    mainEntity: {
+    'mainEntity': {
       '@type': 'Person',
-      name: displayName,
-      url: profileUrl,
+      'name': displayName,
+      'url': profileUrl,
       ...(rawProfile.profilePictureUrl && {
         image: rawProfile.profilePictureUrl,
       }),
     },
-    isPartOf: { '@id': 'https://idriss.xyz/#website' },
+    'isPartOf': { '@id': 'https://idriss.xyz/#website' },
   };
 
   return (

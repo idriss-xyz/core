@@ -36,13 +36,13 @@ const DEPLOYMENT_URL = process.env.RAILWAY_PUBLIC_DOMAIN
 
 // ts-unused-exports:disable-next-line
 export const metadata: Metadata = {
-  title: 'IDRISS',
+  title: 'IDRISS - Instant Donations for Twitch & YouTube Streamers',
   description:
-    'Streamer monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
+    'Accept donations on Twitch and YouTube with instant payouts, no chargebacks, and only 1% fees. The best Streamlabs alternative for streamers who want to keep more of what they earn.',
   openGraph: {
-    title: 'Make more, grow faster, take control',
+    title: 'IDRISS - Instant Donations for Streamers',
     description:
-      'Streamer monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
+      'Accept donations on Twitch and YouTube with instant payouts, no chargebacks, and only 1% fees.',
     type: 'website',
     siteName: 'IDRISS',
     images: [
@@ -56,9 +56,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'IDRISS - Make more, grow faster, take control',
+    title: 'IDRISS - Instant Donations for Streamers',
     description:
-      'Streamer monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
+      'Accept donations on Twitch and YouTube with instant payouts, no chargebacks, and only 1% fees.',
     images: ['/og.png'],
   },
   icons: [
@@ -120,13 +120,13 @@ export default async function RootLayout({
       {
         '@type': 'Organization',
         '@id': 'https://idriss.xyz/#organization',
-        name: 'IDRISS',
-        url: 'https://idriss.xyz',
-        logo: {
+        'name': 'IDRISS',
+        'url': 'https://idriss.xyz',
+        'logo': {
           '@type': 'ImageObject',
-          url: 'https://idriss.xyz/og.png',
+          'url': 'https://idriss.xyz/og.png',
         },
-        sameAs: [
+        'sameAs': [
           'https://x.com/idriss_xyz',
           'https://discord.com/invite/RJhJKamjw5',
           'https://github.com/idriss-xyz',
@@ -135,11 +135,62 @@ export default async function RootLayout({
       {
         '@type': 'WebSite',
         '@id': 'https://idriss.xyz/#website',
-        url: 'https://idriss.xyz',
-        name: 'IDRISS',
-        description:
-          'Streamer monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
-        publisher: { '@id': 'https://idriss.xyz/#organization' },
+        'url': 'https://idriss.xyz',
+        'name': 'IDRISS',
+        'description':
+          'Accept donations on Twitch and YouTube with instant payouts, no chargebacks, and only 1% fees.',
+        'publisher': { '@id': 'https://idriss.xyz/#organization' },
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': 'https://idriss.xyz/#faq',
+        'mainEntity': [
+          {
+            '@type': 'Question',
+            'name': 'How do I accept donations on Twitch?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text':
+                'With IDRISS, you can accept donations on Twitch by creating a free account and adding our browser source to OBS. Donations appear as alerts on your stream and you get instant payouts.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'What are the fees for IDRISS donations?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text':
+                'IDRISS charges a flat 1% fee on donations. This is significantly lower than traditional platforms like Streamlabs or PayPal that take 3-5% cuts.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'How fast are payouts compared to Twitch?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text':
+                'IDRISS payouts are instant. Unlike Twitch which holds your money for 15-45 days, donations are available immediately. No waiting periods, no payout thresholds.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'Can I get chargebacks on IDRISS donations?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text':
+                'No. IDRISS donations are final and cannot be charged back. This protects streamers from fraudulent chargebacks that are common with PayPal and credit card donations.',
+            },
+          },
+          {
+            '@type': 'Question',
+            'name': 'Is IDRISS a good alternative to Streamlabs?',
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text':
+                'Yes. IDRISS offers lower fees (1% vs 3-5%), instant payouts, and no chargebacks compared to Streamlabs. It works alongside your existing setup - you can use both and let viewers choose.',
+            },
+          },
+        ],
       },
     ],
   };
