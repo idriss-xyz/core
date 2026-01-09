@@ -1,6 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalEnv": [
+    "NEXT_PUBLIC_CREATOR_API_URL",
     "DATABASE_URL",
     "TWITCH_CLIENT_ID",
     "TWITCH_CLIENT_SECRET",

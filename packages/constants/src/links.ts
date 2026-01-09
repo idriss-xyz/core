@@ -8,7 +8,14 @@ export const STATIC_ORIGINS = [
   'http://localhost:3000',
 ];
 
-export const CREATOR_API_URL = 'https://creators-api.idriss.xyz';
+// Declare process.env types locally to avoid requiring @types/node in consumers
+// while still allowing Next.js to replace NEXT_PUBLIC_* at build time
+declare const process: {
+  env: { NEXT_PUBLIC_CREATOR_API_URL?: string };
+};
+
+export const CREATOR_API_URL =
+  process.env.NEXT_PUBLIC_CREATOR_API_URL ?? 'https://creators-api.idriss.xyz';
 
 export const SOCIAL_LINK = {
   X: 'https://x.com/idriss_xyz',
