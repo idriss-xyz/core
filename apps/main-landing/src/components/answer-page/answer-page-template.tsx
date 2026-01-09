@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import { ReactNode } from 'react';
 import { Button } from '@idriss-xyz/ui/button';
 import { Icon } from '@idriss-xyz/ui/icon';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
@@ -9,6 +11,49 @@ import { AnswerPageContent, ComparisonItem } from './types';
 
 type Properties = {
   content: AnswerPageContent;
+};
+
+const parseMarkdownLinks = (text: string): ReactNode[] => {
+  const linkRegex = /\[([^\]]+)]\(([^)]+)\)/g;
+  const parts: ReactNode[] = [];
+  let lastIndex = 0;
+  let match;
+
+  while ((match = linkRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+
+    const linkText = match[1] ?? '';
+    const url = match[2] ?? '';
+    const isExternal = url.startsWith('http');
+
+    parts.push(
+      isExternal ? (
+        <a
+          key={match.index}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-mint-600 underline"
+        >
+          {linkText}
+        </a>
+      ) : (
+        <Link key={match.index} href={url} className="text-mint-600 underline">
+          {linkText}
+        </Link>
+      ),
+    );
+
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts.length > 0 ? parts : [text];
 };
 
 const ComparisonCell = ({ value }: { value: string | boolean }) => {
@@ -119,7 +164,7 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                                   key={paragraph.slice(0, 50)}
                                   className="mb-4"
                                 >
-                                  {paragraph}
+                                  {parseMarkdownLinks(paragraph)}
                                 </p>
                               );
                             })}
@@ -167,7 +212,7 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                               {item.question}
                             </h3>
                             <p className="text-body5 text-neutralGreen-700">
-                              {item.answer}
+                              {parseMarkdownLinks(item.answer)}
                             </p>
                           </div>
                         );
