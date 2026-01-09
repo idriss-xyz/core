@@ -114,11 +114,45 @@ export default async function RootLayout({
     );
   }
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        '@id': 'https://idriss.xyz/#organization',
+        name: 'IDRISS',
+        url: 'https://idriss.xyz',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://idriss.xyz/og.png',
+        },
+        sameAs: [
+          'https://x.com/idriss_xyz',
+          'https://discord.com/invite/RJhJKamjw5',
+          'https://github.com/idriss-xyz',
+        ],
+      },
+      {
+        '@type': 'WebSite',
+        '@id': 'https://idriss.xyz/#website',
+        url: 'https://idriss.xyz',
+        name: 'IDRISS',
+        description:
+          'Streamer monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
+        publisher: { '@id': 'https://idriss.xyz/#organization' },
+      },
+    ],
+  };
+
   return (
     <html lang="en">
       <body
         className={`${aeonikPro.variable} flex min-h-screen flex-col font-sans antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <PrivyModalHider />
         <CreatorsProviders>{children}</CreatorsProviders>
         <GoogleAnalytics gaId="G-YM1B80KWY4" />

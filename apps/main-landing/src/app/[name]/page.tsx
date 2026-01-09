@@ -22,7 +22,27 @@ export async function generateMetadata({
   if (!profile) {
     return { robots: { index: false, follow: false } };
   }
-  return {};
+
+  const displayName = profile.displayName ?? profile.name;
+  const title = `${displayName} - IDRISS`;
+  const description = `Support ${displayName} with crypto donations on IDRISS`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'profile',
+      images: profile.profilePictureUrl ? [profile.profilePictureUrl] : [],
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+      images: profile.profilePictureUrl ? [profile.profilePictureUrl] : [],
+    },
+  };
 }
 
 // ts-unused-exports:disable-next-line
@@ -51,8 +71,29 @@ export default async function CreatorProfile({ params }: Properties) {
     minimumSfxAmount: Number.isNaN(minimumSfxAmount) ? 0 : minimumSfxAmount,
   };
 
+  const displayName = rawProfile.displayName ?? rawProfile.name;
+  const profileUrl = `https://idriss.xyz/${rawProfile.name}`;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    mainEntity: {
+      '@type': 'Person',
+      name: displayName,
+      url: profileUrl,
+      ...(rawProfile.profilePictureUrl && {
+        image: rawProfile.profilePictureUrl,
+      }),
+    },
+    isPartOf: { '@id': 'https://idriss.xyz/#website' },
+  };
+
   return (
     <RainbowKitProviders>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <OAuthCallbackHandler />
       <DonateOptionsModal />
       <DonateContent creatorProfile={creatorProfile} />
