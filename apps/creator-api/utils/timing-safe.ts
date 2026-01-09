@@ -4,7 +4,10 @@ import crypto from 'crypto';
  * Timing-safe string comparison to prevent timing attacks.
  * Returns true if the strings are equal, false otherwise.
  */
-export const timingSafeEqual = (a: string | undefined, b: string | undefined): boolean => {
+export const timingSafeEqual = (
+  a: string | undefined,
+  b: string | undefined,
+): boolean => {
   if (!a || !b) return false;
 
   // Ensure both strings are the same length to prevent length-based timing attacks

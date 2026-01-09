@@ -48,7 +48,9 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
       decodedState && isValidCallback(decodedState)
         ? decodedState
         : DEFAULT_CALLBACK;
-    res.redirect(`${process.env.BASE_URL}/${callbackPath}?success=false&error=no_code`);
+    res.redirect(
+      `${process.env.BASE_URL}/${callbackPath}?success=false&error=no_code`,
+    );
     return;
   }
 
