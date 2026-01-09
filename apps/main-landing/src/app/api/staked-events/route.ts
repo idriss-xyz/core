@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 
 import { formatEther, Hex, parseAbiItem } from 'viem';
 import { NextResponse } from 'next/server';
@@ -102,31 +103,39 @@ const loadExistingEvents = (): {
   events: StakeEvent[];
   lastProcessedBlock: bigint;
 } => {
-  if (fs.existsSync(STAKED_EVENTS_FILE_PATH)) {
-    const data = JSON.parse(fs.readFileSync(STAKED_EVENTS_FILE_PATH, 'utf8'));
-    return {
-      events: data.events ?? [],
-      lastProcessedBlock: data.lastProcessedBlock
-        ? BigInt(data.lastProcessedBlock)
-        : STARTING_BLOCK,
-    };
+  if (!fs.existsSync(STAKED_EVENTS_FILE_PATH)) {
+    return { events: [], lastProcessedBlock: STARTING_BLOCK };
   }
-  return { events: [], lastProcessedBlock: STARTING_BLOCK };
+
+  const stat = fs.statSync(STAKED_EVENTS_FILE_PATH);
+  if (!stat.isFile()) {
+    return { events: [], lastProcessedBlock: STARTING_BLOCK };
+  }
+
+  const data = JSON.parse(fs.readFileSync(STAKED_EVENTS_FILE_PATH, 'utf8'));
+
+  return {
+    events: data.events ?? [],
+    lastProcessedBlock: data.lastProcessedBlock
+      ? BigInt(data.lastProcessedBlock)
+      : STARTING_BLOCK,
+  };
 };
 
 const saveEventsToFile = (events: StakeEvent[], lastProcessedBlock: bigint) => {
-  if (!fs.existsSync(STAKED_EVENTS_FILE_PATH)) {
-    fs.mkdirSync(STAKED_EVENTS_FILE_PATH, { recursive: true });
-  }
-
-  const data = {
-    events,
-    lastProcessedBlock: lastProcessedBlock.toString(),
-  };
+  const dir = path.dirname(STAKED_EVENTS_FILE_PATH);
+  fs.mkdirSync(dir, { recursive: true });
 
   fs.writeFileSync(
     STAKED_EVENTS_FILE_PATH,
-    JSON.stringify(data, null, 2),
+    JSON.stringify(
+      {
+        events,
+        lastProcessedBlock: lastProcessedBlock.toString(),
+      },
+      null,
+      2,
+    ),
     'utf8',
   );
 };
