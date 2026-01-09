@@ -1,7 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "globalEnv": [
-    "NEXT_PUBLIC_CREATOR_API_URL",
     "DATABASE_URL",
     "TWITCH_CLIENT_ID",
     "TWITCH_CLIENT_SECRET",
@@ -26,7 +25,6 @@
         "CI",
         "CREATOR_LINKS_SECRET",
         "NEXT_PUBLIC_PRIVY_APP_ID",
-        "NEXT_PUBLIC_CREATOR_API_URL",
         "FONTS_TOKEN"
       ]
     },
@@ -42,7 +40,6 @@
         "CI",
         "CREATOR_LINKS_SECRET",
         "NEXT_PUBLIC_PRIVY_APP_ID",
-        "NEXT_PUBLIC_CREATOR_API_URL",
         "FONTS_TOKEN"
       ]
     },
@@ -57,7 +54,6 @@
         "CI",
         "CREATOR_LINKS_SECRET",
         "NEXT_PUBLIC_PRIVY_APP_ID",
-        "NEXT_PUBLIC_CREATOR_API_URL",
         "FONTS_TOKEN"
       ]
     },
@@ -154,8 +150,7 @@
         "TWITCH_BOT_CLIENT_ID",
         "TWITCH_BOT_CLIENT_SECRET",
         "TWITCH_BOT_USER_ID",
-        "ENCRYPTION_KEY",
-        "NEXT_PUBLIC_CREATOR_API_URL"
+        "ENCRYPTION_KEY"
       ]
     },
     "@idriss-xyz/creator-api#prod": {
@@ -187,8 +182,7 @@
         "TWITCH_BOT_CLIENT_ID",
         "TWITCH_BOT_CLIENT_SECRET",
         "TWITCH_BOT_USER_ID",
-        "ENCRYPTION_KEY",
-        "NEXT_PUBLIC_CREATOR_API_URL"
+        "ENCRYPTION_KEY"
       ]
     },
     "@idriss-xyz/creator-api#test": {
