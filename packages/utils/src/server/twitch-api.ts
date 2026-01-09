@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import { DEFAULT_FOLLOWED_CHANNELS } from './constants';
 import { FollowedChannel } from './interfaces';
 import { twitchAuthManager } from './twitch-auth-manager';

@@ -1,6 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { param, validationResult } from 'express-validator';
 import { creatorProfileService } from '../services/creator-profile.service';
+import { adminRateLimit } from '../middleware/rate-limit';
+import { requireAdminSecret } from '../middleware/admin-auth';
 import {
   Creator,
   DonationParameters,
@@ -707,95 +709,92 @@ router.get(
   },
 );
 
-router.post('/broadcast-force-refresh', async (req: Request, res: Response) => {
-  const adminSecret = req.headers['x-admin-secret'];
-  if (adminSecret !== process.env.SECRET_PASSWORD) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return;
-  }
+router.post(
+  '/broadcast-force-refresh',
+  adminRateLimit,
+  requireAdminSecret,
+  async (req: Request, res: Response) => {
+    try {
+      const io = req.app.get('io');
+      const overlayWS = io.of('/overlay');
 
-  try {
-    const io = req.app.get('io');
-    const overlayWS = io.of('/overlay');
+      overlayWS.emit('forceRefresh');
 
-    overlayWS.emit('forceRefresh');
+      res
+        .status(200)
+        .json({ message: 'Force refresh signal sent to all live overlays.' });
+      return;
+    } catch (error) {
+      console.error('Error broadcasting force refresh signal:', error);
+      res.status(500).json({ error: 'Failed to broadcast refresh signal.' });
+      return;
+    }
+  },
+);
 
-    res
-      .status(200)
-      .json({ message: 'Force refresh signal sent to all live overlays.' });
-    return;
-  } catch (error) {
-    console.error('Error broadcasting force refresh signal:', error);
-    res.status(500).json({ error: 'Failed to broadcast refresh signal.' });
-    return;
-  }
-});
-
-router.get('/list/all', async (req: Request, res: Response) => {
-  const { secret } = req.query;
-  if (secret !== process.env.SECRET_PASSWORD) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return;
-  }
-
-  try {
-    const creatorRepository = AppDataSource.getRepository(Creator);
-    const creators = await creatorRepository.find({
-      order: {
-        joinedAt: 'ASC',
-      },
-    });
-
-    const creatorList = creators.map((creator) => ({
-      displayName: creator.displayName,
-      joinedAt: creator.joinedAt,
-      doneSetup: creator.doneSetup,
-      donationUrl: creator.donationUrl,
-      twitchUrl: `https://twitch.tv/${creator.displayName}`,
-      donor: creator.isDonor,
-    }));
-
-    res.json(creatorList);
-  } catch (error) {
-    console.error('Error fetching all creators:', error);
-    res.status(500).json({ error: 'Failed to fetch all creators' });
-  }
-});
-
-router.get('/invites/all', async (req: Request, res: Response) => {
-  const { secret } = req.query;
-  if (secret !== process.env.SECRET_PASSWORD) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return;
-  }
-
-  try {
-    const referralRepository = AppDataSource.getRepository(Referral);
-    const invites = await referralRepository.find({
-      relations: {
-        referrer: true,
-        referred: true,
-      },
-      order: {
-        referred: {
+router.get(
+  '/list/all',
+  adminRateLimit,
+  requireAdminSecret,
+  async (req: Request, res: Response) => {
+    try {
+      const creatorRepository = AppDataSource.getRepository(Creator);
+      const creators = await creatorRepository.find({
+        order: {
           joinedAt: 'ASC',
         },
-      },
-    });
+      });
 
-    const invitesList = invites.map((invite) => ({
-      referrer: invite.referrer.displayName,
-      referred: invite.referred.displayName,
-      joinedAt: invite.referred.joinedAt,
-      doneSetup: invite.referred.doneSetup,
-      twitchUrl: `https://twitch.tv/${invite.referred.displayName}`,
-    }));
+      const creatorList = creators.map((creator) => ({
+        displayName: creator.displayName,
+        joinedAt: creator.joinedAt,
+        doneSetup: creator.doneSetup,
+        donationUrl: creator.donationUrl,
+        twitchUrl: `https://twitch.tv/${creator.displayName}`,
+        donor: creator.isDonor,
+      }));
 
-    res.json(invitesList);
-  } catch (error) {
-    console.error('Error fetching all creators:', error);
-    res.status(500).json({ error: 'Failed to fetch all creators' });
-  }
-});
+      res.json(creatorList);
+    } catch (error) {
+      console.error('Error fetching all creators:', error);
+      res.status(500).json({ error: 'Failed to fetch all creators' });
+    }
+  },
+);
+
+router.get(
+  '/invites/all',
+  adminRateLimit,
+  requireAdminSecret,
+  async (req: Request, res: Response) => {
+    try {
+      const referralRepository = AppDataSource.getRepository(Referral);
+      const invites = await referralRepository.find({
+        relations: {
+          referrer: true,
+          referred: true,
+        },
+        order: {
+          referred: {
+            joinedAt: 'ASC',
+          },
+        },
+      });
+
+      const invitesList = invites.map((invite) => ({
+        referrer: invite.referrer.displayName,
+        referred: invite.referred.displayName,
+        joinedAt: invite.referred.joinedAt,
+        doneSetup: invite.referred.doneSetup,
+        twitchUrl: `https://twitch.tv/${invite.referred.displayName}`,
+      }));
+
+      res.json(invitesList);
+    } catch (error) {
+      console.error('Error fetching all creators:', error);
+      res.status(500).json({ error: 'Failed to fetch all creators' });
+    }
+  },
+);
 
 export default router;

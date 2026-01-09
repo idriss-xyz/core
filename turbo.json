@@ -1,5 +1,12 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "NEXT_PUBLIC_CREATOR_API_URL",
+    "DATABASE_URL",
+    "TWITCH_CLIENT_ID",
+    "TWITCH_CLIENT_SECRET",
+    "TWITCH_BOT_USER_ID"
+  ],
   "tasks": {
     "@idriss-xyz/main-landing#build": {
       "inputs": [
@@ -13,6 +20,7 @@
       "env": [
         "ENVIRONMENT",
         "RAILWAY_PUBLIC_DOMAIN",
+        "RAILWAY_GIT_COMMIT_SHA",
         "DEV_LOGIN_PASSWORD",
         "PUBLIC_ACCESS_ENABLED",
         "CI",

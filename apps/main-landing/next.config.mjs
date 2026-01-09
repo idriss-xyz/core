@@ -33,7 +33,6 @@ void loadEnvironmentConfig();
 
 const nextConfig = {
   generateBuildId: () => {
-    // eslint-disable-next-line turbo/no-undeclared-env-vars
     return process.env.RAILWAY_GIT_COMMIT_SHA ?? `build-${Date.now()}`;
   },
 
@@ -216,12 +215,12 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: [
-      'localhost',
-      'storage.googleapis.com',
-      'static-cdn.jtvnw.net',
-      'images.zapper.xyz',
-      'nftmedia.parallelnft.com',
+    remotePatterns: [
+      { protocol: 'http', hostname: 'localhost' },
+      { protocol: 'https', hostname: 'storage.googleapis.com' },
+      { protocol: 'https', hostname: 'static-cdn.jtvnw.net' },
+      { protocol: 'https', hostname: 'images.zapper.xyz' },
+      { protocol: 'https', hostname: 'nftmedia.parallelnft.com' },
     ],
   },
   env: {

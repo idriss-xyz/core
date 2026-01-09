@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 class TwitchAuthManager {
   private static instance: TwitchAuthManager;
   private authToken: string | null = null;
