@@ -1,57 +1,10 @@
 import { MetadataRoute } from 'next';
-import { CREATOR_API_URL } from '@idriss-xyz/constants';
 
 import { getAllCompareSlugs } from './compare/content';
 import { getAllGuideSlugs } from './guides/content';
 
-type LeaderboardEntry = {
-  displayName: string;
-};
-
-type LeaderboardResponse = {
-  leaderboard: LeaderboardEntry[];
-};
-
-async function getCreatorNames(): Promise<string[]> {
-  try {
-    const response = await fetch(`${CREATOR_API_URL}/creator-leaderboard`, {
-      next: { revalidate: 3600 },
-    });
-    if (!response.ok) return [];
-    const data: LeaderboardResponse = await response.json();
-    return data.leaderboard
-      .slice(0, 20)
-      .map((entry) => {
-        return entry.displayName;
-      })
-      .filter(Boolean);
-  } catch {
-    return [];
-  }
-}
-
-async function getFanNames(): Promise<string[]> {
-  try {
-    const response = await fetch(`${CREATOR_API_URL}/donor-leaderboard`, {
-      next: { revalidate: 3600 },
-    });
-    if (!response.ok) return [];
-    const data: LeaderboardResponse = await response.json();
-    return data.leaderboard
-      .map((entry) => {
-        return entry.displayName;
-      })
-      .filter((name) => {
-        return Boolean(name) && name !== 'anon';
-      })
-      .slice(0, 10);
-  } catch {
-    return [];
-  }
-}
-
 // ts-unused-exports:disable-next-line
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://idriss.xyz';
 
   // Static pages
@@ -88,28 +41,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  // Dynamic creator pages from leaderboard
-  const creatorNames = await getCreatorNames();
-  const creatorPages: MetadataRoute.Sitemap = creatorNames.map((name) => {
-    return {
-      url: `${baseUrl}/${name.toLowerCase()}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.6,
-    };
-  });
-
-  // Dynamic fan pages from donor leaderboard
-  const fanNames = await getFanNames();
-  const fanPages: MetadataRoute.Sitemap = fanNames.map((name) => {
-    return {
-      url: `${baseUrl}/fan/${name.toLowerCase()}`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly' as const,
-      priority: 0.5,
-    };
-  });
-
   // Compare/answer pages for SEO
   const compareSlugs = getAllCompareSlugs();
   const comparePages: MetadataRoute.Sitemap = compareSlugs.map((slug) => {
@@ -132,11 +63,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
-  return [
-    ...staticPages,
-    ...creatorPages,
-    ...fanPages,
-    ...comparePages,
-    ...guidePagesList,
-  ];
+  return [...staticPages, ...comparePages, ...guidePagesList];
 }
