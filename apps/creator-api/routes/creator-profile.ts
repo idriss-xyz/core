@@ -1,8 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { param, validationResult } from 'express-validator';
 import { creatorProfileService } from '../services/creator-profile.service';
-import { timingSafeEqual } from '../utils/timing-safe';
 import { adminRateLimit } from '../middleware/rate-limit';
+import { requireAdminSecret } from '../middleware/admin-auth';
 import {
   Creator,
   DonationParameters,
@@ -712,13 +712,8 @@ router.get(
 router.post(
   '/broadcast-force-refresh',
   adminRateLimit,
+  requireAdminSecret,
   async (req: Request, res: Response) => {
-    const adminSecret = req.headers['x-admin-secret'];
-    if (!timingSafeEqual(adminSecret as string, process.env.SECRET_PASSWORD)) {
-      res.status(401).json({ error: 'Unauthorized' });
-      return;
-    }
-
     try {
       const io = req.app.get('io');
       const overlayWS = io.of('/overlay');
@@ -737,47 +732,41 @@ router.post(
   },
 );
 
-router.get('/list/all', adminRateLimit, async (req: Request, res: Response) => {
-  const { secret } = req.query;
-  if (!timingSafeEqual(secret as string, process.env.SECRET_PASSWORD)) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return;
-  }
+router.get(
+  '/list/all',
+  adminRateLimit,
+  requireAdminSecret,
+  async (req: Request, res: Response) => {
+    try {
+      const creatorRepository = AppDataSource.getRepository(Creator);
+      const creators = await creatorRepository.find({
+        order: {
+          joinedAt: 'ASC',
+        },
+      });
 
-  try {
-    const creatorRepository = AppDataSource.getRepository(Creator);
-    const creators = await creatorRepository.find({
-      order: {
-        joinedAt: 'ASC',
-      },
-    });
+      const creatorList = creators.map((creator) => ({
+        displayName: creator.displayName,
+        joinedAt: creator.joinedAt,
+        doneSetup: creator.doneSetup,
+        donationUrl: creator.donationUrl,
+        twitchUrl: `https://twitch.tv/${creator.displayName}`,
+        donor: creator.isDonor,
+      }));
 
-    const creatorList = creators.map((creator) => ({
-      displayName: creator.displayName,
-      joinedAt: creator.joinedAt,
-      doneSetup: creator.doneSetup,
-      donationUrl: creator.donationUrl,
-      twitchUrl: `https://twitch.tv/${creator.displayName}`,
-      donor: creator.isDonor,
-    }));
-
-    res.json(creatorList);
-  } catch (error) {
-    console.error('Error fetching all creators:', error);
-    res.status(500).json({ error: 'Failed to fetch all creators' });
-  }
-});
+      res.json(creatorList);
+    } catch (error) {
+      console.error('Error fetching all creators:', error);
+      res.status(500).json({ error: 'Failed to fetch all creators' });
+    }
+  },
+);
 
 router.get(
   '/invites/all',
   adminRateLimit,
+  requireAdminSecret,
   async (req: Request, res: Response) => {
-    const { secret } = req.query;
-    if (!timingSafeEqual(secret as string, process.env.SECRET_PASSWORD)) {
-      res.status(401).json({ error: 'Unauthorized' });
-      return;
-    }
-
     try {
       const referralRepository = AppDataSource.getRepository(Referral);
       const invites = await referralRepository.find({
