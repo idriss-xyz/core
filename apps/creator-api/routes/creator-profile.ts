@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { param, validationResult } from 'express-validator';
 import { creatorProfileService } from '../services/creator-profile.service';
+import { timingSafeEqual } from '../utils/timing-safe';
 import {
   Creator,
   DonationParameters,
@@ -709,7 +710,7 @@ router.get(
 
 router.post('/broadcast-force-refresh', async (req: Request, res: Response) => {
   const adminSecret = req.headers['x-admin-secret'];
-  if (adminSecret !== process.env.SECRET_PASSWORD) {
+  if (!timingSafeEqual(adminSecret as string, process.env.SECRET_PASSWORD)) {
     res.status(401).json({ error: 'Unauthorized' });
     return;
   }
@@ -733,7 +734,7 @@ router.post('/broadcast-force-refresh', async (req: Request, res: Response) => {
 
 router.get('/list/all', async (req: Request, res: Response) => {
   const { secret } = req.query;
-  if (secret !== process.env.SECRET_PASSWORD) {
+  if (!timingSafeEqual(secret as string, process.env.SECRET_PASSWORD)) {
     res.status(401).json({ error: 'Unauthorized' });
     return;
   }
@@ -764,7 +765,7 @@ router.get('/list/all', async (req: Request, res: Response) => {
 
 router.get('/invites/all', async (req: Request, res: Response) => {
   const { secret } = req.query;
-  if (secret !== process.env.SECRET_PASSWORD) {
+  if (!timingSafeEqual(secret as string, process.env.SECRET_PASSWORD)) {
     res.status(401).json({ error: 'Unauthorized' });
     return;
   }

@@ -1,4 +1,3 @@
-/* eslint-disable turbo/no-undeclared-env-vars */
 import { formatUnits, zeroAddress } from 'viem';
 import {
   ZAPPER_API_URL,

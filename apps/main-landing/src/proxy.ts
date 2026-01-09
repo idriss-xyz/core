@@ -23,7 +23,7 @@ const CSP = [
 ].join('; ');
 
 // ts-unused-exports:disable-next-line
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const url = request.nextUrl;
 
   // Redirect www to non-www

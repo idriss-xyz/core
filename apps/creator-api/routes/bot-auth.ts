@@ -7,6 +7,18 @@ import { encryptionService } from '../services/encryption.service';
 
 const router = Router();
 
+// Validate callback is a safe relative path (no open redirect)
+const isValidCallback = (callback: string): boolean => {
+  // Must not contain protocol or start with //
+  if (/^[a-z]+:/i.test(callback) || callback.startsWith('//')) {
+    return false;
+  }
+  // Must be a relative path starting with a safe character
+  return /^[a-z0-9@]/i.test(callback);
+};
+
+const DEFAULT_CALLBACK = 'app/setup/stream-alerts';
+
 const TWITCH_BOT_CLIENT_ID = process.env.TWITCH_BOT_CLIENT_ID;
 const TWITCH_BOT_CLIENT_SECRET = process.env.TWITCH_BOT_CLIENT_SECRET;
 const TWITCH_BOT_USER_ID = process.env.TWITCH_BOT_USER_ID;
@@ -31,11 +43,12 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
   const { code, state } = req.query;
 
   if (!code) {
-    const finalCallbackUrl = state
-      ? `${process.env.BASE_URL}/${decodeURIComponent(state as string)}`
-      : `${process.env.BASE_URL}/app/setup/stream-alerts`;
-
-    res.redirect(`${finalCallbackUrl}?success=false&error=no_code`);
+    const decodedState = state ? decodeURIComponent(state as string) : null;
+    const callbackPath =
+      decodedState && isValidCallback(decodedState)
+        ? decodedState
+        : DEFAULT_CALLBACK;
+    res.redirect(`${process.env.BASE_URL}/${callbackPath}?success=false&error=no_code`);
     return;
   }
 
@@ -74,12 +87,13 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
         }
       } catch (userError: any) {
         console.error('Bot user validation failed:', userError);
-        const finalCallbackUrl = state
-          ? `${process.env.BASE_URL}/${decodeURIComponent(state as string)}`
-          : `${process.env.BASE_URL}/app/setup/stream-alerts`;
-
+        const decodedState = state ? decodeURIComponent(state as string) : null;
+        const callbackPath =
+          decodedState && isValidCallback(decodedState)
+            ? decodedState
+            : DEFAULT_CALLBACK;
         res.redirect(
-          `${finalCallbackUrl}?success=false&error=${encodeURIComponent(userError.message)}`,
+          `${process.env.BASE_URL}/${callbackPath}?success=false&error=bot_validation_failed`,
         );
         return;
       }
@@ -107,12 +121,13 @@ router.get('/twitch/callback', async (req: Request, res: Response) => {
     res.send('Bot authorization successful! Tokens stored in database.');
   } catch (error: any) {
     console.error('Twitch bot auth failed:', error);
-    const finalCallbackUrl = state
-      ? `${process.env.BASE_URL}/${decodeURIComponent(state as string)}`
-      : `${process.env.BASE_URL}/app/setup/stream-alerts`;
-
+    const decodedState = state ? decodeURIComponent(state as string) : null;
+    const callbackPath =
+      decodedState && isValidCallback(decodedState)
+        ? decodedState
+        : DEFAULT_CALLBACK;
     res.redirect(
-      `${finalCallbackUrl}?success=false&error=${encodeURIComponent(error.message)}`,
+      `${process.env.BASE_URL}/${callbackPath}?success=false&error=auth_failed`,
     );
     return;
   }

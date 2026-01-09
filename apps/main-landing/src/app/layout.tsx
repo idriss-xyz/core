@@ -32,7 +32,7 @@ const aeonikPro = localFont({
 
 const DEPLOYMENT_URL = process.env.RAILWAY_PUBLIC_DOMAIN
   ? new URL(`https://${process.env.RAILWAY_PUBLIC_DOMAIN}`)
-  : undefined;
+  : new URL('https://idriss.xyz');
 
 // ts-unused-exports:disable-next-line
 export const metadata: Metadata = {
@@ -43,11 +43,23 @@ export const metadata: Metadata = {
     title: 'Make more, grow faster, take control',
     description:
       'Streamer monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
+    type: 'website',
+    siteName: 'IDRISS',
     images: [
       {
         url: '/og.png',
+        width: 1200,
+        height: 630,
+        alt: 'IDRISS - Streamer monetization platform',
       },
     ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'IDRISS - Make more, grow faster, take control',
+    description:
+      'Streamer monetization app that helps you earn more with instant payouts and near-zero platform cuts.',
+    images: ['/og.png'],
   },
   icons: [
     {
