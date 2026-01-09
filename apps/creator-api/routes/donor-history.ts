@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 
 import { timingSafeEqual } from '../utils/timing-safe';
+import { adminRateLimit } from '../middleware/rate-limit';
 import {
   calculateGlobalDonorLeaderboard,
   calculateStatsForDonor,
@@ -167,7 +168,7 @@ router.get('/csv', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/csv/all', async (req: Request, res: Response) => {
+router.get('/csv/all', adminRateLimit, async (req: Request, res: Response) => {
   const { secret } = req.query;
   if (!timingSafeEqual(secret as string, process.env.SECRET_PASSWORD)) {
     res.status(401).json({ error: 'Unauthorized' });

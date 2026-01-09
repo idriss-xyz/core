@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { param, validationResult } from 'express-validator';
 import { creatorProfileService } from '../services/creator-profile.service';
 import { timingSafeEqual } from '../utils/timing-safe';
+import { adminRateLimit } from '../middleware/rate-limit';
 import {
   Creator,
   DonationParameters,
@@ -708,7 +709,7 @@ router.get(
   },
 );
 
-router.post('/broadcast-force-refresh', async (req: Request, res: Response) => {
+router.post('/broadcast-force-refresh', adminRateLimit, async (req: Request, res: Response) => {
   const adminSecret = req.headers['x-admin-secret'];
   if (!timingSafeEqual(adminSecret as string, process.env.SECRET_PASSWORD)) {
     res.status(401).json({ error: 'Unauthorized' });
@@ -732,7 +733,7 @@ router.post('/broadcast-force-refresh', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/list/all', async (req: Request, res: Response) => {
+router.get('/list/all', adminRateLimit, async (req: Request, res: Response) => {
   const { secret } = req.query;
   if (!timingSafeEqual(secret as string, process.env.SECRET_PASSWORD)) {
     res.status(401).json({ error: 'Unauthorized' });
@@ -763,7 +764,7 @@ router.get('/list/all', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/invites/all', async (req: Request, res: Response) => {
+router.get('/invites/all', adminRateLimit, async (req: Request, res: Response) => {
   const { secret } = req.query;
   if (!timingSafeEqual(secret as string, process.env.SECRET_PASSWORD)) {
     res.status(401).json({ error: 'Unauthorized' });
