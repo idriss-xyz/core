@@ -9,6 +9,19 @@ export type ComparisonItem = {
   competitor: string | boolean;
 };
 
+type FeeTableRow = {
+  label: string;
+  idriss: string;
+  competitor: string;
+};
+
+export type FeeTable = {
+  idrissName: string;
+  competitorName: string;
+  rows: FeeTableRow[];
+  footnote?: string;
+};
+
 export type AnswerPageContent = {
   // SEO
   slug: string;
@@ -27,15 +40,22 @@ export type AnswerPageContent = {
     content: string;
   }[];
 
-  // Optional comparison table
+  // Optional fee breakdown table (inline in content)
+  feeTable?: FeeTable;
+
+  // Optional feature comparison table
   comparison?: {
     idrissName: string;
     competitorName: string;
     items: ComparisonItem[];
+    footnote?: string;
   };
 
   // FAQ for schema markup + display
   faq: FAQItem[];
+
+  // Optional disclaimer note
+  disclaimer?: string;
 
   // CTA
   ctaTitle: string;

@@ -8,7 +8,7 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { TopBar } from '@/app/components/top-bar';
 import { Footer } from '@/app/components/footer';
 
-import { AnswerPageContent, ComparisonItem } from './types';
+import { AnswerPageContent, ComparisonItem, FeeTable } from './types';
 
 type Properties = {
   content: AnswerPageContent;
@@ -36,7 +36,7 @@ const parseMarkdownLinks = (text: string): ReactNode[] => {
           key={match.index}
           href={url}
           target="_blank"
-          rel={isReddit ? 'nofollow ugc' : 'nofollow'}
+          rel={isReddit ? 'nofollow ugc noreferrer' : 'nofollow noreferrer'}
           className="text-mint-600 underline"
         >
           {linkText}
@@ -69,55 +69,112 @@ const ComparisonCell = ({ value }: { value: string | boolean }) => {
   return <span>{value}</span>;
 };
 
+const FeeComparisonTable = ({ feeTable }: { feeTable: FeeTable }) => {
+  return (
+    <div className="my-6">
+      <div className="bg-mint-50 relative overflow-hidden rounded-[16px]">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-mint-200">
+                <th className="px-4 py-3 text-left text-label5 font-medium text-neutralGreen-900" />
+                <th className="px-4 py-3 text-center text-label5 font-medium text-mint-600">
+                  {feeTable.idrissName}
+                </th>
+                <th className="px-4 py-3 text-center text-label5 font-medium text-neutralGreen-700">
+                  {feeTable.competitorName}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {feeTable.rows.map((row, index) => {
+                const isLastRow = index === feeTable.rows.length - 1;
+                return (
+                  <tr
+                    key={row.label}
+                    className={isLastRow ? 'bg-mint-100 font-medium' : ''}
+                  >
+                    <td className="px-4 py-3 text-body5 text-neutralGreen-900">
+                      {row.label}
+                    </td>
+                    <td className="px-4 py-3 text-center text-body5">
+                      {row.idriss}
+                    </td>
+                    <td className="px-4 py-3 text-center text-body5">
+                      {row.competitor}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {feeTable.footnote && (
+        <p className="mt-2 text-body6 italic text-neutralGreen-500">
+          {feeTable.footnote}
+        </p>
+      )}
+    </div>
+  );
+};
+
 const ComparisonTable = ({
   comparison,
 }: {
   comparison: NonNullable<AnswerPageContent['comparison']>;
 }) => {
   return (
-    <div className="relative overflow-hidden rounded-[24px] bg-white/80 backdrop-blur-[7px]">
-      <GradientBorder borderRadius={24} gradientDirection="toTop" />
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[500px]">
-          <thead>
-            <tr className="border-b border-mint-200">
-              <th className="px-6 py-4 text-left text-label4 font-medium text-neutralGreen-900">
-                Feature
-              </th>
-              <th className="px-6 py-4 text-center text-label4 font-medium text-mint-600">
-                {comparison.idrissName}
-              </th>
-              <th className="px-6 py-4 text-center text-label4 font-medium text-neutralGreen-700">
-                {comparison.competitorName}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {comparison.items.map((item: ComparisonItem, index: number) => {
-              return (
-                <tr
-                  key={item.label}
-                  className={index % 2 === 0 ? 'bg-mint-50/50' : ''}
-                >
-                  <td className="px-6 py-4 text-body5 text-neutralGreen-900">
-                    {item.label}
-                  </td>
-                  <td className="px-6 py-4 text-center text-body5">
-                    <div className="flex justify-center">
-                      <ComparisonCell value={item.idriss} />
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-center text-body5">
-                    <div className="flex justify-center">
-                      <ComparisonCell value={item.competitor} />
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+    <div>
+      <div className="relative overflow-hidden rounded-[24px] bg-white/80 backdrop-blur-[7px]">
+        <GradientBorder borderRadius={24} gradientDirection="toTop" />
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[500px]">
+            <thead>
+              <tr className="border-b border-mint-200">
+                <th className="px-6 py-4 text-left text-label4 font-medium text-neutralGreen-900">
+                  Feature
+                </th>
+                <th className="px-6 py-4 text-center text-label4 font-medium text-mint-600">
+                  {comparison.idrissName}
+                </th>
+                <th className="px-6 py-4 text-center text-label4 font-medium text-neutralGreen-700">
+                  {comparison.competitorName}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparison.items.map((item: ComparisonItem, index: number) => {
+                return (
+                  <tr
+                    key={item.label}
+                    className={index % 2 === 0 ? 'bg-mint-50/50' : ''}
+                  >
+                    <td className="px-6 py-4 text-body5 text-neutralGreen-900">
+                      {item.label}
+                    </td>
+                    <td className="px-6 py-4 text-center text-body5">
+                      <div className="flex justify-center">
+                        <ComparisonCell value={item.idriss} />
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-center text-body5">
+                      <div className="flex justify-center">
+                        <ComparisonCell value={item.competitor} />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
+      {comparison.footnote && (
+        <p className="mt-3 text-body6 italic text-neutralGreen-500">
+          {comparison.footnote}
+        </p>
+      )}
     </div>
   );
 };
@@ -136,7 +193,7 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
             {/* Hero Section */}
             <header className="relative flex w-full flex-col items-center bg-mint-100 pb-16 pt-[104px] lg:pb-24 lg:pt-[200px]">
               <div className="z-1 flex flex-col items-center gap-4 text-center px-safe md:gap-6">
-                <h1 className="container pb-2 text-balance text-display5 font-medium uppercase gradient-text md:text-display4 lg:text-display3">
+                <h1 className="container text-balance pb-2 text-display5 font-medium uppercase gradient-text md:text-display4 lg:text-display3">
                   {content.heroTitle}
                 </h1>
                 <p className="container text-body3 text-neutralGreen-700 lg:text-body2">
@@ -154,6 +211,9 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                 <div className="container">
                   <div className="mx-auto max-w-[800px]">
                     {content.sections.map((section) => {
+                      const isFeeSection = section.title
+                        .toLowerCase()
+                        .includes('fee');
                       return (
                         <div key={section.title} className="mb-12 last:mb-0">
                           <h2 className="mb-4 text-heading4 font-medium text-neutralGreen-900 lg:text-heading3">
@@ -171,6 +231,9 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                               );
                             })}
                           </div>
+                          {isFeeSection && content.feeTable && (
+                            <FeeComparisonTable feeTable={content.feeTable} />
+                          )}
                         </div>
                       );
                     })}
@@ -208,7 +271,7 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                         return (
                           <div
                             key={item.question}
-                            className="relative rounded-[16px] bg-mint-50 p-6"
+                            className="bg-mint-50 relative rounded-[16px] p-6"
                           >
                             <h3 className="mb-3 text-heading6 font-medium text-neutralGreen-900">
                               {item.question}
@@ -224,6 +287,21 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                 </div>
               </div>
             </section>
+
+            {/* Disclaimer */}
+            {content.disclaimer && (
+              <section className="bg-mint-50 py-6 lg:py-8">
+                <div className="px-safe">
+                  <div className="container">
+                    <div className="mx-auto max-w-[800px]">
+                      <p className="text-body6 italic text-neutralGreen-500">
+                        {content.disclaimer}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            )}
 
             {/* CTA Section */}
             <section className="bg-mint-100 py-10 lg:py-14">
