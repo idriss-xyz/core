@@ -21,7 +21,7 @@ But PayPal-based donations come with real downsides: [chargebacks that cost you 
     },
     {
       title: 'How do the fees compare?',
-      content: `Streamlabs itself is free, but PayPal takes at least 2.89% plus a fixed fee per transaction, depending on location and currency ([see detailed fee breakdown](https://www.paypal.com/us/webapps/mpp/merchant-fees)). A typical $10 domestic donation within the US costs $0.78 in fees, nearly 8%. For international donations, the total fee can be higher due to international surcharge.
+      content: `Streamlabs itself is free, but PayPal takes at least 2.89% plus a fixed fee per transaction, depending on location and currency (see detailed [fee breakdown](https://www.paypal.com/us/webapps/mpp/merchant-fees)). A typical $10 domestic donation within the US costs $0.78 in fees, nearly 8%. For international donations, the total fee can be higher due to international surcharge.
 
 IDRISS charges a flat 1% fee. That same $10 donation costs just $0.10. On $1,000 received in typical $10 donations, you save over $50 compared to PayPal fees. While most crypto platforms force you to pay "gas fees" to move your money, IDRISS actually sponsors the gas fees for your withdrawals. This means you don't have to worry about high network costs eating into your profits when you're ready to cash out.`,
     },
@@ -29,13 +29,13 @@ IDRISS charges a flat 1% fee. That same $10 donation costs just $0.10. On $1,000
       title: 'Which pays you faster?',
       content: `With Streamlabs and PayPal, your money sits in PayPal until you transfer it to your bank (1-3 business days). It's worth keeping in mind that [discussions on r/Twitch](https://www.reddit.com/r/Twitch/) show that some streamers had issues resolving donation holds.
 
-IDRISS payouts are [instant](/guides/instant-payouts-for-streamers) to your digital wallet. The moment someone donates, the funds are available for you to use, trade, and send. While traditional bank transfers from an exchange still take 1-3 days, many streamers now bypass this entirely by using a Coinbase Card or Crypto.com Visa. These cards link directly to your account balance, allowing you to spend your donation at a grocery store or ATM within minutes of receiving it.
+IDRISS payouts are [instant](/guides/instant-payouts-for-streamers) to your digital wallet. The moment someone donates, the funds are available for you to use, trade, and send. While traditional bank transfers from an exchange still take 1-3 days, many streamers now bypass this entirely by using a [Coinbase Card](https://www.coinbase.com/card) or [Crypto.com Visa](https://crypto.com/en/cards). These cards link directly to your account balance, allowing you to spend your donation at a grocery store or ATM within minutes of receiving it.
 
 Because IDRISS covers the network fees for your withdrawal, you can move your funds to these spendable cards immediately without needing to "top up" your wallet with extra crypto first. You gain total custody and "instant spendability" that traditional platforms can't match.`,
     },
     {
       title: 'What about chargebacks?',
-      content: `This is where the difference is dramatic. PayPal chargebacks are a [major problem for streamers](/guides/streamer-chargebacks). Donors can dispute transactions months later, taking back the money plus a $20 fee.
+      content: `This is where the difference is dramatic. PayPal [chargebacks](/guides/streamer-chargebacks) are a major problem for streamers. Donors can dispute transactions months later, taking back the money plus a $20 fee.
 
 With IDRISS, donations are final and cannot be charged back, as they are processed on modern blockchain payment rails. This completely eliminates chargeback fraud.`,
     },
