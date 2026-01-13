@@ -6,7 +6,7 @@ export const streamlabsVsStreamelements: AnswerPageContent = {
   description:
     'Compare Streamlabs and StreamElements for accepting stream donations. See payment methods, fees, features, and which platform is right for you.',
   datePublished: '2026-01-01',
-  dateModified: '2026-01-09',
+  dateModified: '2026-01-13',
 
   heroTitle: 'Streamlabs vs StreamElements for Donations',
   heroSubtitle:
@@ -14,36 +14,34 @@ export const streamlabsVsStreamelements: AnswerPageContent = {
 
   sections: [
     {
-      title: 'Which Platform Takes a Smaller Cut?',
+      title: 'Which platform takes a smaller cut?',
       content: `Neither Streamlabs nor StreamElements takes a percentage of your donations. Both platforms are free to use for basic features.
 
-However, both route donations through PayPal or credit cards, so you'll pay [2.9% + $0.30 in processing fees](https://www.paypal.com/us/webapps/mpp/merchant-fees) regardless of which you choose. The real differences are in payment methods, features, and regional availability.`,
+However, both route donations through PayPal or credit cards, so processing fees typically start around 2.89% plus a fixed fee per transaction. Depending on the donor's location and the currency used, the total cost can be higher due to international surcharge and higher fixed fee. In total, they can add up to 6-10% for smaller donations.`,
     },
     {
-      title: 'Which Has More Payment Options?',
-      content: `[Streamlabs](https://streamlabs.com/donations) supports PayPal, credit/debit cards, Coinbase (crypto), Unitpay, and Skrill. Skrill is particularly useful for international streamers as it supports paysafecard and Sofort.
+      title: 'Which has more payment options?',
+      content: `[Streamlabs](https://streamlabs.com/donations) supports PayPal and credit/debit cards.
 
-[StreamElements](https://streamelements.com/setips) is more limited with just PayPal and credit/debit cards. Their SE.Pay feature only works in the US, UK, and select European countries. If you're outside these regions or want crypto support, Streamlabs is the better choice.`,
+[StreamElements](https://streamelements.com/setips) supports PayPal and their native payment method SE.Pay, which allows other donation options such as credit cards, iDEAL and more. It's worth noting SE.Pay is only available in a selection of countries.`,
     },
     {
-      title: 'Which Has Better Free Features?',
-      content: `StreamElements wins on free content. All their overlay templates and widgets are completely free. Streamlabs locks many premium templates behind their "Ultra" subscription at $19/month.
+      title: 'Which has better free features?',
+      content: `StreamElements wins on free content. All their overlay templates and widgets are completely free. Streamlabs locks many premium templates behind their "Ultra" subscription at $27/month.
 
-Both platforms offer customizable alerts for donations, follows, and subs with comparable functionality. StreamElements' overlay editor is browser-based, while Streamlabs requires their desktop app.`,
+Both platforms offer customizable alerts for donations, follows, and subs with comparable functionality.`,
     },
     {
-      title: 'Does Either Platform Protect Against Chargebacks?',
+      title: 'Does either platform protect against chargebacks?',
       content: `Neither platform fully protects you. Since donations go through PayPal, donors can dispute transactions and [take their money back](/guides/streamer-chargebacks) weeks later.
 
-StreamElements' SE.Pay claims to cover chargeback fees (not the donation itself), but only for SE.Pay transactions - not PayPal. Streamlabs offers no chargeback protection at all.`,
+StreamElements' SE.Pay claims to cover chargeback fees (not the donation itself), but only for SE.Pay transactions - not PayPal. Streamlabs offers no native chargeback protection.`,
     },
     {
-      title: 'Which Should You Choose?',
-      content: `**Choose Streamlabs** if you want more payment options, especially for international viewers or crypto donations.
+      title: 'Which should you choose?',
+      content: `StreamElements offers more donation methods (if your region supports SE.Pay) and can partially protect you from chargebacks.
 
-**Choose StreamElements** if you want free overlays and don't need advanced payment methods.
-
-**Consider alternatives** if [chargebacks](/guides/streamer-chargebacks) are a concern or you want [faster access to your money](/guides/instant-payouts-for-streamers) than PayPal provides.`,
+Consider alternatives if [chargebacks](/guides/streamer-chargebacks) are a concern or you want [faster access to your money](/guides/instant-payouts-for-streamers) than PayPal provides.`,
     },
   ],
 
@@ -68,12 +66,12 @@ StreamElements' SE.Pay claims to cover chargeback fees (not the donation itself)
       },
       {
         label: 'Crypto support',
-        idriss: true,
+        idriss: false,
         competitor: false,
       },
       {
         label: 'International payments (Skrill)',
-        idriss: true,
+        idriss: false,
         competitor: false,
       },
       {
@@ -103,7 +101,7 @@ StreamElements' SE.Pay claims to cover chargeback fees (not the donation itself)
     {
       question: 'Which has lower fees?',
       answer:
-        'Fees are effectively identical since both use the same payment processors. PayPal charges 2.9% + $0.30 regardless of which platform you use.',
+        "Fees are effectively identical since both use the same payment processors. PayPal charges at least 2.89% plus a fixed fee regardless of which platform you use. In practice, the total cost can be higher depending on the donor's location and the currency used. This can reach up to 10% effectively for smaller donations after including an international surcharge and the fixed fee.",
     },
     {
       question: 'Can I use both at the same time?',
@@ -116,6 +114,9 @@ StreamElements' SE.Pay claims to cover chargeback fees (not the donation itself)
         'If you want instant payouts, lower fees, or chargeback protection, consider platforms like IDRISS that offer these features without the PayPal middleman.',
     },
   ],
+
+  disclaimer:
+    'Note: Fees, payout schedules, and platform policies can change over time. The information in this article reflects standard rates and practices as of the last update of this article. For the most up-to-date details, check the official documentation of each platform.',
 
   ctaTitle: 'Want Lower Fees and No Chargebacks?',
   ctaButtonText: 'Try IDRISS Free',
