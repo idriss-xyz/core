@@ -187,7 +187,7 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
         className="[&_[data-radix-scroll-area-content]]:w-screen [&_[data-radix-scroll-area-content]]:min-w-[unset_!important]"
       >
         <div className="relative">
-          <TopBar />
+          <TopBar displayCTA />
 
           <main>
             {/* Hero Section */}
