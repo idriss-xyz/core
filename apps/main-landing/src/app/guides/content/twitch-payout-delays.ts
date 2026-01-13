@@ -102,5 +102,5 @@ The only way to get faster access to your money is through direct donations outs
 
   ctaTitle: 'Tired of Waiting for Your Money?',
   ctaButtonText: 'Get Instant Payouts',
-  ctaButtonHref: 'https://creators.idriss.xyz',
+  ctaButtonHref: 'https://idriss.xyz',
 };

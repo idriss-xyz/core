@@ -122,5 +122,5 @@ Adding IDRISS takes about 5 minutes. Your existing Streamlabs alerts and overlay
 
   ctaTitle: 'Ready to Keep More of Your Donations?',
   ctaButtonText: 'Get Started Free',
-  ctaButtonHref: 'https://creators.idriss.xyz',
+  ctaButtonHref: 'https://idriss.xyz',
 };

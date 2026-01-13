@@ -76,5 +76,5 @@ Even with video evidence of the donation on stream, you may still lose the dispu
 
   ctaTitle: 'Want Chargeback-Proof Donations?',
   ctaButtonText: 'Try IDRISS Free',
-  ctaButtonHref: 'https://creators.idriss.xyz',
+  ctaButtonHref: 'https://idriss.xyz',
 };

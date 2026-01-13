@@ -79,5 +79,5 @@ Many streamers find their biggest supporters prefer direct donations because mor
 
   ctaTitle: 'Ready to Get Paid Instantly?',
   ctaButtonText: 'Start With IDRISS',
-  ctaButtonHref: 'https://creators.idriss.xyz',
+  ctaButtonHref: 'https://idriss.xyz',
 };

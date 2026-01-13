@@ -118,5 +118,5 @@ For the highest revenue with no chargeback risk, consider [instant payout altern
 
   ctaTitle: 'Want to Keep More of Your Donations?',
   ctaButtonText: 'Try IDRISS Free',
-  ctaButtonHref: 'https://creators.idriss.xyz',
+  ctaButtonHref: 'https://idriss.xyz',
 };

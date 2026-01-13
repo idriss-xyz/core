@@ -5,7 +5,8 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 
-import { TopBar, FooterDao } from '@/components';
+import { TopBar } from '@/app/components/top-bar';
+import { Footer } from '@/app/components/footer';
 
 import { AnswerPageContent, ComparisonItem } from './types';
 
@@ -27,6 +28,7 @@ const parseMarkdownLinks = (text: string): ReactNode[] => {
     const linkText = match[1] ?? '';
     const url = match[2] ?? '';
     const isExternal = url.startsWith('http');
+    const isReddit = url.includes('reddit.com');
 
     parts.push(
       isExternal ? (
@@ -34,7 +36,7 @@ const parseMarkdownLinks = (text: string): ReactNode[] => {
           key={match.index}
           href={url}
           target="_blank"
-          rel="noopener noreferrer"
+          rel={isReddit ? 'nofollow ugc' : 'nofollow'}
           className="text-mint-600 underline"
         >
           {linkText}
@@ -134,7 +136,7 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
             {/* Hero Section */}
             <header className="relative flex w-full flex-col items-center bg-mint-100 pb-16 pt-[104px] lg:pb-24 lg:pt-[200px]">
               <div className="z-1 flex flex-col items-center gap-4 text-center px-safe md:gap-6">
-                <h1 className="container text-balance pb-2 text-display5 font-medium gradient-text md:text-display4 lg:text-display3">
+                <h1 className="container pb-2 text-balance text-display5 font-medium uppercase gradient-text md:text-display4 lg:text-display3">
                   {content.heroTitle}
                 </h1>
                 <p className="container text-body3 text-neutralGreen-700 lg:text-body2">
@@ -154,7 +156,7 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                     {content.sections.map((section) => {
                       return (
                         <div key={section.title} className="mb-12 last:mb-0">
-                          <h2 className="mb-4 text-heading4 font-medium gradient-text lg:text-heading3">
+                          <h2 className="mb-4 text-heading4 font-medium text-neutralGreen-900 lg:text-heading3">
                             {section.title}
                           </h2>
                           <div className="text-body4 leading-relaxed text-neutralGreen-700 lg:text-body3">
@@ -182,9 +184,9 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
               <section className="bg-mint-50 py-10 lg:py-14">
                 <div className="px-safe">
                   <div className="container">
-                    <div className="mx-auto max-w-[900px]">
-                      <h2 className="mb-8 text-center text-heading4 font-medium gradient-text lg:text-heading3">
-                        Side-by-Side Comparison
+                    <div className="mx-auto max-w-[800px]">
+                      <h2 className="mb-8 text-heading4 font-medium text-neutralGreen-900 lg:text-heading3">
+                        Side-by-side comparison
                       </h2>
                       <ComparisonTable comparison={content.comparison} />
                     </div>
@@ -198,15 +200,15 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
               <div className="px-safe">
                 <div className="container">
                   <div className="mx-auto max-w-[800px]">
-                    <h2 className="mb-8 text-center text-heading4 font-medium gradient-text lg:text-heading3">
-                      Frequently Asked Questions
+                    <h2 className="mb-8 text-heading4 font-medium text-neutralGreen-900 lg:text-heading3">
+                      Frequently asked questions
                     </h2>
                     <div className="space-y-6">
                       {content.faq.map((item) => {
                         return (
                           <div
                             key={item.question}
-                            className="bg-mint-50 relative rounded-[16px] p-6"
+                            className="relative rounded-[16px] bg-mint-50 p-6"
                           >
                             <h3 className="mb-3 text-heading6 font-medium text-neutralGreen-900">
                               {item.question}
@@ -226,24 +228,26 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
             {/* CTA Section */}
             <section className="bg-mint-100 py-10 lg:py-14">
               <div className="px-safe">
-                <div className="container flex flex-col items-center text-center">
-                  <h2 className="mb-6 text-heading4 font-medium gradient-text lg:text-heading3">
-                    {content.ctaTitle}
-                  </h2>
-                  <Button
-                    intent="primary"
-                    size="large"
-                    asLink
-                    href={content.ctaButtonHref}
-                  >
-                    {content.ctaButtonText}
-                  </Button>
+                <div className="container">
+                  <div className="mx-auto max-w-[800px]">
+                    <h2 className="mb-6 text-heading4 font-medium uppercase gradient-text lg:text-heading3">
+                      {content.ctaTitle}
+                    </h2>
+                    <Button
+                      intent="primary"
+                      size="large"
+                      asLink
+                      href={content.ctaButtonHref}
+                    >
+                      {content.ctaButtonText}
+                    </Button>
+                  </div>
                 </div>
               </div>
             </section>
           </main>
 
-          <FooterDao />
+          <Footer />
         </div>
       </ScrollArea>
     </div>

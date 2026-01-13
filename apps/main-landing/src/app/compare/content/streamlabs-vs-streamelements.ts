@@ -119,5 +119,5 @@ StreamElements' SE.Pay claims to cover chargeback fees (not the donation itself)
 
   ctaTitle: 'Want Lower Fees and No Chargebacks?',
   ctaButtonText: 'Try IDRISS Free',
-  ctaButtonHref: 'https://creators.idriss.xyz',
+  ctaButtonHref: 'https://idriss.xyz',
 };
