@@ -271,7 +271,7 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                     <h2 className="mb-4 text-heading4 font-medium text-neutralGreen-900 lg:text-heading3">
                       Frequently asked questions
                     </h2>
-                    <div className="space-y-4">
+                    <div>
                       {content.faq.map((item) => {
                         return (
                           <div
@@ -312,7 +312,7 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
             <section className="bg-mint-100 py-10 lg:py-14">
               <div className="px-safe">
                 <div className="container">
-                  <div className="mx-auto max-w-[800px] text-center">
+                  <div className="mx-auto flex max-w-[800px] flex-col items-center text-center">
                     <h2 className="mb-6 text-heading4 font-medium uppercase gradient-text lg:text-heading3">
                       {content.ctaTitle}
                     </h2>
