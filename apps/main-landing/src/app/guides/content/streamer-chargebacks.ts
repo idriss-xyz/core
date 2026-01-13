@@ -6,7 +6,7 @@ export const streamerChargebacks: AnswerPageContent = {
   description:
     'Learn how donation chargebacks work, how much they cost streamers, and proven ways to protect yourself from chargeback fraud.',
   datePublished: '2026-01-01',
-  dateModified: '2026-01-09',
+  dateModified: '2026-01-13',
 
   heroTitle: 'How to Avoid Chargebacks as a Streamer',
   heroSubtitle:
@@ -14,34 +14,34 @@ export const streamerChargebacks: AnswerPageContent = {
 
   sections: [
     {
-      title: 'What Is a Chargeback and How Does It Work?',
+      title: 'What is a chargeback and how does it work?',
       content: `A chargeback happens when a donor disputes a transaction with their bank or PayPal. The payment processor reverses the transaction, pulling money directly from your account.
 
-Unlike refunds (which you control), chargebacks are initiated by the donor's bank. You often lose even when the donation was completely legitimate. The process typically takes 30+ days to resolve, during which your funds may be frozen.`,
+Unlike refunds, chargebacks are initiated by the donor's bank. You often lose even when the donation was completely legitimate. The process typically takes 30+ days to resolve, during which your funds may be frozen. As seen in [this r/Twitch discussion](https://www.reddit.com/r/Twitch/comments/9oacsh/chargeback_nightmare/), even "obvious" troll donations can result in lost disputes because PayPal often defaults to protecting the buyer, not the creator.`,
     },
     {
-      title: 'How Much Do Chargebacks Actually Cost?',
-      content: `You lose more than the donation amount. PayPal charges a $20 fee per chargeback. Credit card processors charge $15. You pay this fee win or lose.
+      title: 'How much do chargebacks actually cost?',
+      content: `You lose more than the donation amount. PayPal charges a $20 fee per chargeback. Credit card processors charge as much as $25. You pay this fee win or lose.
 
-Example: A $50 donation gets charged back. You lose $50 + $20 fee = $70 total. If your PayPal balance was low, you'll have a negative balance and potentially a locked account until you pay it off.`,
+Example: A $50 donation gets charged back. You lose a $20 fee. If your PayPal balance was low, you'll have a negative balance and potentially a locked account until you pay it off.`,
     },
     {
-      title: 'Why Do Donors File Chargebacks?',
-      content: `Some chargebacks are fraud - trolls donate large amounts for attention, then take the money back. The [infamous iNexus_Ninja case](https://dotesports.com/streaming/news/twitch-donation-troll-scams-streamers-out-of-50000) involved $50,000 in donations across multiple streamers before PayPal finally stepped in.
+      title: 'Why do donors file chargebacks?',
+      content: `Some chargebacks are fraud - trolls donate large amounts for attention, then take the money back. The [infamous iNexus_Ninja case](https://www.reddit.com/r/news/comments/4mpbwc/paypal_refuses_to_refund_twitch_troll_who_donated/) involved $50,000 in donations across multiple streamers before PayPal finally stepped in.
 
 Others are "friendly fraud" - donors regret their purchase, forgot they donated, or a family member used their card without permission. Regardless of intent, you bear the cost.`,
     },
     {
-      title: "Why Can't PayPal Protect Streamers?",
-      content: `PayPal's Seller Protection doesn't cover donations or digital services. Since you're not shipping a physical product, you have no "proof of delivery." Banks and PayPal typically side with the person disputing the charge.
+      title: "Why can't PayPal protect streamers?",
+      content: `PayPal's Seller Protection doesn't cover donations or digital services. Since you're not shipping a physical product, you have no "proof of delivery." Banks and PayPal typically side with the person disputing the charge. Meanwhile, PayPal's native chargeback protection feature comes at an additional fee.
 
 Even with video evidence of the donation on stream, you may still lose the dispute. The system is designed to protect buyers, not creators.`,
     },
     {
-      title: 'What Are Your Options for Protection?',
-      content: `**Partial protection:** Require donors to log in with verified accounts. Set minimum donation amounts to discourage trolls. Hold funds for 30+ days before spending (though this defeats the purpose of getting paid).
+      title: 'What are your options for protection?',
+      content: `To get partial protection, require donors to log in with verified accounts. Set minimum donation amounts to discourage trolls. Hold funds for 30+ days before spending (though this defeats the purpose of getting paid).
 
-**Full protection:** Use payment methods that don't allow chargebacks. Some platforms process payments in ways that are final and irreversible - once confirmed, the money is permanently yours. Learn more about [instant payout alternatives](/guides/instant-payouts-for-streamers) that eliminate chargeback risk entirely.`,
+To achieve full protection, use payment methods that don't allow chargebacks. Some platforms process payments in ways that are final and irreversible. Once confirmed, the money is permanently yours.`,
     },
   ],
 
@@ -58,7 +58,7 @@ Even with video evidence of the donation on stream, you may still lose the dispu
     },
     {
       question:
-        'Does Streamlabs or StreamElements protect against chargebacks?',
+        'Do Streamlabs or StreamElements protect against chargebacks?',
       answer:
         "Not really. Both platforms route through PayPal, which doesn't protect donations. StreamElements' SE.Pay covers chargeback fees (not the donation itself) but only for SE.Pay transactions. See our [Streamlabs vs StreamElements comparison](/compare/streamlabs-vs-streamelements) for details.",
     },
@@ -70,9 +70,12 @@ Even with video evidence of the donation on stream, you may still lose the dispu
     {
       question: 'Is there a way to completely avoid chargebacks?',
       answer:
-        'Yes - use platforms where transactions are final and irreversible. IDRISS donations cannot be charged back once confirmed, eliminating this risk entirely.',
+        'Yes. Use platforms where transactions are final and irreversible. IDRISS donations cannot be charged back once confirmed, eliminating this risk entirely.',
     },
   ],
+
+  disclaimer:
+    'Note: Fees, payout schedules, and platform policies can change over time. The information in this article reflects standard rates and practices as of the last update of this article. For the most up-to-date details, check the official documentation of each platform.',
 
   ctaTitle: 'Want Chargeback-Proof Donations?',
   ctaButtonText: 'Try IDRISS Free',
