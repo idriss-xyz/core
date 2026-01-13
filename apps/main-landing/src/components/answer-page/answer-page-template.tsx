@@ -72,35 +72,35 @@ const ComparisonCell = ({ value }: { value: string | boolean }) => {
 const FeeComparisonTable = ({ feeTable }: { feeTable: FeeTable }) => {
   return (
     <div className="my-6">
-      <div className="bg-mint-50 relative overflow-hidden rounded-[16px]">
+      <div className="relative overflow-hidden rounded-[24px] bg-white/80 backdrop-blur-[7px]">
+        <GradientBorder borderRadius={24} gradientDirection="toTop" />
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[500px]">
             <thead>
               <tr className="border-b border-mint-200">
-                <th className="px-4 py-3 text-left text-label5 font-medium text-neutralGreen-900" />
-                <th className="px-4 py-3 text-center text-label5 font-medium text-mint-600">
+                <th className="px-6 py-4 text-left text-label4 font-medium text-neutralGreen-900" />
+                <th className="px-6 py-4 text-center text-label4 font-medium text-mint-600">
                   {feeTable.idrissName}
                 </th>
-                <th className="px-4 py-3 text-center text-label5 font-medium text-neutralGreen-700">
+                <th className="px-6 py-4 text-center text-label4 font-medium text-neutralGreen-700">
                   {feeTable.competitorName}
                 </th>
               </tr>
             </thead>
             <tbody>
               {feeTable.rows.map((row, index) => {
-                const isLastRow = index === feeTable.rows.length - 1;
                 return (
                   <tr
                     key={row.label}
-                    className={isLastRow ? 'bg-mint-100 font-medium' : ''}
+                    className={index % 2 === 0 ? 'bg-mint-50/50' : ''}
                   >
-                    <td className="px-4 py-3 text-body5 text-neutralGreen-900">
+                    <td className="px-6 py-4 text-body5 text-neutralGreen-900">
                       {row.label}
                     </td>
-                    <td className="px-4 py-3 text-center text-body5">
+                    <td className="px-6 py-4 text-center text-body5">
                       {row.idriss}
                     </td>
-                    <td className="px-4 py-3 text-center text-body5">
+                    <td className="px-6 py-4 text-center text-body5">
                       {row.competitor}
                     </td>
                   </tr>
@@ -111,7 +111,7 @@ const FeeComparisonTable = ({ feeTable }: { feeTable: FeeTable }) => {
         </div>
       </div>
       {feeTable.footnote && (
-        <p className="mt-2 text-body6 italic text-neutralGreen-500">
+        <p className="mt-3 text-body6 italic text-neutralGreen-500">
           {feeTable.footnote}
         </p>
       )}
@@ -197,9 +197,13 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                 <h1 className="container text-balance pb-2 text-display5 font-medium uppercase gradient-text md:text-display4 lg:text-display3">
                   {content.heroTitle}
                 </h1>
-                <p className="container text-body3 text-neutralGreen-700 lg:text-body2">
-                  {content.heroSubtitle}
-                </p>
+                <div className="container">
+                  <div className="mx-auto max-w-[800px]">
+                    <p className="text-body3 text-neutralGreen-700 lg:text-body2">
+                      {content.heroSubtitle}
+                    </p>
+                  </div>
+                </div>
                 <p className="text-label6 text-neutralGreen-500">
                   Last updated: {content.dateModified}
                 </p>
@@ -207,7 +211,7 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
             </header>
 
             {/* Content Sections */}
-            <section className="bg-white py-10 lg:py-14">
+            <section className="bg-white pb-12 pt-10 lg:pt-14">
               <div className="px-safe">
                 <div className="container">
                   <div className="mx-auto max-w-[800px]">
@@ -245,12 +249,12 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
 
             {/* Comparison Table */}
             {content.comparison && (
-              <section className="bg-mint-50 py-10 lg:py-14">
+              <section className="bg-mint-50 pb-12">
                 <div className="px-safe">
                   <div className="container">
                     <div className="mx-auto max-w-[800px]">
-                      <h2 className="mb-8 text-heading4 font-medium text-neutralGreen-900 lg:text-heading3">
-                        Side-by-side comparison
+                      <h2 className="mb-4 text-heading4 font-medium text-neutralGreen-900 lg:text-heading3">
+                        Comparison
                       </h2>
                       <ComparisonTable comparison={content.comparison} />
                     </div>
@@ -260,14 +264,14 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
             )}
 
             {/* FAQ Section */}
-            <section className="bg-white py-10 lg:py-14">
+            <section className="bg-white pb-12">
               <div className="px-safe">
                 <div className="container">
                   <div className="mx-auto max-w-[800px]">
-                    <h2 className="mb-8 text-heading4 font-medium text-neutralGreen-900 lg:text-heading3">
+                    <h2 className="mb-4 text-heading4 font-medium text-neutralGreen-900 lg:text-heading3">
                       Frequently asked questions
                     </h2>
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                       {content.faq.map((item) => {
                         return (
                           <div
@@ -308,7 +312,7 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
             <section className="bg-mint-100 py-10 lg:py-14">
               <div className="px-safe">
                 <div className="container">
-                  <div className="mx-auto max-w-[800px]">
+                  <div className="mx-auto max-w-[800px] text-center">
                     <h2 className="mb-6 text-heading4 font-medium uppercase gradient-text lg:text-heading3">
                       {content.ctaTitle}
                     </h2>
