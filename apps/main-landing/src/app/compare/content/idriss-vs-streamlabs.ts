@@ -2,7 +2,7 @@ import { AnswerPageContent } from '@/components/answer-page';
 
 export const idrissVsStreamlabs: AnswerPageContent = {
   slug: 'idriss-vs-streamlabs',
-  title: 'IDRISS vs Streamlabs (2026): Which Is Better for Streamer Donations?',
+  title: 'IDRISS vs Streamlabs (2026): Which is better for streamer donations?',
   description:
     'Compare IDRISS and Streamlabs for accepting donations as a streamer. See fees, payout speed, chargebacks, and features side-by-side.',
   datePublished: '2026-01-01',

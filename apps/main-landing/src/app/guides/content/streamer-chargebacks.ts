@@ -2,7 +2,7 @@ import { AnswerPageContent } from '@/components/answer-page';
 
 export const streamerChargebacks: AnswerPageContent = {
   slug: 'streamer-chargebacks',
-  title: 'How to Avoid Chargebacks as a Streamer (2026 Guide)',
+  title: 'How to avoid chargebacks as a streamer (2026 guide)',
   description:
     'Learn how donation chargebacks work, how much they cost streamers, and proven ways to protect yourself from chargeback fraud.',
   datePublished: '2026-01-01',

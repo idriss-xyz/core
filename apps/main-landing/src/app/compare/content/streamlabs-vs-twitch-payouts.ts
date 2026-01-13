@@ -2,7 +2,7 @@ import { AnswerPageContent } from '@/components/answer-page';
 
 export const streamlabsVsTwitchPayouts: AnswerPageContent = {
   slug: 'streamlabs-vs-twitch-payouts',
-  title: 'Streamlabs vs Twitch Payouts (2026): Which Pays Streamers More?',
+  title: 'Streamlabs vs Twitch payouts (2026): Which pays streamers more?',
   description:
     'Compare Streamlabs donations to Twitch subs and bits. See which pays more, which is faster, and which has fewer fees.',
   datePublished: '2026-01-01',

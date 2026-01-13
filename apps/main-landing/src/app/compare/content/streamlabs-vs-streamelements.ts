@@ -2,7 +2,7 @@ import { AnswerPageContent } from '@/components/answer-page';
 
 export const streamlabsVsStreamelements: AnswerPageContent = {
   slug: 'streamlabs-vs-streamelements',
-  title: 'Streamlabs vs StreamElements (2026): Which Is Better for Donations?',
+  title: 'Streamlabs vs StreamElements (2026): Which is better for donations?',
   description:
     'Compare Streamlabs and StreamElements for accepting stream donations. See payment methods, fees, features, and which platform is right for you.',
   datePublished: '2026-01-01',
