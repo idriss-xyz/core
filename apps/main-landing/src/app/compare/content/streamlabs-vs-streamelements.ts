@@ -41,7 +41,7 @@ StreamElements' SE.Pay claims to cover chargeback fees (not the donation itself)
       title: 'Which should you choose?',
       content: `StreamElements offers more donation methods (if your region supports SE.Pay) and can partially protect you from chargebacks.
 
-Consider alternatives if [chargebacks](/guides/streamer-chargebacks) are a concern or you want [faster access to your money](/guides/instant-payouts-for-streamers) than PayPal provides.`,
+Consider alternatives if [chargebacks](/guides/streamer-chargebacks) are a concern or you want faster access to your money than PayPal provides.`,
     },
   ],
 
