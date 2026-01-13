@@ -96,7 +96,7 @@ Adding IDRISS takes about 5 minutes. Your existing Streamlabs alerts and overlay
         competitor: true,
       },
     ],
-    footnote: '*Effective fee on a typical donation of $10',
+    footnote: '*Effective fee on a typical donation of $10.',
   },
 
   faq: [
