@@ -36,9 +36,9 @@ const DEPLOYMENT_URL = process.env.RAILWAY_PUBLIC_DOMAIN
 
 // ts-unused-exports:disable-next-line
 export const metadata: Metadata = {
-  title: 'IDRISS - Instant Donations for Twitch & YouTube Streamers',
+  title: 'IDRISS - Instant donations for Twitch & YouTube streamers',
   description:
-    'Accept donations on Twitch and YouTube with instant payouts, no chargebacks, and only 1% fees. The best Streamlabs alternative for streamers who want to keep more of what they earn.',
+    'Accept donations on Twitch and YouTube with instant payouts, no chargebacks, and only 1% fees. A modern and secure donation tool for streamers who want to keep more of their earnings.',
   openGraph: {
     title: 'IDRISS - Instant Donations for Streamers',
     description:
