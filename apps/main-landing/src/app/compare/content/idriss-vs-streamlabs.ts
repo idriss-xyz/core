@@ -49,7 +49,7 @@ Adding IDRISS takes about 5 minutes. Your existing Streamlabs alerts and overlay
 
   feeTable: {
     idrissName: 'IDRISS',
-    competitorName: 'Streamlabs',
+    competitorName: 'Streamlabs*',
     rows: [
       { label: 'Donation', idriss: '$10', competitor: '$10' },
       { label: 'Base fee', idriss: '-$0.10', competitor: '-$0.289' },
