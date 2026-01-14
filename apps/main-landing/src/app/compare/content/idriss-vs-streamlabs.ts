@@ -27,9 +27,9 @@ IDRISS charges a flat 1% fee. That same $10 donation costs just $0.10. On $1,000
     },
     {
       title: 'Which pays you faster?',
-      content: `With Streamlabs and PayPal, your money sits in PayPal until you transfer it to your bank (1-3 business days). It's worth keeping in mind that [discussions on r/Twitch](https://www.reddit.com/r/Twitch/) show that some streamers had issues resolving donation holds.
+      content: `With Streamlabs and PayPal, your money sits in PayPal until you transfer it to your bank (1-3 business days). It's worth keeping in mind that [discussions on r/Twitch](https://www.reddit.com/r/Twitch/comments/zo079c/received_first_ever_donation_and_paypal/) show that some streamers had issues resolving donation holds.
 
-IDRISS payouts are [instant](/guides/instant-payouts-for-streamers) to your digital wallet. The moment someone donates, the funds are available for you to use, trade, and send. While traditional bank transfers from an exchange still take 1-3 days, many streamers now bypass this entirely by using a [Coinbase Card](https://www.coinbase.com/card) or [Crypto.com Visa](https://crypto.com/en/cards). These cards link directly to your account balance, allowing you to spend your donation at a grocery store or ATM within minutes of receiving it.
+IDRISS payouts are instant to your digital wallet. The moment someone donates, the funds are available for you to use, trade, and send. While traditional bank transfers from an exchange still take 1-3 days, many streamers now bypass this entirely by using a [Coinbase Card](https://www.coinbase.com/card) or [Crypto.com Visa](https://crypto.com/en/cards). These cards link directly to your account balance, allowing you to spend your donation at a grocery store or ATM within minutes of receiving it.
 
 Because IDRISS covers the network fees for your withdrawal, you can move your funds to these spendable cards immediately without needing to "top up" your wallet with extra crypto first. You gain total custody and "instant spendability" that traditional platforms can't match.`,
     },

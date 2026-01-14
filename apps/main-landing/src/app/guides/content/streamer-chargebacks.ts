@@ -57,8 +57,7 @@ To achieve full protection, use payment methods that don't allow chargebacks. So
         'You can try, but success rates are low for digital services. You need evidence the transaction was authorized, which is hard to prove. The process takes 30+ days regardless of outcome.',
     },
     {
-      question:
-        'Do Streamlabs or StreamElements protect against chargebacks?',
+      question: 'Do Streamlabs or StreamElements protect against chargebacks?',
       answer:
         "Not really. Both platforms route through PayPal, which doesn't protect donations. StreamElements' SE.Pay covers chargeback fees (not the donation itself) but only for SE.Pay transactions. See our [Streamlabs vs StreamElements comparison](/compare/streamlabs-vs-streamelements) for details.",
     },

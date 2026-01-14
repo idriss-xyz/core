@@ -88,7 +88,8 @@ For the highest revenue with no chargeback risk, consider instant payout alterna
         competitor: true,
       },
     ],
-    footnote: '*Estimate based on fees for an international donation in USD to the US via PayPal.',
+    footnote:
+      '*Estimate based on fees for an international donation in USD to the US via PayPal.',
   },
 
   faq: [
