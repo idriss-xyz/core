@@ -236,6 +236,11 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                               );
                             })}
                           </div>
+                          {section.footnote && (
+                            <p className="mt-2 text-body6 italic text-neutralGreen-500">
+                              {section.footnote}
+                            </p>
+                          )}
                           {isFeeSection && content.feeTable && (
                             <FeeComparisonTable feeTable={content.feeTable} />
                           )}

@@ -58,7 +58,7 @@ Adding IDRISS takes about 5 minutes. Your existing Streamlabs alerts and overlay
       { label: 'You receive', idriss: '$9.90', competitor: '$9.07' },
     ],
     footnote:
-      'Estimate based on fees for an international donation in USD to the US via PayPal.',
+      '*Estimate based on fees for an international donation in USD to the US via PayPal.',
   },
 
   comparison: {

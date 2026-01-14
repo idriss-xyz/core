@@ -17,9 +17,9 @@ export const streamlabsVsTwitchPayouts: AnswerPageContent = {
       title: 'How much do you actually keep from each?',
       content: `Twitch affiliates keep 50% of subscription revenue. A $4.99 sub gives you about $2.50. Partners can negotiate up to 70%, but most streamers never reach that level.
 
-Streamlabs donations go directly to you minus PayPal fees (6-10% effective on a typical $10 donation). A $10 donation nets you $9.07*. That's 91% versus Twitch's 50%. The math strongly favors direct donations.
-
-*Estimate based on fees for an international donation in USD to the US via PayPal.`,
+Streamlabs donations go directly to you minus PayPal fees (6-10% effective on a typical $10 donation). A $10 donation nets you $9.07*. That's 91% versus Twitch's 50%. The math strongly favors direct donations.`,
+      footnote:
+        '*Estimate based on fees for an international donation in USD to the US via PayPal.',
     },
     {
       title: 'Are twitch bits better than donations?',
