@@ -26,3 +26,4 @@ apps/main-landing/data/creator-links.json
 
 # AI files
 LLM.md
+docs/*
