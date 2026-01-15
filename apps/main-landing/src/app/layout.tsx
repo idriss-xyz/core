@@ -38,13 +38,13 @@ const DEPLOYMENT_URL = process.env.RAILWAY_PUBLIC_DOMAIN
 
 // ts-unused-exports:disable-next-line
 export const metadata: Metadata = {
-  title: 'IDRISS - Instant donations for Twitch & YouTube streamers',
+  title: 'IDRISS - Instant donations for Twitch streamers',
   description:
-    'Accept donations on Twitch and YouTube with instant payouts, no chargebacks, and only 1% fees. A modern and secure donation tool for streamers who want to keep more of their earnings.',
+    'Accept donations on Twitch with instant payouts, no chargebacks, and only 1% fees. Built for streamers who want to keep more.',
   openGraph: {
     title: 'IDRISS - Instant donations for streamers',
     description:
-      'Accept donations on Twitch and YouTube with instant payouts, no chargebacks, and only 1% fees.',
+      'Accept donations on Twitch with instant payouts, no chargebacks, and only 1% fees.',
     type: 'website',
     siteName: 'IDRISS',
     images: [
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'IDRISS - Instant donations for streamers',
     description:
-      'Accept donations on Twitch and YouTube with instant payouts, no chargebacks, and only 1% fees.',
+      'Accept donations on Twitch with instant payouts, no chargebacks, and only 1% fees.',
     images: ['/og.png'],
   },
   icons: [
@@ -140,7 +140,7 @@ export default async function RootLayout({
         'url': 'https://idriss.xyz',
         'name': 'IDRISS',
         'description':
-          'Accept donations on Twitch and YouTube with instant payouts, no chargebacks, and only 1% fees.',
+          'Accept donations on Twitch with instant payouts, no chargebacks, and only 1% fees.',
         'publisher': { '@id': 'https://idriss.xyz/#organization' },
       },
       {
