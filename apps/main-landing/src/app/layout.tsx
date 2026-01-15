@@ -31,7 +31,9 @@ const aeonikPro = localFont({
 });
 
 const DEPLOYMENT_URL = process.env.RAILWAY_PUBLIC_DOMAIN
-  ? new URL(`https://${process.env.RAILWAY_PUBLIC_DOMAIN}`)
+  ? new URL(
+      `https://${process.env.RAILWAY_PUBLIC_DOMAIN.replace(/^www\./, '')}`,
+    )
   : new URL('https://idriss.xyz');
 
 // ts-unused-exports:disable-next-line
