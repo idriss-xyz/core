@@ -33,7 +33,7 @@ export async function GET(request: Request) {
         }}
       >
         <img
-          src="http://idriss.xyz/og.png"
+          src="https://idriss.xyz/og.png"
           alt=""
           width={CANVAS_W}
           height={CANVAS_H}

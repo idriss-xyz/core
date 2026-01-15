@@ -19,7 +19,7 @@ export async function generateMetadata({
     return { robots: { index: false, follow: false } };
   }
 
-  const ogUrl = `/api/og?name=${encodeURIComponent(profile.name)}&avatar=${encodeURIComponent(profile.profilePictureUrl ?? '')}`;
+  const ogUrl = `/api/og?name=${encodeURIComponent(profile.name)}&avatar=${encodeURIComponent(profile.profilePictureUrl ?? '')}&v=2`;
 
   return {
     openGraph: {
