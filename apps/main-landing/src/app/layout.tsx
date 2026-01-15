@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   description:
     'Accept donations on Twitch and YouTube with instant payouts, no chargebacks, and only 1% fees. A modern and secure donation tool for streamers who want to keep more of their earnings.',
   openGraph: {
-    title: 'IDRISS - Instant Donations for Streamers',
+    title: 'IDRISS - Instant donations for streamers',
     description:
       'Accept donations on Twitch and YouTube with instant payouts, no chargebacks, and only 1% fees.',
     type: 'website',
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'IDRISS - Instant Donations for Streamers',
+    title: 'IDRISS - Instant donations for streamers',
     description:
       'Accept donations on Twitch and YouTube with instant payouts, no chargebacks, and only 1% fees.',
     images: ['/og.png'],
