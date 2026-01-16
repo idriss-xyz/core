@@ -10,6 +10,7 @@ import {
   TEAM_TREASURY_ADDRESS,
   AIRDROP_TREASURY_ADDRESS,
   TOTAL_SUPPLY,
+  VESTING_V2_CONTRACT_ADDRESS,
 } from '@/constants';
 
 const DEFAULT_HEADERS = {
@@ -23,6 +24,12 @@ export async function GET() {
       abi: ERC20_ABI,
       functionName: 'balanceOf',
       args: [VESTING_CONTRACT_ADDRESS],
+      address: IDRISS_TOKEN_ADDRESS,
+    });
+    const vestedBalance2 = await clientBase.readContract({
+      abi: ERC20_ABI,
+      functionName: 'balanceOf',
+      args: [VESTING_V2_CONTRACT_ADDRESS],
       address: IDRISS_TOKEN_ADDRESS,
     });
     const daoBalance = await clientBase.readContract({
@@ -44,7 +51,12 @@ export async function GET() {
       address: IDRISS_TOKEN_ADDRESS,
     });
     const totalCirculatingSupply =
-      TOTAL_SUPPLY - vestedBalance - daoBalance - teamBalance - airdropBalance;
+      TOTAL_SUPPLY -
+      vestedBalance -
+      vestedBalance2 -
+      daoBalance -
+      teamBalance -
+      airdropBalance;
     const formattedBalance = formatEther(totalCirculatingSupply);
     return NextResponse.json(
       { result: formattedBalance },
