@@ -24,11 +24,11 @@ export function GET(request: Request): NextResponse<ApiResponse> {
       const score = [
         {
           address: '0x896C20Da40c2A4df9B7C98B16a8D5A95129161a5',
-          score: '18836827713071916039467',
+          score: '21837038200000000000000',
         },
         {
           address: '0x656A78630F31432E6F35F6996AF5C0a4E445655c',
-          score: '111701559178689625607',
+          score: '165903700000000000000',
         },
       ];
       return NextResponse.json({ score });
