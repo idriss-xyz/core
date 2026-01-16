@@ -6,6 +6,7 @@ import { ERC20_ABI } from '@idriss-xyz/constants';
 import { IDRISS_TOKEN_ADDRESS } from '@/components/token-section/constants';
 import {
   VESTING_CONTRACT_ADDRESS,
+  VESTING_V2_CONTRACT_ADDRESS,
   DAO_TREASURY_ADDRESS,
   TEAM_TREASURY_ADDRESS,
   AIRDROP_TREASURY_ADDRESS,
@@ -15,6 +16,7 @@ import {
   POSITION_MANAGER,
   POOL_ABI,
   POOL_ADDRESS,
+  AERO_POOL_ADDRESS,
 } from '@/constants';
 
 const DEFAULT_HEADERS = {
@@ -69,6 +71,12 @@ export async function GET() {
       args: [VESTING_CONTRACT_ADDRESS],
       address: IDRISS_TOKEN_ADDRESS,
     });
+    const vestedBalance2 = await clientBase.readContract({
+      abi: ERC20_ABI,
+      functionName: 'balanceOf',
+      args: [VESTING_V2_CONTRACT_ADDRESS],
+      address: IDRISS_TOKEN_ADDRESS,
+    });
     const daoBalance = await clientBase.readContract({
       abi: ERC20_ABI,
       functionName: 'balanceOf',
@@ -85,6 +93,12 @@ export async function GET() {
       abi: ERC20_ABI,
       functionName: 'balanceOf',
       args: [AIRDROP_TREASURY_ADDRESS],
+      address: IDRISS_TOKEN_ADDRESS,
+    });
+    const aeroPoolBalance = await clientBase.readContract({
+      abi: ERC20_ABI,
+      functionName: 'balanceOf',
+      args: [AERO_POOL_ADDRESS],
       address: IDRISS_TOKEN_ADDRESS,
     });
     const [
@@ -126,9 +140,11 @@ export async function GET() {
     const totalCirculatingSupply =
       TOTAL_SUPPLY -
       vestedBalance -
+      vestedBalance2 -
       daoBalance -
       teamBalance -
       airdropBalance -
+      aeroPoolBalance -
       amount0;
 
     const formattedBalance = formatEther(totalCirculatingSupply);
