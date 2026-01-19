@@ -12,11 +12,13 @@ import { useAuth } from '../context/auth-context';
 import { CreatorSocketManager } from './creator-socket-manager';
 import { Sidebar } from './sidebar';
 import { TopBar } from './topbar';
+import { usePageTitle } from './use-page-title';
 
 function Layout({ children }: { children: React.ReactNode }) {
   const { setIsLoading } = useAuth();
   const pathname = usePathname();
   useRedirectIfNotAuthenticated();
+  usePageTitle();
 
   useEffect(() => {
     setIsLoading(false);
