@@ -67,14 +67,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const isAuthenticated = customAuthToken != null && !oauthLoading;
 
-  // Debug logging for isAuthenticated changes
+  // Track when customAuthToken or isAuthenticated changes
   useEffect(() => {
-    console.log('[AuthContext] isAuthenticated changed:', {
-      isAuthenticated,
+    console.log('[AuthContext] State changed:', {
       hasCustomAuthToken: !!customAuthToken,
+      tokenLength: customAuthToken?.length,
+      isAuthenticated,
       oauthLoading,
     });
-  }, [isAuthenticated, customAuthToken, oauthLoading]);
+  }, [customAuthToken, isAuthenticated, oauthLoading]);
 
   const error = loginError || oauthError;
   const loading = isLoading;
@@ -93,8 +94,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const handleSetCustomAuthToken = (token: string | null) => {
-    console.log('[AuthContext] setCustomAuthToken called:', {
+    console.log('[AuthContext] handleSetCustomAuthToken called:', {
       hasToken: !!token,
+      tokenLength: token?.length,
+      currentAuthState: !!customAuthToken,
     });
     if (typeof window !== 'undefined') {
       if (token) {
@@ -104,10 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
     setCustomAuthToken(token);
-    console.log(
-      '[AuthContext] isAuthenticated will become:',
-      token != null && !oauthLoading,
-    );
+    console.log('[AuthContext] setCustomAuthToken state setter called');
   };
 
   return (
