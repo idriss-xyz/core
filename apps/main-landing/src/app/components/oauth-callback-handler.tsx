@@ -38,12 +38,9 @@ export function OAuthCallbackHandler() {
   useEffect(() => {
     const exchangeCodeForToken = async (authCode: string) => {
       if (hasExchangedCode.current) {
-        console.log('[OAuth] Already exchanged code, skipping');
         return;
       }
       hasExchangedCode.current = true;
-
-      console.log('[OAuth] Starting token exchange, has code:', !!authCode);
 
       try {
         const response = await fetch(`${CREATOR_API_URL}/auth/token`, {
@@ -60,13 +57,6 @@ export function OAuthCallbackHandler() {
 
         const data: TokenExchangeResponse = await response.json();
 
-        console.log('[OAuth] Token exchange successful, about to set states:', {
-          hasToken: !!data.token,
-          tokenLength: data.token?.length,
-          hasName: !!data.name,
-          hasCallbackUrl: !!data.callbackUrl,
-        });
-
         setIsModalOpen(true);
         if (data.name) {
           localStorage.setItem(
@@ -81,15 +71,11 @@ export function OAuthCallbackHandler() {
         }
         if (data.callbackUrl) setCallbackUrl(data.callbackUrl);
 
-        console.log('[OAuth] About to call setCustomAuthToken');
         setCustomAuthToken(data.token);
-        console.log('[OAuth] About to call setOauthLoading(false)');
         setOauthLoading(false);
-        console.log('[OAuth] About to call setIsLoading(true)');
         setIsLoading(true);
-        console.log('[OAuth] All state setters called');
       } catch (error_) {
-        console.error('[OAuth] Failed to exchange code for token:', error_);
+        console.error('Failed to exchange code for token:', error_);
         setIsModalOpen(true);
         setOauthError(true);
         setOauthLoading(false);
@@ -99,14 +85,11 @@ export function OAuthCallbackHandler() {
 
     if (login) {
       // Twitch has finished authenticating the user and failed
-      console.log(
-        '[OAuth] Login parameter present, opening modal and redirecting to /',
-      );
       setIsModalOpen(true);
       router.replace('/', { scroll: false });
     } else if (error) {
       // Twitch could not authenticate the user
-      console.error('[OAuth] Oauth error:', error);
+      console.error('Oauth error:', error);
       setIsModalOpen(true);
       setOauthError(true);
       if (!oauthLoading) {

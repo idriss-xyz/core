@@ -44,20 +44,14 @@ export function PrivyAuthSync() {
 
   const handleCreatorsAuth = useCallback(async () => {
     if (isAuthInProgress.current) {
-      console.log(
-        '[PrivyAuthSync] handleCreatorsAuth already in progress, skipping',
-      );
       return;
     }
 
-    console.log('[PrivyAuthSync] handleCreatorsAuth starting');
     isAuthInProgress.current = true;
     setCreatorLoading(true);
     setDonorLoading(true);
     try {
-      console.log('[PrivyAuthSync] Getting access token from Privy');
       const authToken = await getAccessToken();
-      console.log('[PrivyAuthSync] Got access token:', !!authToken);
 
       if (!user?.id) {
         throw new Error('Could not get user id.');
@@ -67,22 +61,14 @@ export function PrivyAuthSync() {
         throw new Error('Could not get auth token for new user.');
       }
 
-      console.log('[PrivyAuthSync] Fetching existing creator profile');
       const existingCreator = await getCreatorProfile(authToken);
 
       if (existingCreator) {
-        console.log(
-          '[PrivyAuthSync] Existing creator found:',
-          existingCreator.name,
-        );
         setCreator(existingCreator);
         deleteCookie('referrerName');
         deleteCookie('referrerAddress');
         deleteCookie('referrerProfilePictureUrl');
         if (callbackUrl && !isHomeCallback(callbackUrl)) {
-          console.log(
-            '[PrivyAuthSync] Has callback URL (not home), will redirect',
-          );
           // If existing creator has isDonor true, update it to false
           if (existingCreator.isDonor) {
             await editCreatorProfile(
@@ -96,20 +82,11 @@ export function PrivyAuthSync() {
           setDonor(updatedCreator ?? existingCreator);
           router.replace(callbackUrl);
         } else if (existingCreator.doneSetup) {
-          console.log(
-            '[PrivyAuthSync] Setup done, redirecting to /app/earnings/stats-and-history',
-          );
           router.replace('/app/earnings/stats-and-history');
         } else {
-          console.log(
-            '[PrivyAuthSync] Setup not done, redirecting to /app/setup/payment-methods',
-          );
           router.replace('/app/setup/payment-methods');
         }
       } else {
-        console.log(
-          '[PrivyAuthSync] No existing creator, creating new profile',
-        );
         let newCreatorName: string;
         let newCreatorDisplayName: string | null = null;
         let newCreatorProfilePic: string | null = null;
@@ -220,13 +197,7 @@ export function PrivyAuthSync() {
       !hasRunAuth.current &&
       isLoginModalOpen
     ) {
-      console.log(
-        '[PrivyAuthSync] Privy not authenticated yet, setting 10s fallback timeout',
-      );
       retryTimeoutRef.current = setTimeout(() => {
-        console.log(
-          '[PrivyAuthSync] Fallback timeout triggered - forcing auth despite Privy not being authenticated',
-        );
         if (!hasRunAuth.current) {
           hasRunAuth.current = true;
           void handleCreatorsAuth();
@@ -250,20 +221,6 @@ export function PrivyAuthSync() {
   ]);
 
   useEffect(() => {
-    console.log('[PrivyAuthSync] useEffect triggered with conditions:', {
-      ready,
-      authenticated,
-      hasUser: !!user,
-      hasRunAuth: hasRunAuth.current,
-      isLoginModalOpen,
-      allConditionsMet:
-        ready &&
-        authenticated &&
-        user &&
-        !hasRunAuth.current &&
-        isLoginModalOpen,
-    });
-
     if (
       ready &&
       authenticated &&
@@ -271,9 +228,6 @@ export function PrivyAuthSync() {
       !hasRunAuth.current &&
       isLoginModalOpen
     ) {
-      console.log(
-        '[PrivyAuthSync] All conditions met, calling handleCreatorsAuth',
-      );
       hasRunAuth.current = true;
       // Clear fallback timeout since we're proceeding normally
       if (retryTimeoutRef.current) {
@@ -281,27 +235,8 @@ export function PrivyAuthSync() {
         retryTimeoutRef.current = null;
       }
       void handleCreatorsAuth();
-    } else {
-      console.log('[PrivyAuthSync] Conditions not met, waiting...');
     }
   }, [ready, authenticated, user, isLoginModalOpen, handleCreatorsAuth]);
-
-  useEffect(() => {
-    console.log('[PrivyAuthSync] Dependency changed:', {
-      hasCustomAuthToken: !!customAuthToken,
-      tokenLength: customAuthToken?.length,
-      isAuthenticated,
-      oauthLoading,
-      timestamp: Date.now(),
-    });
-  }, [customAuthToken, isAuthenticated, oauthLoading]);
-
-  console.log('[PrivyAuthSync] Calling useSubscribeToJwtAuthWithFlag with:', {
-    isAuthenticated,
-    isLoading: oauthLoading,
-    hasCustomAuthToken: !!customAuthToken,
-    tokenLength: customAuthToken?.length,
-  });
 
   useSubscribeToJwtAuthWithFlag({
     isAuthenticated,
@@ -309,16 +244,7 @@ export function PrivyAuthSync() {
     getExternalJwt: () => {
       // Read from ref to get the latest value, not the closure value
       const currentToken = customAuthTokenRef.current;
-      const tokenToReturn = currentToken ?? undefined;
-      console.log('[PrivyAuthSync] getExternalJwt INVOKED:', {
-        hasCustomAuthToken: !!currentToken,
-        tokenLength: currentToken?.length,
-        returningUndefined: tokenToReturn === undefined,
-        isAuthenticated,
-        oauthLoading,
-        timestamp: Date.now(),
-      });
-      return Promise.resolve(tokenToReturn);
+      return Promise.resolve(currentToken ?? undefined);
     },
     onError(error) {
       console.error('[PrivyAuthSync] Error occurred syncing:', error);

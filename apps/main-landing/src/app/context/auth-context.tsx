@@ -6,7 +6,6 @@ import {
   ReactNode,
   Dispatch,
   SetStateAction,
-  useEffect,
 } from 'react';
 import { StoredDonationData } from '@idriss-xyz/constants';
 
@@ -67,16 +66,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const isAuthenticated = customAuthToken != null && !oauthLoading;
 
-  // Track when customAuthToken or isAuthenticated changes
-  useEffect(() => {
-    console.log('[AuthContext] State changed:', {
-      hasCustomAuthToken: !!customAuthToken,
-      tokenLength: customAuthToken?.length,
-      isAuthenticated,
-      oauthLoading,
-    });
-  }, [customAuthToken, isAuthenticated, oauthLoading]);
-
   const error = loginError || oauthError;
   const loading = isLoading;
 
@@ -94,11 +83,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const handleSetCustomAuthToken = (token: string | null) => {
-    console.log('[AuthContext] handleSetCustomAuthToken called:', {
-      hasToken: !!token,
-      tokenLength: token?.length,
-      currentAuthState: !!customAuthToken,
-    });
     if (typeof window !== 'undefined') {
       if (token) {
         localStorage.setItem('custom-auth-token', token);
@@ -107,7 +91,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
     setCustomAuthToken(token);
-    console.log('[AuthContext] setCustomAuthToken state setter called');
   };
 
   return (
