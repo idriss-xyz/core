@@ -283,22 +283,36 @@ export function PrivyAuthSync() {
   }, [ready, authenticated, user, isLoginModalOpen, handleCreatorsAuth]);
 
   useEffect(() => {
-    console.log('[PrivyAuthSync] useSubscribeToJwtAuthWithFlag params:', {
-      isAuthenticated,
-      isLoading: oauthLoading,
+    console.log('[PrivyAuthSync] Dependency changed:', {
       hasCustomAuthToken: !!customAuthToken,
+      tokenLength: customAuthToken?.length,
+      isAuthenticated,
+      oauthLoading,
+      timestamp: Date.now(),
     });
-  }, [isAuthenticated, oauthLoading, customAuthToken]);
+  }, [customAuthToken, isAuthenticated, oauthLoading]);
+
+  console.log('[PrivyAuthSync] Calling useSubscribeToJwtAuthWithFlag with:', {
+    isAuthenticated,
+    isLoading: oauthLoading,
+    hasCustomAuthToken: !!customAuthToken,
+    tokenLength: customAuthToken?.length,
+  });
 
   useSubscribeToJwtAuthWithFlag({
     isAuthenticated,
     isLoading: oauthLoading,
     getExternalJwt: () => {
-      console.log(
-        '[PrivyAuthSync] getExternalJwt called, returning token:',
-        !!customAuthToken,
-      );
-      return Promise.resolve(customAuthToken ?? undefined);
+      const tokenToReturn = customAuthToken ?? undefined;
+      console.log('[PrivyAuthSync] getExternalJwt INVOKED:', {
+        hasCustomAuthToken: !!customAuthToken,
+        tokenLength: customAuthToken?.length,
+        returningUndefined: tokenToReturn === undefined,
+        isAuthenticated,
+        oauthLoading,
+        timestamp: Date.now(),
+      });
+      return Promise.resolve(tokenToReturn);
     },
     onError(error) {
       console.error('[PrivyAuthSync] Error occurred syncing:', error);

@@ -60,15 +60,14 @@ export function OAuthCallbackHandler() {
 
         const data: TokenExchangeResponse = await response.json();
 
-        console.log('[OAuth] Token exchange successful, received token:', {
+        console.log('[OAuth] Token exchange successful, about to set states:', {
           hasToken: !!data.token,
+          tokenLength: data.token?.length,
           hasName: !!data.name,
           hasCallbackUrl: !!data.callbackUrl,
         });
 
         setIsModalOpen(true);
-        console.log('[OAuth] Set modal open = true');
-
         if (data.name) {
           localStorage.setItem(
             'twitch_new_user_info',
@@ -79,24 +78,16 @@ export function OAuthCallbackHandler() {
               email: data.email,
             }),
           );
-          console.log('[OAuth] Saved user info to localStorage');
         }
-        if (data.callbackUrl) {
-          setCallbackUrl(data.callbackUrl);
-          console.log(
-            '[OAuth] Set callback URL, has value:',
-            !!data.callbackUrl,
-          );
-        }
+        if (data.callbackUrl) setCallbackUrl(data.callbackUrl);
 
+        console.log('[OAuth] About to call setCustomAuthToken');
         setCustomAuthToken(data.token);
-        console.log('[OAuth] Set custom auth token');
-
+        console.log('[OAuth] About to call setOauthLoading(false)');
         setOauthLoading(false);
-        console.log('[OAuth] Set oauth loading = false');
-
+        console.log('[OAuth] About to call setIsLoading(true)');
         setIsLoading(true);
-        console.log('[OAuth] Set is loading = true');
+        console.log('[OAuth] All state setters called');
       } catch (error_) {
         console.error('[OAuth] Failed to exchange code for token:', error_);
         setIsModalOpen(true);
