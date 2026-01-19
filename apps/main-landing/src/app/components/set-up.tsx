@@ -6,7 +6,7 @@ import { Icon } from '@idriss-xyz/ui/icon';
 import { CREATORS_USER_GUIDE_LINK } from '@idriss-xyz/constants';
 
 import { IDRISS_SCENE_STREAM } from '@/assets';
-import { browserBasedSource } from '@/app/utils';
+import { useBrowserBasedImage } from '@/app/hooks/use-browser-based-image';
 
 import {
   CREATORS_LINES,
@@ -19,6 +19,15 @@ import {
 } from './set-up-section/assets';
 
 export const SetUp = () => {
+  const creatorsFormSrc = useBrowserBasedImage({
+    svgSrc: CRETORS_FORM_SVG.src,
+    pngSrc: CRETORS_FORM_PNG.src,
+  });
+
+  const creatorsFormMobileSrc = useBrowserBasedImage({
+    svgSrc: CRETORS_FORM_MOBILE_SVG.src,
+    pngSrc: CRETORS_FORM_MOBILE_PNG.src,
+  });
   return (
     <div className="relative z-1 overflow-visible px-safe">
       <div
@@ -119,19 +128,13 @@ export const SetUp = () => {
             >
               <img
                 alt=""
-                src={browserBasedSource({
-                  svgSrc: CRETORS_FORM_SVG.src,
-                  pngSrc: CRETORS_FORM_PNG.src,
-                })}
+                src={creatorsFormSrc}
                 className="relative z-1 ml-auto hidden h-full max-h-[600px] object-contain lg:block"
               />
 
               <img
                 alt=""
-                src={browserBasedSource({
-                  svgSrc: CRETORS_FORM_MOBILE_SVG.src,
-                  pngSrc: CRETORS_FORM_MOBILE_PNG.src,
-                })}
+                src={creatorsFormMobileSrc}
                 className="relative z-1 mx-auto block h-full max-h-[600px] object-contain px-4 lg:hidden"
               />
 

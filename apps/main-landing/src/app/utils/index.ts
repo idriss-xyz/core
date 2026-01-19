@@ -3,34 +3,6 @@ import { CHAIN, CREATOR_API_URL } from '@idriss-xyz/constants';
 
 import { CreatorProfileResponse } from './types';
 
-type BrowserBasedImageProperties = {
-  svgSrc: string;
-  pngSrc: string;
-};
-
-const isAppleBrowser = (): boolean => {
-  if (typeof navigator === 'undefined') return false;
-
-  const ua = navigator.userAgent;
-
-  return (
-    /Macintosh|iPhone|iPad|iPod/.test(ua) &&
-    ua.includes('Safari') &&
-    !/Chrome|CriOS|FxiOS/.test(ua)
-  );
-};
-
-export const browserBasedSource = ({
-  svgSrc,
-  pngSrc,
-}: BrowserBasedImageProperties) => {
-  if (isAppleBrowser()) {
-    return pngSrc;
-  }
-
-  return svgSrc;
-};
-
 export const getChainShortNamesFromIds = (chainsIds: number[]) => {
   return (
     chainsIds

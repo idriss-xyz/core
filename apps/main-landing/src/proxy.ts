@@ -37,8 +37,7 @@ export function proxy(request: NextRequest) {
   const response = NextResponse.next();
 
   response.headers.set('X-Frame-Options', 'DENY');
-  // response.headers.set('Content-Security-Policy', CSP);
-  response.headers.set('Content-Security-Policy-Report-Only', CSP);
+  response.headers.set('Content-Security-Policy', CSP);
 
   if (
     ['/vault', '/claim'].includes(url.pathname) &&

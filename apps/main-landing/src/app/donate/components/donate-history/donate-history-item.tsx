@@ -172,7 +172,7 @@ export const DonateHistoryItem = ({
 
         <div className="flex flex-col justify-center gap-y-1">
           <div className="flex items-center gap-x-2">
-            <p
+            <div
               className={classes(
                 'flex flex-row flex-wrap items-center gap-x-1 text-body3 text-neutral-900',
               )}
@@ -201,7 +201,7 @@ export const DonateHistoryItem = ({
                 <TokenLogo symbol={tokenSymbol} imageUrl={tokenImage} />
               </span>{' '}
               {!isTokenDonation && tradeValue === 0 ? (
-                <div className="flex items-center gap-x-1">
+                <span className="flex items-center gap-x-1">
                   <Badge type="success" variant="subtle">
                     –
                   </Badge>
@@ -222,13 +222,13 @@ export const DonateHistoryItem = ({
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
-                </div>
+                </span>
               ) : (
                 <Badge type="success" variant="subtle">
                   {formatFiatValue(tradeValue)}
                 </Badge>
               )}
-            </p>
+            </div>
           </div>
 
           {tipComment && (

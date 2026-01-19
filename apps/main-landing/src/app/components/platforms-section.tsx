@@ -1,8 +1,10 @@
+'use client';
+
 import { classes } from '@idriss-xyz/ui/utils';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 
 import { TopWave } from '@/components/superpowers-section/components/top-wave';
-import { browserBasedSource } from '@/app/utils';
+import { useBrowserBasedImage } from '@/app/hooks/use-browser-based-image';
 
 import {
   PLATFORMS_TOKEN_SVG,
@@ -10,6 +12,11 @@ import {
 } from './platforms-section/assets';
 
 export const PlatformsSection = () => {
+  const imageSrc = useBrowserBasedImage({
+    svgSrc: PLATFORMS_TOKEN_SVG.src,
+    pngSrc: PLATFORMS_TOKEN_PNG.src,
+  });
+
   return (
     <section className="relative bg-mint-100">
       <TopWave className="absolute left-0 top-0 z-0 w-full translate-y-[-12%] text-white" />
@@ -43,14 +50,7 @@ export const PlatformsSection = () => {
             <div className="relative mx-auto mb-px max-w-[600px] rounded-[24px] px-2 py-10 lg:max-w-none lg:p-6">
               <GradientBorder gradientDirection="toTop" borderRadius={24} />
 
-              <img
-                alt=""
-                className="w-full"
-                src={browserBasedSource({
-                  svgSrc: PLATFORMS_TOKEN_SVG.src,
-                  pngSrc: PLATFORMS_TOKEN_PNG.src,
-                })}
-              />
+              <img alt="" className="w-full" src={imageSrc} />
             </div>
           </div>
         </div>
