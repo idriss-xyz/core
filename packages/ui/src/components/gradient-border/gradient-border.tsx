@@ -27,7 +27,7 @@ export const GradientBorder = ({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox={`0 0 100 100`}
+      viewBox="0 0 100 100"
       preserveAspectRatio="none"
       className={classes(
         'pointer-events-none absolute left-0 top-0 h-full w-full overflow-visible',

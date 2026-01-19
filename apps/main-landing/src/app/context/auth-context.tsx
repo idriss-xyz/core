@@ -104,7 +104,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
     setCustomAuthToken(token);
-    console.log('[AuthContext] isAuthenticated will become:', token != null && !oauthLoading);
+    console.log(
+      '[AuthContext] isAuthenticated will become:',
+      token != null && !oauthLoading,
+    );
   };
 
   return (

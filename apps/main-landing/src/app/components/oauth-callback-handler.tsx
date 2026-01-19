@@ -83,7 +83,10 @@ export function OAuthCallbackHandler() {
         }
         if (data.callbackUrl) {
           setCallbackUrl(data.callbackUrl);
-          console.log('[OAuth] Set callback URL, has value:', !!data.callbackUrl);
+          console.log(
+            '[OAuth] Set callback URL, has value:',
+            !!data.callbackUrl,
+          );
         }
 
         setCustomAuthToken(data.token);
@@ -105,7 +108,9 @@ export function OAuthCallbackHandler() {
 
     if (login) {
       // Twitch has finished authenticating the user and failed
-      console.log('[OAuth] Login parameter present, opening modal and redirecting to /');
+      console.log(
+        '[OAuth] Login parameter present, opening modal and redirecting to /',
+      );
       setIsModalOpen(true);
       router.replace('/', { scroll: false });
     } else if (error) {
