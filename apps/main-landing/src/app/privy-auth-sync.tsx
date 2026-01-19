@@ -34,6 +34,10 @@ export function PrivyAuthSync() {
     setDonor,
     setDonorLoading,
   } = useAuth();
+
+  // Use ref to ensure getExternalJwt always has the latest token value
+  const customAuthTokenRef = useRef(customAuthToken);
+  customAuthTokenRef.current = customAuthToken;
   const { user, ready, getAccessToken, logout, authenticated } = usePrivy();
   const router = useRouter();
   const { createWallet } = useCreateWallet();
@@ -303,10 +307,12 @@ export function PrivyAuthSync() {
     isAuthenticated,
     isLoading: oauthLoading,
     getExternalJwt: () => {
-      const tokenToReturn = customAuthToken ?? undefined;
+      // Read from ref to get the latest value, not the closure value
+      const currentToken = customAuthTokenRef.current;
+      const tokenToReturn = currentToken ?? undefined;
       console.log('[PrivyAuthSync] getExternalJwt INVOKED:', {
-        hasCustomAuthToken: !!customAuthToken,
-        tokenLength: customAuthToken?.length,
+        hasCustomAuthToken: !!currentToken,
+        tokenLength: currentToken?.length,
         returningUndefined: tokenToReturn === undefined,
         isAuthenticated,
         oauthLoading,
