@@ -4,7 +4,7 @@ import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
-import { browserBasedSource } from '@/app/utils';
+import { useBrowserBasedImage } from '@/app/hooks/use-browser-based-image';
 
 import { TokensShowcase } from './pros-section/tokens-showcase';
 import { ProsItem } from './pros-section/pros-item';
@@ -21,6 +21,21 @@ import {
 export const ProsSection = () => {
   const [direction, setDirection] = useState(1);
   const [activeWrapper, setActiveWrapper] = useState(0);
+
+  const donorsLeaderboardSrc = useBrowserBasedImage({
+    svgSrc: DONORS_LEADERBOARD_SVG.src,
+    pngSrc: DONORS_LEADERBOARD_PNG.src,
+  });
+
+  const creatorsDonate1Src = useBrowserBasedImage({
+    svgSrc: CREATORS_DONATE_1_SVG.src,
+    pngSrc: CREATORS_DONATE_1_PNG.src,
+  });
+
+  const creatorsDonate2Src = useBrowserBasedImage({
+    svgSrc: CREATORS_DONATE_2_SVG.src,
+    pngSrc: CREATORS_DONATE_2_PNG.src,
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -152,10 +167,7 @@ export const ProsSection = () => {
                       >
                         <img
                           alt=""
-                          src={browserBasedSource({
-                            svgSrc: DONORS_LEADERBOARD_SVG.src,
-                            pngSrc: DONORS_LEADERBOARD_PNG.src,
-                          })}
+                          src={donorsLeaderboardSrc}
                           className="mx-auto w-full max-w-[297px]"
                         />
                       </motion.div>
@@ -172,19 +184,13 @@ export const ProsSection = () => {
                       >
                         <img
                           alt=""
-                          src={browserBasedSource({
-                            svgSrc: CREATORS_DONATE_1_SVG.src,
-                            pngSrc: CREATORS_DONATE_1_PNG.src,
-                          })}
+                          src={creatorsDonate1Src}
                           className="ml-5 w-max max-w-full sm:ml-auto sm:max-w-[430px]"
                         />
 
                         <img
                           alt=""
-                          src={browserBasedSource({
-                            svgSrc: CREATORS_DONATE_2_SVG.src,
-                            pngSrc: CREATORS_DONATE_2_PNG.src,
-                          })}
+                          src={creatorsDonate2Src}
                           className="mr-5 w-max max-w-full sm:mr-auto sm:max-w-[430px]"
                         />
                       </motion.div>

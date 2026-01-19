@@ -9,7 +9,7 @@ type BrowserBasedImageProperties = {
 };
 
 const isAppleBrowser = (): boolean => {
-  if (typeof navigator === 'undefined') return false;
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') return false;
 
   const ua = navigator.userAgent;
 
@@ -24,6 +24,11 @@ export const browserBasedSource = ({
   svgSrc,
   pngSrc,
 }: BrowserBasedImageProperties) => {
+  // Always use SVG during SSR to prevent hydration mismatch
+  if (typeof window === 'undefined') {
+    return svgSrc;
+  }
+
   if (isAppleBrowser()) {
     return pngSrc;
   }

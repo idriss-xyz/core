@@ -37,8 +37,13 @@ export function OAuthCallbackHandler() {
 
   useEffect(() => {
     const exchangeCodeForToken = async (authCode: string) => {
-      if (hasExchangedCode.current) return;
+      if (hasExchangedCode.current) {
+        console.log('[OAuth] Already exchanged code, skipping');
+        return;
+      }
       hasExchangedCode.current = true;
+
+      console.log('[OAuth] Starting token exchange, has code:', !!authCode);
 
       try {
         const response = await fetch(`${CREATOR_API_URL}/auth/token`, {
@@ -55,7 +60,15 @@ export function OAuthCallbackHandler() {
 
         const data: TokenExchangeResponse = await response.json();
 
+        console.log('[OAuth] Token exchange successful, received token:', {
+          hasToken: !!data.token,
+          hasName: !!data.name,
+          hasCallbackUrl: !!data.callbackUrl,
+        });
+
         setIsModalOpen(true);
+        console.log('[OAuth] Set modal open = true');
+
         if (data.name) {
           localStorage.setItem(
             'twitch_new_user_info',
@@ -66,13 +79,23 @@ export function OAuthCallbackHandler() {
               email: data.email,
             }),
           );
+          console.log('[OAuth] Saved user info to localStorage');
         }
-        if (data.callbackUrl) setCallbackUrl(data.callbackUrl);
+        if (data.callbackUrl) {
+          setCallbackUrl(data.callbackUrl);
+          console.log('[OAuth] Set callback URL, has value:', !!data.callbackUrl);
+        }
+
         setCustomAuthToken(data.token);
+        console.log('[OAuth] Set custom auth token');
+
         setOauthLoading(false);
+        console.log('[OAuth] Set oauth loading = false');
+
         setIsLoading(true);
+        console.log('[OAuth] Set is loading = true');
       } catch (error_) {
-        console.error('Failed to exchange code for token:', error_);
+        console.error('[OAuth] Failed to exchange code for token:', error_);
         setIsModalOpen(true);
         setOauthError(true);
         setOauthLoading(false);
@@ -82,11 +105,12 @@ export function OAuthCallbackHandler() {
 
     if (login) {
       // Twitch has finished authenticating the user and failed
+      console.log('[OAuth] Login parameter present, opening modal and redirecting to /');
       setIsModalOpen(true);
       router.replace('/', { scroll: false });
     } else if (error) {
       // Twitch could not authenticate the user
-      console.error('Oauth error.', error);
+      console.error('[OAuth] Oauth error:', error);
       setIsModalOpen(true);
       setOauthError(true);
       if (!oauthLoading) {
@@ -94,6 +118,7 @@ export function OAuthCallbackHandler() {
       }
     } else if (code) {
       // Exchange the authorization code for a token
+      console.log('[OAuth] Code parameter present, starting exchange');
       void exchangeCodeForToken(code);
     }
   }, [

@@ -1,12 +1,19 @@
+'use client';
+
 import { classes } from '@idriss-xyz/ui/utils';
 import { Button } from '@idriss-xyz/ui/button';
 import { CREATORS_NFT_DONATIONS_X_POST } from '@idriss-xyz/constants';
 
-import { browserBasedSource } from '@/app/utils';
+import { useBrowserBasedImage } from '@/app/hooks/use-browser-based-image';
 
 import { NFTS_SVG, NFTS_PNG } from './assets';
 
 export const NftSection = () => {
+  const imageSrc = useBrowserBasedImage({
+    svgSrc: NFTS_SVG.src,
+    pngSrc: NFTS_PNG.src,
+  });
+
   return (
     <section className="relative bg-mint-100">
       <div className="relative overflow-hidden">
@@ -48,14 +55,7 @@ export const NftSection = () => {
             </div>
 
             <div className="relative mx-auto mb-px rounded-[24px] px-2 py-10 lg:p-6">
-              <img
-                alt=""
-                className="w-full"
-                src={browserBasedSource({
-                  svgSrc: NFTS_SVG.src,
-                  pngSrc: NFTS_PNG.src,
-                })}
-              />
+              <img alt="" className="w-full" src={imageSrc} />
             </div>
           </div>
         </div>
