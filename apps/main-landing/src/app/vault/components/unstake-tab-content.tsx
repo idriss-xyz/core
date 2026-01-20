@@ -107,7 +107,7 @@ export const UnstakeTabContent = () => {
                     <p className="text-label6">
                       12% APR distributed every 6 months.
                       <br />
-                      First payout: July 6, 2025.
+                      Final payout: January 6, 2026.
                     </p>
                   </TooltipContent>
                 </Tooltip>
