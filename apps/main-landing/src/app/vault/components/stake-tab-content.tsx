@@ -41,46 +41,43 @@ export const StakeTabContent = () => {
           name="amount"
           render={({ field }) => {
             return (
-              <Form.Field
-                {...field}
-                className="mt-4 lg:mt-6"
-                value={field.value?.toString()}
-                onChange={(value) => {
-                  field.onChange(Number(value));
-                }}
-                label={
-                  <div className="flex justify-between">
-                    <span className="text-label4 text-neutralGreen-700">
-                      Amount
-                    </span>
+              <div className="mt-4 lg:mt-6">
+                <div className="mb-2 flex w-full items-center justify-between text-label4 text-neutralGreen-900">
+                  <span className="text-label4 text-neutralGreen-700">
+                    Amount
+                  </span>
 
-                    {account.isConnected ? (
-                      <div
-                        className="flex text-label6 text-neutral-800 hover:cursor-pointer"
-                        onClick={() => {
-                          field.onChange(unstakedBalance.amount);
-                        }}
-                      >
-                        Available:{' '}
-                        <span className="mx-1 flex justify-center">
-                          {unstakedBalance.formattedAmount ?? (
-                            <Spinner className="size-3" />
-                          )}
-                        </span>{' '}
-                        IDRISS
-                      </div>
-                    ) : (
-                      ''
-                    )}
-                  </div>
-                }
-                numeric
-                decimalScale={18}
-                prefixIconName="IdrissCircled"
-                suffixElement={
-                  <span className="text-body4 text-neutral-500">IDRISS</span>
-                }
-              />
+                  {account.isConnected && (
+                    <div
+                      className="flex text-label6 text-neutral-800 hover:cursor-pointer"
+                      onClick={() => {
+                        field.onChange(unstakedBalance.amount);
+                      }}
+                    >
+                      Available:{' '}
+                      <span className="mx-1 flex justify-center">
+                        {unstakedBalance.formattedAmount ?? (
+                          <Spinner className="size-3" />
+                        )}
+                      </span>{' '}
+                      IDRISS
+                    </div>
+                  )}
+                </div>
+                <Form.Field
+                  {...field}
+                  value={field.value?.toString()}
+                  onChange={(value) => {
+                    field.onChange(Number(value));
+                  }}
+                  numeric
+                  decimalScale={18}
+                  prefixIconName="IdrissCircled"
+                  suffixElement={
+                    <span className="text-body4 text-neutral-500">IDRISS</span>
+                  }
+                />
+              </div>
             );
           }}
         />
