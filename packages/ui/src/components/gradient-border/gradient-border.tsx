@@ -27,8 +27,6 @@ export const GradientBorder = ({
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
       className={classes(
         'pointer-events-none absolute left-0 top-0 h-full w-full overflow-visible',
         className,
@@ -73,14 +71,13 @@ export const GradientBorder = ({
       <rect
         x={borderWidth / 2}
         y={borderWidth / 2}
-        width={100 - borderWidth}
-        height={100 - borderWidth}
-        rx={(borderRadius / 100) * 100}
-        ry={(borderRadius / 100) * 100}
+        width={`calc(100% - ${borderWidth}px)`}
+        height={`calc(100% - ${borderWidth}px)`}
+        rx={borderRadius}
+        ry={borderRadius}
         fill="none"
         stroke={`url(#${gradientId})`}
         strokeWidth={borderWidth}
-        vectorEffect="non-scaling-stroke"
       />
     </svg>
   );
