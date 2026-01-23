@@ -266,7 +266,7 @@ const ComparisonTable = ({
       </div>
       {comparison.footnote && (
         <p className="mt-3 text-body6 italic text-neutralGreen-500">
-          {comparison.footnote}
+          {parseMarkdownLinks(comparison.footnote)}
         </p>
       )}
     </div>
@@ -417,9 +417,6 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                 <div className="px-safe">
                   <div className="container">
                     <div className="mx-auto max-w-[800px]">
-                      <h2 className="mb-4 text-heading4 font-medium text-neutralGreen-900 lg:text-heading3">
-                        Comparison
-                      </h2>
                       <ComparisonTable comparison={content.comparison} />
                     </div>
                   </div>

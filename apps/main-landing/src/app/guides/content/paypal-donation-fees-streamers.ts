@@ -38,9 +38,9 @@ See the detailed breakdown for domestic donations within the US:`,
       title: 'Are there any hidden costs?',
       content: `The percentage cut is only one part of the friction. PayPal's traditional "merchant" model introduces other risks:
 
-- [Chargeback](/guides/streamer-chargebacks) fees: If a donor disputes a payment, PayPal typically charges the streamer a non-refundable fee of $20 per incident in the US.
-- Payout delays: Funds sit in your PayPal account until you transfer them to your bank, which typically takes 1-3 business days.
-- Frozen accounts: Many streamers have [reported issues with donation holds](https://www.reddit.com/r/Twitch/comments/7gbbbx/paypal_and_large_donations_or_freezing_your/) or frozen accounts while trying to resolve disputes.`,
+- **Chargeback fees**: If a donor disputes a payment, PayPal typically charges the streamer a non-refundable fee of $20 per incident in the US. See more about [chargebacks](/guides/streamer-chargebacks).
+- **Payout delays**: Funds sit in your PayPal account until you transfer them to your bank, which typically takes 1-3 business days.
+- **Frozen accounts**: Many streamers have [reported issues with donation holds](https://www.reddit.com/r/Twitch/comments/7gbbbx/paypal_and_large_donations_or_freezing_your/) or frozen accounts while trying to resolve disputes.`,
     },
     {
       title: 'How does IDRISS compare?',
