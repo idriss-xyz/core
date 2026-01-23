@@ -23,6 +23,7 @@ export type FeeTable = {
 };
 
 export type CustomTable = {
+  title?: string;
   headers: string[];
   rows: string[][];
   footnote?: string;

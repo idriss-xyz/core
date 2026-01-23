@@ -85,6 +85,11 @@ const CustomTableComponent = ({
 }) => {
   return (
     <div className="my-6">
+      {customTable.title && (
+        <h3 className="mb-4 text-center text-heading5 font-medium text-neutralGreen-900">
+          {customTable.title}
+        </h3>
+      )}
       <div className="relative overflow-hidden rounded-[24px] bg-white/80 backdrop-blur-[7px]">
         <GradientBorder borderRadius={24} gradientDirection="toTop" />
         <div className="overflow-x-auto">

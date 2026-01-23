@@ -31,30 +31,28 @@ Twitch takes a 50% cut of subscriptions and roughly 30% of Bits revenue. Further
 
 Most established platforms, including Streamlabs and StreamElements, rely on PayPal for payment processing. This makes your income vulnerable to a 180-day chargeback window and processing fees that can effectively eat up to 10% of a $10 donation once fixed costs are applied. See our [detailed PayPal fee breakdown](/guides/paypal-donation-fees-streamers).
 
-Modern onchain solutions like [IDRISS](https://idriss.xyz) eliminate these traditional pain points by moving transactions to the blockchain. This lowers the fee to just 1%, makes the payouts instant and fully removes the risk of chargebacks or account freezes.
-
-**Fan payment comparison**`,
+Modern onchain solutions like [IDRISS](https://idriss.xyz) eliminate these traditional pain points by moving transactions to the blockchain. This lowers the fee to just 1%, makes the payouts instant and fully removes the risk of chargebacks or account freezes.`,
+      customTable: {
+        title: 'Fan payment comparison',
+        headers: [
+          'Platform',
+          'Total fee',
+          'Minimum payout',
+          'Payout speed',
+          'Effective loss ($10 tip)',
+        ],
+        rows: [
+          ['IDRISS', '1% flat', '$0', 'Instant to your wallet', '1% ($0.10)'],
+          ['StreamElements (PayPal)', '~6-10%*', '$0', '1-3 days', '9.7% ($0.97)*'],
+          ['Streamlabs (PayPal)', '~6-10%*', '$0', '1-3 days', '9.7% ($0.97)*'],
+          ['Twitch Bits', '~30%', '$50', '15-45 days', '30% ($3.00)'],
+          ['Twitch Subs', '50%', '$50', '15-45 days', '50% ($5.00)'],
+        ],
+        footnote:
+          '*Effective fees on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
+      },
     },
   ],
-
-  customTable: {
-    headers: [
-      'Platform',
-      'Total fee',
-      'Minimum payout',
-      'Payout speed',
-      'Effective loss ($10 tip)',
-    ],
-    rows: [
-      ['IDRISS', '1% flat', '$0', 'Instant to your wallet', '1% ($0.10)'],
-      ['StreamElements (PayPal)', '~6-10%*', '$0', '1-3 days', '9.7% ($0.97)*'],
-      ['Streamlabs (PayPal)', '~6-10%*', '$0', '1-3 days', '9.7% ($0.97)*'],
-      ['Twitch Bits', '~30%', '$50', '15-45 days', '30% ($3.00)'],
-      ['Twitch Subs', '50%', '$50', '15-45 days', '50% ($5.00)'],
-    ],
-    footnote:
-      '*Effective fees on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
-  },
 
   faq: [
     {
