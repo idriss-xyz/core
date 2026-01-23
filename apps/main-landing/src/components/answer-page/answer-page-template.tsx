@@ -78,7 +78,11 @@ const ComparisonCell = ({ value }: { value: string | boolean }) => {
   return <span>{value}</span>;
 };
 
-const CustomTableComponent = ({ customTable }: { customTable: CustomTable }) => {
+const CustomTableComponent = ({
+  customTable,
+}: {
+  customTable: CustomTable;
+}) => {
   return (
     <div className="my-6">
       <div className="relative overflow-hidden rounded-[24px] bg-white/80 backdrop-blur-[7px]">

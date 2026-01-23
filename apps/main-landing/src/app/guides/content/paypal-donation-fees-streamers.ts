@@ -34,7 +34,12 @@ See the detailed breakdown for domestic donations within the US:`,
   ],
 
   customTable: {
-    headers: ['Donation Amount', 'PayPal Fees', 'You Receive', 'Effective Loss'],
+    headers: [
+      'Donation Amount',
+      'PayPal Fees',
+      'You Receive',
+      'Effective Loss',
+    ],
     rows: [
       ['$1.00', '$0.52', '$0.48', '52%'],
       ['$5.00', '$0.63', '$4.37', '12.6%'],

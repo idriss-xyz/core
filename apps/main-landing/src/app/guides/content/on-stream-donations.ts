@@ -15,7 +15,7 @@ export const onStreamDonations: AnswerPageContent = {
   sections: [
     {
       title: 'What are on-stream donations?',
-      content: `On-stream donations, often called "tips," are direct monetary gifts from viewers to streamers. Unlike native platform features, these are typically handled by third-party services like Streamlabs or StreamElements. When a viewer donates, an alert usually pops up on the screen with a custom sound or message, providing instant social recognition.
+      content: `On-stream donations, often called "tips", are direct monetary gifts from viewers to streamers. Unlike native platform features, these are typically handled by third-party services like Streamlabs or StreamElements. When a viewer donates, an alert usually pops up on the screen with a custom sound or message, providing instant social recognition.
 
 Because they aren't processed through the app store or platform-specific currencies, they are one of the most direct ways for a fan to support your work.`,
     },
@@ -33,44 +33,19 @@ In contrast, modern onchain solutions like [IDRISS](https://idriss.xyz) move the
       title: 'Are crypto donations safe?',
       content: `Crypto donations are increasingly popular in 2026 because they offer a level of security that traditional payment processors cannot match: chargeback finality. In a standard PayPal donation, a "troll" can dispute the charge months later, often sticking the streamer with a $20 fee.
 
-Because blockchain transactions are immutable, once you receive a crypto donation through a tool like [IDRISS](https://idriss.xyz), it cannot be clawed back. Additionally, these tools often provide better privacy for the streamer, as they don't reveal personal names or email addresses like a standard PayPal account might.`,
+Because blockchain transactions are immutable, once you receive a crypto donation through a tool like IDRISS, it cannot be clawed back. Additionally, these tools often provide better privacy for the streamer, as they don't reveal personal names or email addresses like a standard PayPal account might.`,
     },
   ],
 
-  comparison: {
-    idrissName: 'IDRISS',
-    competitorName: 'Streamlabs / StreamElements',
-    items: [
-      {
-        label: 'Platform Fee',
-        idriss: '1% flat',
-        competitor: '0%',
-      },
-      {
-        label: 'Processor Fees',
-        idriss: '$0',
-        competitor: '~6-10%*',
-      },
-      {
-        label: 'Effective Loss ($10 tip)',
-        idriss: '$0.10',
-        competitor: 'Up to $0.97',
-      },
-      {
-        label: 'Payout Speed',
-        idriss: 'Instant to your wallet',
-        competitor: '1-3 business days',
-      },
-      {
-        label: 'Chargeback Risk',
-        idriss: 'Zero (Onchain finality)',
-        competitor: 'High ($20 penalty fee)',
-      },
-      {
-        label: 'Minimum Payout',
-        idriss: '$0',
-        competitor: '$0 (PayPal)',
-      },
+  customTable: {
+    headers: ['Feature', 'Streamlabs', 'StreamElements', 'IDRISS'],
+    rows: [
+      ['Platform Fee', '0%', '0%', '1% flat'],
+      ['Processor Fees', '~6-10%*', '~6-10%*', '$0'],
+      ['Effective Loss ($10 tip)', 'Up to $0.97', 'Up to $0.97', '$0.10'],
+      ['Payout Speed', '1-3 business days', '1-3 business days', 'Instant to your wallet'],
+      ['Chargeback Risk', 'High ($20 penalty fee)', 'Moderate (increased protection with SE.Pay)', 'Zero (Onchain finality)'],
+      ['Minimum Payout', '$0 (PayPal)', '$0 (PayPal)', '$0'],
     ],
     footnote: '*Effective fee on typical PayPal donations.',
   },
