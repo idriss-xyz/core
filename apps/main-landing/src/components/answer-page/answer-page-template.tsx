@@ -20,48 +20,70 @@ type Properties = {
 };
 
 const parseMarkdownLinks = (text: string): ReactNode[] => {
-  const linkRegex = /\[([^\]]+)]\(([^)]+)\)/g;
   const parts: ReactNode[] = [];
-  let lastIndex = 0;
-  let match;
+  let remaining = text;
+  let key = 0;
 
-  while ((match = linkRegex.exec(text)) !== null) {
-    if (match.index > lastIndex) {
-      parts.push(text.slice(lastIndex, match.index));
+  const linkRegex = /\[([^\]]+)]\(([^)]+)\)/;
+  const boldRegex = /\*\*([^*]+)\*\*/;
+
+  while (remaining.length > 0) {
+    const linkMatch = linkRegex.exec(remaining);
+    const boldMatch = boldRegex.exec(remaining);
+
+    const linkIndex = linkMatch ? linkMatch.index : -1;
+    const boldIndex = boldMatch ? boldMatch.index : -1;
+
+    if (linkIndex === -1 && boldIndex === -1) {
+      parts.push(remaining);
+      break;
     }
 
-    const linkText = match[1] ?? '';
-    const url = match[2] ?? '';
-    const isExternal = url.startsWith('http');
-    const isReddit = url.includes('reddit.com');
+    const nextMatch =
+      linkIndex !== -1 && (boldIndex === -1 || linkIndex < boldIndex)
+        ? { type: 'link' as const, index: linkIndex, match: linkMatch }
+        : { type: 'bold' as const, index: boldIndex, match: boldMatch };
 
-    parts.push(
-      isExternal ? (
-        <a
-          key={match.index}
-          href={url}
-          target="_blank"
-          rel={
-            isReddit
-              ? 'nofollow ugc noopener noreferrer'
-              : 'nofollow noopener noreferrer'
-          }
-          className="text-mint-600 underline"
-        >
-          {linkText}
-        </a>
-      ) : (
-        <Link key={match.index} href={url} className="text-mint-600 underline">
-          {linkText}
-        </Link>
-      ),
-    );
+    if (nextMatch.index > 0) {
+      parts.push(remaining.slice(0, nextMatch.index));
+    }
 
-    lastIndex = match.index + match[0].length;
-  }
+    if (nextMatch.type === 'link' && linkMatch) {
+      const linkText = linkMatch[1] ?? '';
+      const url = linkMatch[2] ?? '';
+      const isExternal = url.startsWith('http');
+      const isReddit = url.includes('reddit.com');
 
-  if (lastIndex < text.length) {
-    parts.push(text.slice(lastIndex));
+      parts.push(
+        isExternal ? (
+          <a
+            key={key++}
+            href={url}
+            target="_blank"
+            rel={
+              isReddit
+                ? 'nofollow ugc noopener noreferrer'
+                : 'nofollow noopener noreferrer'
+            }
+            className="text-mint-600 underline"
+          >
+            {linkText}
+          </a>
+        ) : (
+          <Link key={key++} href={url} className="text-mint-600 underline">
+            {linkText}
+          </Link>
+        ),
+      );
+      remaining = remaining.slice(nextMatch.index + linkMatch[0].length);
+    } else if (nextMatch.type === 'bold' && boldMatch) {
+      parts.push(
+        <strong key={key++} className="font-semibold">
+          {boldMatch[1]}
+        </strong>,
+      );
+      remaining = remaining.slice(nextMatch.index + boldMatch[0].length);
+    }
   }
 
   return parts.length > 0 ? parts : [text];
@@ -298,6 +320,61 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                           </h2>
                           <div className="text-body4 leading-relaxed text-neutralGreen-700 lg:text-body3">
                             {section.content.split('\n\n').map((paragraph) => {
+                              const lines = paragraph.split('\n');
+                              const isBulletList = lines.some((line) => {
+                                return line.trim().startsWith('-');
+                              });
+                              const isNumberedList = lines.some((line) => {
+                                return /^\d+\./.test(line.trim());
+                              });
+
+                              if (isBulletList) {
+                                return (
+                                  <ul
+                                    key={paragraph.slice(0, 50)}
+                                    className="mb-4 list-disc space-y-2 pl-6"
+                                  >
+                                    {lines.map((line, index) => {
+                                      const trimmedLine = line.trim();
+                                      if (trimmedLine.startsWith('-')) {
+                                        const content = trimmedLine.slice(1).trim();
+                                        return (
+                                          <li key={index} className="pl-2">
+                                            {parseMarkdownLinks(content)}
+                                          </li>
+                                        );
+                                      }
+                                      return null;
+                                    })}
+                                  </ul>
+                                );
+                              }
+
+                              if (isNumberedList) {
+                                return (
+                                  <ol
+                                    key={paragraph.slice(0, 50)}
+                                    className="mb-4 list-decimal space-y-2 pl-6"
+                                  >
+                                    {lines.map((line, index) => {
+                                      const trimmedLine = line.trim();
+                                      const match = /^(\d+)\.\s*(.*)$/.exec(
+                                        trimmedLine,
+                                      );
+                                      if (match) {
+                                        const content = match[2] ?? '';
+                                        return (
+                                          <li key={index} className="pl-2">
+                                            {parseMarkdownLinks(content)}
+                                          </li>
+                                        );
+                                      }
+                                      return null;
+                                    })}
+                                  </ol>
+                                );
+                              }
+
                               return (
                                 <p
                                   key={paragraph.slice(0, 50)}

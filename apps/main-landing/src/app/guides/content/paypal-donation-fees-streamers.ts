@@ -18,6 +18,21 @@ export const paypalDonationFeesStreamers: AnswerPageContent = {
       content: `For every donation, PayPal takes at least 2.89% + a fixed fee, depending on location and currency. A typical $10 domestic donation within the US costs $0.78 in fees, which is nearly 8%. For international donations, the total fee can be higher due to [international surcharge](https://www.paypal.com/us/business/paypal-business-fees).
 
 See the detailed breakdown for domestic donations within the US:`,
+      customTable: {
+        headers: [
+          'Donation Amount',
+          'PayPal Fees',
+          'You Receive',
+          'Effective Loss',
+        ],
+        rows: [
+          ['$1.00', '$0.52', '$0.48', '52%'],
+          ['$5.00', '$0.63', '$4.37', '12.6%'],
+          ['$10.00', '$0.78', '$9.22', '7.8%'],
+          ['$20.00', '$1.07', '$18.93', '5.3%'],
+          ['$100.00', '$3.38', '$96.62', '3.4%'],
+        ],
+      },
     },
     {
       title: 'Are there any hidden costs?',

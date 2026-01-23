@@ -19,9 +19,22 @@ export const cryptoVsPaypalDonations: AnswerPageContent = {
     },
     {
       title: 'How does it compare to traditional methods?',
-      content: `Moving your monetization **onchain** isn't just a trend; it's a strategic move to bypass the high-fee "gatekeepers" of the traditional financial system.
-
-**The math for a growing stream:** If you process $1,000 in monthly donations through typical $10 tips, PayPal's fixed fees and percentages can eat up to $100*. Onchain, those same transactions would cost you less than $10, putting **$90+ back into your setup every month.**
+      content: `Moving your monetization onchain isn't just a trend; it's a strategic move to bypass the high-fee "gatekeepers" of the traditional financial system.`,
+      customTable: {
+        headers: ['Feature', 'PayPal', 'Crypto (onchain)'],
+        rows: [
+          ['Standard fee', '6-10%*', '1-2%'],
+          ['Payout speed', '1-2 business days', 'Instant to a wallet'],
+          ['Chargeback window', 'Up to 180 days', 'No chargebacks'],
+          ['Global access', 'Subject to regional locks', 'Truly borderless'],
+        ],
+        footnote:
+          '*Effective fee on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
+      },
+    },
+    {
+      title: 'What does this mean for your earnings?',
+      content: `The math for a growing stream: If you process $1,000 in monthly donations through typical $10 tips, PayPal's fixed fees and percentages can eat up to $100*. Onchain, those same transactions would cost you less than $10, putting $90+ back into your setup every month.
 
 *Effective fee on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))`,
     },
@@ -49,18 +62,6 @@ export const cryptoVsPaypalDonations: AnswerPageContent = {
 - **Zero gas withdrawals:** Unlike most crypto platforms, IDRISS sponsors the network fees when you move your money, ensuring you don't lose your profits to high "gas" costs.`,
     },
   ],
-
-  customTable: {
-    headers: ['Feature', 'PayPal', 'Crypto (onchain)'],
-    rows: [
-      ['Standard fee', '6-10%*', '1-2%'],
-      ['Payout speed', '1-2 business days', 'Instant to a wallet'],
-      ['Chargeback window', 'Up to 180 days', 'No chargebacks'],
-      ['Global access', 'Subject to regional locks', 'Truly borderless'],
-    ],
-    footnote:
-      '*Effective fee on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
-  },
 
   faq: [
     {

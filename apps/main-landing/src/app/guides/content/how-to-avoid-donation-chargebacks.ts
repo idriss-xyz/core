@@ -24,6 +24,15 @@ export const howToAvoidDonationChargebacks: AnswerPageContent = {
     {
       title: 'Which platforms actually protect you?',
       content: `Not all "protection" is created equal. Some services merely block the user after the damage is done, while others prevent the damage entirely.`,
+      customTable: {
+        headers: ['Platform', 'Protection level', 'Cost of chargeback', 'Window'],
+        rows: [
+          ['IDRISS', '100%', '$0', '-'],
+          ['SE.Pay', 'High', '$0 (Fees covered)', '120 Days'],
+          ['Stripe', 'Moderate', '$15', '120 Days'],
+          ['PayPal', 'Low', '$20', '180 Days'],
+        ],
+      },
     },
     {
       title: 'What are the best methods to prevent chargebacks?',
@@ -44,16 +53,6 @@ export const howToAvoidDonationChargebacks: AnswerPageContent = {
 8. **Enable 3D secure authentication:** If your payment gateway supports it, forcing a 2-factor "handshake" during the donation process shifts the liability for fraud away from you and back to the bank.`,
     },
   ],
-
-  customTable: {
-    headers: ['Platform', 'Protection level', 'Cost of chargeback', 'Window'],
-    rows: [
-      ['IDRISS', '100%', '$0', '-'],
-      ['SE.Pay', 'High', '$0 (Fees covered)', '120 Days'],
-      ['Stripe', 'Moderate', '$15', '120 Days'],
-      ['PayPal', 'Low', '$20', '180 Days'],
-    ],
-  },
 
   faq: [
     {
