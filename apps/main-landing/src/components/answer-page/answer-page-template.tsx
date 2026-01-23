@@ -311,14 +311,19 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                           {isFeeSection && content.feeTable && (
                             <FeeComparisonTable feeTable={content.feeTable} />
                           )}
-                          {isFeeSection && content.customTable && (
+                          {section.customTable && (
                             <CustomTableComponent
-                              customTable={content.customTable}
+                              customTable={section.customTable}
                             />
                           )}
                         </div>
                       );
                     })}
+                    {content.customTable && (
+                      <CustomTableComponent
+                        customTable={content.customTable}
+                      />
+                    )}
                   </div>
                 </div>
               </div>

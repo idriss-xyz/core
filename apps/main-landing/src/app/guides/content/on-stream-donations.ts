@@ -28,6 +28,18 @@ Because they aren't processed through the app store or platform-specific currenc
       content: `The choice of tool depends on your priorities. Streamlabs and StreamElements are the industry standards for those who want deep integration with overlays and "text-to-speech" alerts, but they primarily rely on PayPal, which is vulnerable to high processing fees and [chargebacks](/guides/streamer-chargebacks).
 
 In contrast, modern onchain solutions like [IDRISS](https://idriss.xyz) move the monetization layer directly onto the blockchain to eliminate these traditional pain points. By utilizing blockchain finality, IDRISS provides 100% protection against chargebacks and account freezes while slashing fees to a flat 1%. Despite the technical shift, streamers still maintain full control over their stream's aesthetic with customizable alerts, leaderboards, and integrated social features.`,
+      customTable: {
+        headers: ['Feature', 'Streamlabs', 'StreamElements', 'IDRISS'],
+        rows: [
+          ['Platform Fee', '0%', '0%', '1% flat'],
+          ['Processor Fees', '~6-10%*', '~6-10%*', '$0'],
+          ['Effective Loss ($10 tip)', 'Up to $0.97', 'Up to $0.97', '$0.10'],
+          ['Payout Speed', '1-3 business days', '1-3 business days', 'Instant to your wallet'],
+          ['Chargeback Risk', 'High ($20 penalty fee)', 'Moderate (increased protection with SE.Pay)', 'Zero (Onchain finality)'],
+          ['Minimum Payout', '$0 (PayPal)', '$0 (PayPal)', '$0'],
+        ],
+        footnote: '*Effective fee on typical PayPal donations.',
+      },
     },
     {
       title: 'Are crypto donations safe?',
@@ -36,29 +48,6 @@ In contrast, modern onchain solutions like [IDRISS](https://idriss.xyz) move the
 Because blockchain transactions are immutable, once you receive a crypto donation through a tool like IDRISS, it cannot be clawed back. Additionally, these tools often provide better privacy for the streamer, as they don't reveal personal names or email addresses like a standard PayPal account might.`,
     },
   ],
-
-  customTable: {
-    headers: ['Feature', 'Streamlabs', 'StreamElements', 'IDRISS'],
-    rows: [
-      ['Platform Fee', '0%', '0%', '1% flat'],
-      ['Processor Fees', '~6-10%*', '~6-10%*', '$0'],
-      ['Effective Loss ($10 tip)', 'Up to $0.97', 'Up to $0.97', '$0.10'],
-      [
-        'Payout Speed',
-        '1-3 business days',
-        '1-3 business days',
-        'Instant to your wallet',
-      ],
-      [
-        'Chargeback Risk',
-        'High ($20 penalty fee)',
-        'Moderate (increased protection with SE.Pay)',
-        'Zero (Onchain finality)',
-      ],
-      ['Minimum Payout', '$0 (PayPal)', '$0 (PayPal)', '$0'],
-    ],
-    footnote: '*Effective fee on typical PayPal donations.',
-  },
 
   faq: [
     {

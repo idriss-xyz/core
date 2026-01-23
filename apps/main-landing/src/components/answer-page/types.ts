@@ -45,6 +45,7 @@ export type AnswerPageContent = {
     title: string;
     content: string;
     footnote?: string;
+    customTable?: CustomTable;
   }[];
 
   // Optional fee breakdown table (inline in content)
