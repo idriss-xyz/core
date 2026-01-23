@@ -31,12 +31,7 @@ export const cryptoVsPaypalDonations: AnswerPageContent = {
         footnote:
           '*Effective fee on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
       },
-    },
-    {
-      title: 'What does this mean for your earnings?',
-      content: `The math for a growing stream: If you process $1,000 in monthly donations through typical $10 tips, PayPal's fixed fees and percentages can eat up to $100*. Onchain, those same transactions would cost you less than $10, putting $90+ back into your setup every month.
-
-*Effective fee on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))`,
+      afterTable: `**The math for a growing stream:** If you process $1,000 in monthly donations through typical $10 tips, PayPal's fixed fees and percentages can eat up to $100*. Onchain, those same transactions would cost you less than $10, putting **$90+ back into your setup** every month.`,
     },
     {
       title: 'Should I be worried about getting started with crypto?',

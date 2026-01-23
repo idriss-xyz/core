@@ -47,23 +47,6 @@ See the detailed breakdown for domestic donations within the US:`,
       content: `[IDRISS](https://idriss.xyz) was built to provide a better way to monetize than legacy banking "middlemen" that cause high fees and delays. By moving the monetization layer onchain, we replace 1990s payment rails with modern settlement. This minimizes fees, and removes the risk of chargebacks or account freezes.`,
     },
   ],
-
-  customTable: {
-    headers: [
-      'Donation Amount',
-      'PayPal Fees',
-      'You Receive',
-      'Effective Loss',
-    ],
-    rows: [
-      ['$1.00', '$0.52', '$0.48', '52%'],
-      ['$5.00', '$0.63', '$4.37', '12.6%'],
-      ['$10.00', '$0.78', '$9.22', '7.8%'],
-      ['$20.00', '$1.07', '$18.93', '5.3%'],
-      ['$100.00', '$3.38', '$96.62', '3.4%'],
-    ],
-  },
-
   comparison: {
     idrissName: 'IDRISS',
     competitorName: 'PayPal',

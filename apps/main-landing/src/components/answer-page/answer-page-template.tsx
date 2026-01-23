@@ -77,9 +77,11 @@ const parseMarkdownLinks = (text: string): ReactNode[] => {
       );
       remaining = remaining.slice(nextMatch.index + linkMatch[0].length);
     } else if (nextMatch.type === 'bold' && boldMatch) {
+      const boldContent = boldMatch[1] ?? '';
+      // Recursively parse the content inside bold tags to handle nested links
       parts.push(
         <strong key={key++} className="font-semibold">
-          {boldMatch[1]}
+          {parseMarkdownLinks(boldContent)}
         </strong>,
       );
       remaining = remaining.slice(nextMatch.index + boldMatch[0].length);
@@ -143,7 +145,7 @@ const CustomTableComponent = ({
                           key={cellIndex}
                           className={`px-6 py-4 ${cellIndex === 0 ? 'text-left' : 'text-center'} text-body5 text-neutralGreen-900`}
                         >
-                          {cell}
+                          {parseMarkdownLinks(cell)}
                         </td>
                       );
                     })}
@@ -156,7 +158,7 @@ const CustomTableComponent = ({
       </div>
       {customTable.footnote && (
         <p className="mt-3 text-body6 italic text-neutralGreen-500">
-          {customTable.footnote}
+          {parseMarkdownLinks(customTable.footnote)}
         </p>
       )}
     </div>
@@ -294,7 +296,7 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                 <div className="container">
                   <div className="mx-auto max-w-[800px]">
                     <p className="text-body3 text-neutralGreen-700 lg:text-body2">
-                      {content.heroSubtitle}
+                      {parseMarkdownLinks(content.heroSubtitle)}
                     </p>
                   </div>
                 </div>
@@ -319,77 +321,134 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                             {section.title}
                           </h2>
                           <div className="text-body4 leading-relaxed text-neutralGreen-700 lg:text-body3">
-                            {section.content.split('\n\n').map((paragraph) => {
-                              const lines = paragraph.split('\n');
-                              const isBulletList = lines.some((line) => {
-                                return line.trim().startsWith('-');
-                              });
-                              const isNumberedList = lines.some((line) => {
-                                return /^\d+\./.test(line.trim());
-                              });
+                            {(() => {
+                              const paragraphs = section.content.split('\n\n');
+                              const result: ReactNode[] = [];
+                              let numberedListItems: string[] = [];
+                              let listKey = 0;
 
-                              if (isBulletList) {
-                                return (
-                                  <ul
-                                    key={paragraph.slice(0, 50)}
-                                    className="mb-4 list-disc space-y-2 pl-6"
-                                  >
-                                    {lines.map((line, index) => {
-                                      const trimmedLine = line.trim();
-                                      if (trimmedLine.startsWith('-')) {
-                                        const content = trimmedLine
-                                          .slice(1)
-                                          .trim();
-                                        return (
-                                          <li key={index} className="pl-2">
-                                            {parseMarkdownLinks(content)}
-                                          </li>
+                              for (const [
+                                pIndex,
+                                paragraph,
+                              ] of paragraphs.entries()) {
+                                const trimmed = paragraph.trim();
+                                const isNumberedItem = /^\d+\.\s/.test(trimmed);
+
+                                if (isNumberedItem) {
+                                  // Accumulate numbered items
+                                  numberedListItems.push(trimmed);
+                                } else {
+                                  // If we have accumulated numbered items, render them first
+                                  if (numberedListItems.length > 0) {
+                                    result.push(
+                                      <ol
+                                        key={`list-${listKey++}`}
+                                        className="mb-4 list-decimal space-y-2 pl-6"
+                                      >
+                                        {numberedListItems.map(
+                                          (item, index) => {
+                                            const match =
+                                              /^(\d+)\.\s*(.*)$/.exec(item);
+                                            if (match) {
+                                              const content = match[2] ?? '';
+                                              return (
+                                                <li
+                                                  key={index}
+                                                  className="pl-2"
+                                                >
+                                                  {parseMarkdownLinks(content)}
+                                                </li>
+                                              );
+                                            }
+                                            return null;
+                                          },
+                                        )}
+                                      </ol>,
+                                    );
+                                    numberedListItems = [];
+                                  }
+
+                                  // Now process the current paragraph
+                                  const lines = paragraph.split('\n');
+                                  const isBulletList = lines.some((line) => {
+                                    return line.trim().startsWith('-');
+                                  });
+
+                                  if (isBulletList) {
+                                    result.push(
+                                      <ul
+                                        key={paragraph.slice(0, 50)}
+                                        className="mb-4 list-disc space-y-2 pl-6"
+                                      >
+                                        {lines.map((line, index) => {
+                                          const trimmedLine = line.trim();
+                                          const isNested =
+                                            line.startsWith('  -');
+
+                                          if (trimmedLine.startsWith('-')) {
+                                            const content = trimmedLine
+                                              .slice(1)
+                                              .trim();
+                                            return (
+                                              <li
+                                                key={index}
+                                                className={`pl-2 ${isNested ? 'ml-6 list-[circle]' : ''}`}
+                                              >
+                                                {parseMarkdownLinks(content)}
+                                              </li>
+                                            );
+                                          }
+                                          return null;
+                                        })}
+                                      </ul>,
+                                    );
+                                  } else {
+                                    result.push(
+                                      <p
+                                        key={paragraph.slice(0, 50)}
+                                        className="mb-4"
+                                      >
+                                        {parseMarkdownLinks(paragraph)}
+                                      </p>,
+                                    );
+                                  }
+                                }
+
+                                // If this is the last paragraph and we have numbered items, render them
+                                if (
+                                  pIndex === paragraphs.length - 1 &&
+                                  numberedListItems.length > 0
+                                ) {
+                                  result.push(
+                                    <ol
+                                      key={`list-${listKey++}`}
+                                      className="mb-4 list-decimal space-y-2 pl-6"
+                                    >
+                                      {numberedListItems.map((item, index) => {
+                                        const match = /^(\d+)\.\s*(.*)$/.exec(
+                                          item,
                                         );
-                                      }
-                                      return null;
-                                    })}
-                                  </ul>
-                                );
+                                        if (match) {
+                                          const content = match[2] ?? '';
+                                          return (
+                                            <li key={index} className="pl-2">
+                                              {parseMarkdownLinks(content)}
+                                            </li>
+                                          );
+                                        }
+                                        return null;
+                                      })}
+                                    </ol>,
+                                  );
+                                }
                               }
 
-                              if (isNumberedList) {
-                                return (
-                                  <ol
-                                    key={paragraph.slice(0, 50)}
-                                    className="mb-4 list-decimal space-y-2 pl-6"
-                                  >
-                                    {lines.map((line, index) => {
-                                      const trimmedLine = line.trim();
-                                      const match = /^(\d+)\.\s*(.*)$/.exec(
-                                        trimmedLine,
-                                      );
-                                      if (match) {
-                                        const content = match[2] ?? '';
-                                        return (
-                                          <li key={index} className="pl-2">
-                                            {parseMarkdownLinks(content)}
-                                          </li>
-                                        );
-                                      }
-                                      return null;
-                                    })}
-                                  </ol>
-                                );
-                              }
-
-                              return (
-                                <p
-                                  key={paragraph.slice(0, 50)}
-                                  className="mb-4"
-                                >
-                                  {parseMarkdownLinks(paragraph)}
-                                </p>
-                              );
-                            })}
+                              return result;
+                            })()}
                           </div>
                           {section.footnote && (
                             <p className="mt-2 text-body6 italic text-neutralGreen-500">
-                              {section.footnote}
+                              {parseMarkdownLinks(section.footnote)}
                             </p>
                           )}
                           {isFeeSection && content.feeTable && (
@@ -400,6 +459,23 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                               customTable={section.customTable}
                             />
                           )}
+                          {section.afterTable &&
+                            (() => {
+                              const afterTableText = section.afterTable;
+                              return (
+                                <div className="text-body4 leading-relaxed text-neutralGreen-700 lg:text-body3">
+                                  {afterTableText
+                                    .split('\n\n')
+                                    .map((paragraph, index) => {
+                                      return (
+                                        <p key={index} className="mb-4">
+                                          {parseMarkdownLinks(paragraph)}
+                                        </p>
+                                      );
+                                    })}
+                                </div>
+                              );
+                            })()}
                         </div>
                       );
                     })}
