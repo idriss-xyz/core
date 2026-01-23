@@ -27,45 +27,32 @@ export const howToAvoidDonationChargebacks: AnswerPageContent = {
     },
     {
       title: 'What are the best methods to prevent chargebacks?',
-      content: `**[Accept crypto/onchain tips](https://idriss.xyz):** Because blockchain transactions are irreversible, chargebacks are technically impossible. Once the funds hit your wallet, they cannot be pulled back by a bank or donor.
+      content: `1. **[Accept crypto/onchain tips](https://idriss.xyz):** Because blockchain transactions are irreversible, chargebacks are technically impossible. Once the funds hit your wallet, they cannot be pulled back by a bank or donor.
 
-**Use SE.Pay:** StreamElements' in-house solution uses machine learning to flag high-risk donors and, crucially, covers the chargeback fees if a dispute does occur. However, the donation itself is still refunded.
+2. **Use SE.Pay:** StreamElements' in-house solution uses machine learning to flag high-risk donors and, crucially, covers the chargeback fees if a dispute does occur. However, the donation itself is still refunded.
 
-**Set $5 minimums:** Most "trolls" test the waters with $1 or $2 donations to see if they can trigger alerts and then charge back dozens of small amounts to maximize your fee penalties. A $5 minimum makes trolling more expensive for them.
+3. **Set $5 minimums:** Most "trolls" test the waters with $1 or $2 donations to see if they can trigger alerts and then charge back dozens of small amounts to maximize your fee penalties. A $5 minimum makes trolling more expensive for them.
 
-**Wait out the 180-day window:** For PayPal donations, the safest (though most difficult) method is to let the funds sit for 180 days before spending them, as this is the standard dispute window.
+4. **Wait out the 180-day window:** For PayPal donations, the safest (though most difficult) method is to let the funds sit for 180 days before spending them, as this is the standard dispute window.
 
-**Use clear "non-refundable" disclaimers:** While not a legal "shield," having clear TOS on your tip page can help you win disputes if you provide screenshots of the disclaimer to PayPal.
+5. **Use clear "non-refundable" disclaimers:** While not a legal "shield," having clear TOS on your tip page can help you win disputes if you provide screenshots of the disclaimer to PayPal.
 
-**Blacklist repeat offenders:** Use tools like the Streamlabs/StreamElements "shared blacklist" to automatically block known chargeback trolls from ever reaching your tip page.
+6. **Blacklist repeat offenders:** Use tools like the Streamlabs/StreamElements "shared blacklist" to automatically block known chargeback trolls from ever reaching your tip page.
 
-**Identify "unverified" senders:** Always check your PayPal transaction details. If a donor is "Unverified," they are significantly more likely to be using a stolen or temporary account.
+7. **Identify "unverified" senders:** Always check your PayPal transaction details. If a donor is "Unverified," they are significantly more likely to be using a stolen or temporary account.
 
-**Enable 3D secure authentication:** If your payment gateway supports it, forcing a 2-factor "handshake" during the donation process shifts the liability for fraud away from you and back to the bank.`,
+8. **Enable 3D secure authentication:** If your payment gateway supports it, forcing a 2-factor "handshake" during the donation process shifts the liability for fraud away from you and back to the bank.`,
     },
   ],
 
-  comparison: {
-    idrissName: 'IDRISS',
-    competitorName: 'Other Platforms',
-    items: [
-      {
-        label: 'Protection level',
-        idriss: '100%',
-        competitor: 'Low to High',
-      },
-      {
-        label: 'Cost of chargeback',
-        idriss: '$0',
-        competitor: '$0-$20',
-      },
-      {
-        label: 'Chargeback window',
-        idriss: 'None',
-        competitor: '120-180 days',
-      },
+  customTable: {
+    headers: ['Platform', 'Protection level', 'Cost of chargeback', 'Window'],
+    rows: [
+      ['IDRISS', '100%', '$0', '-'],
+      ['SE.Pay', 'High', '$0 (Fees covered)', '120 Days'],
+      ['Stripe', 'Moderate', '$15', '120 Days'],
+      ['PayPal', 'Low', '$20', '180 Days'],
     ],
-    footnote: '*Comparison includes IDRISS, SE.Pay, Stripe, and PayPal.',
   },
 
   faq: [
