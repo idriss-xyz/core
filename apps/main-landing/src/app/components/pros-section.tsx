@@ -99,7 +99,7 @@ export const ProsSection = () => {
           </div>
 
           <div className="flex w-full flex-col gap-4 lg:gap-6">
-            <div className="relative grid items-center gap-x-8 gap-y-4 overflow-hidden rounded-[24px] p-4 py-8 pb-0 lg:grid-cols-[1fr,1fr] lg:p-8">
+            <div className="relative flex flex-col gap-y-4 overflow-hidden rounded-[24px] p-4 py-8 pb-0 lg:grid lg:grid-cols-[1fr,1fr] lg:items-center lg:gap-x-8 lg:p-8">
               <ProsItem
                 iconName="TrendingUp"
                 heading="More revenue, less fees"
@@ -109,7 +109,7 @@ export const ProsSection = () => {
               <img
                 alt=""
                 src={FEE_CHART.src}
-                className="ml-[calc((100%-680px)/2)] w-[600px] max-w-fit object-contain sm:mx-auto sm:w-full"
+                className="mx-auto w-full max-w-[600px] object-contain"
               />
 
               <GradientBorder
