@@ -10,7 +10,7 @@ export const bestWaysToMonetizeStream: AnswerPageContent = {
 
   heroTitle: 'Best ways to monetize your stream (2026)',
   heroSubtitle:
-    'Streaming has hit a [record Q3 in 2025](https://streamhatchet.com/reports/q3-2025-live-streaming-trends-report/), and is becoming a source of income to more people everyday. Discover the best ways to monetize your streaming in 2026.',
+    'Streaming has hit a record Q3 in 2025, and is becoming a source of income to more people everyday. Discover the best ways to monetize your streaming in 2026.',
 
   sections: [
     {
@@ -19,28 +19,21 @@ export const bestWaysToMonetizeStream: AnswerPageContent = {
     },
     {
       title: 'How can I earn money on Twitch?',
-      content: `Once you qualify for the Affiliate or Partner programs, you can earn through subscriptions, Bits, and ad revenue. For most streamers, Twitch takes a 50% revenue split on subscriptions and a 30-50% cut of ad revenue. Payouts are not instant; they are typically processed on a [Net-15 cycle](/guides/twitch-payout-delays), meaning you receive your balance around the 15th of the following month, provided you meet the $50 minimum threshold.
-
-**Revenue split comparison - Twitch:**
-
-| Feature | Twitch Affiliate | Twitch Partner | Plus Program (Affiliate or Partner) |
-|---------|-----------------|----------------|-------------------------------------|
-| Subscriptions | 50/50 | 50/50 (Default) | 60/40 or 70/30 |
-| Bits | $0.01 per Bit | $0.01 per Bit | $0.01 per Bit |
-| Ads | 30% - 55% | 30% - 55% (Negotiable) | 30% - 55% |
-| Payout schedule | Net-15 | Net-15 | Net-15 |
-
-Learn more about [Twitch payout delays](/guides/twitch-payout-delays).`,
+      content: `Once you qualify for the Affiliate or Partner programs, you can earn through subscriptions, Bits, and ad revenue. For most streamers, Twitch takes a 50% revenue split on subscriptions and a 30-50% cut of ad revenue. Payouts are not instant; they are typically processed on a [Net-15 cycle](/guides/twitch-payout-delays), meaning you receive your balance around the 15th of the following month, provided you meet the $50 minimum threshold.`,
     },
     {
       title: "What's the best tool for donations?",
-      content: `Streamers often use third-party tools like Streamlabs/StreamElements or PayPal links to collect "tips" while bypassing Twitch's high revenue splits. While these services allow you to keep more of your earnings, they still carry standard payment processor fees - about 2.89% + a fixed fee depending on currency and location, which for small donations can even add up to 10%. See our [detailed fee breakdown](/guides/paypal-donation-fees-streamers).
+      content: `Streamers often use third-party tools like Streamlabs/StreamElements or PayPal links to collect "tips" while bypassing Twitch's high revenue splits. While these services allow you to keep more of your earnings, they still carry standard payment processor fees - about 2.89% + a fixed fee depending on currency and location, which for small donations can even add up to 10%.
 
-Additionally, these traditional rails are vulnerable to [chargeback trolls](/guides/streamer-chargebacks), where a donor disputes a payment months later, often costing the streamer up to an extra $20 non-refundable penalty fee per incident.`,
+Additionally, these traditional rails are vulnerable to [chargeback trolls](/guides/streamer-chargebacks), where a donor disputes a payment months later, often costing the streamer up to an extra $20 non-refundable penalty fee per incident.
+
+See our [detailed fee breakdown](/guides/paypal-donation-fees-streamers) for exact figures.`,
     },
     {
       title: 'What about crypto donations?',
-      content: `Accepting crypto through tools like [IDRISS](https://idriss.xyz) allows you to move your monetization onto modern blockchain rails, offering a flat 1% fee with no hidden international surcharges. Because onchain transactions are final, this method provides 100% protection against chargebacks, ensuring your income is secure once received. Furthermore, payouts are instant to your digital wallet, bypassing the multi-day bank delays and account freezes common with traditional payment processors.`,
+      content: `Accepting crypto through tools like [IDRISS](https://idriss.xyz) allows you to move your monetization onto modern blockchain rails, offering a flat 1% fee with no hidden international surcharges. Because onchain transactions are final, this method provides 100% protection against chargebacks, ensuring your income is secure once received. Furthermore, payouts are instant to your digital wallet, bypassing the multi-day bank delays and account freezes common with traditional payment processors.
+
+**Summary**`,
     },
     {
       title: "What's the best solution?",
@@ -50,33 +43,16 @@ While Twitch native features like Bits provide a safe, integrated experience, th
     },
   ],
 
-  comparison: {
-    idrissName: 'IDRISS',
-    competitorName: 'Other Platforms',
-    items: [
-      {
-        label: 'Total Fees',
-        idriss: '1%',
-        competitor: '6-50%',
-      },
-      {
-        label: 'Payout Speed',
-        idriss: 'Instant to your wallet',
-        competitor: '1-3 days (Net-15 for Twitch)',
-      },
-      {
-        label: 'Chargeback Risk',
-        idriss: 'Zero (Onchain finality)',
-        competitor: 'Moderate to High',
-      },
-      {
-        label: 'Best For',
-        idriss: 'Profit, international, safety',
-        competitor: 'Various use cases',
-      },
+  customTable: {
+    headers: ['Platform', 'Total Fees', 'Payout Speed', 'Chargeback Risk', 'Best For'],
+    rows: [
+      ['Twitch (Bits/Subs)', '30-50%', 'Net-15 (monthly)', 'Zero (Twitch covers)', 'Community hype & safety'],
+      ['StreamElements', '~6-10%*', '1-3 business days', 'Moderate (increased protection)', 'Cloud-based overlays'],
+      ['Streamlabs', '~6-10%*', '1-3 business days', 'Low (Dispute help)', 'All-in-one software'],
+      ['Direct PayPal', '~6-10%*', '1-3 business days', 'High ($20 fee)', 'Simplicity'],
+      ['IDRISS', '1%', 'Instant to your wallet', 'Zero (Onchain finality)', 'Profit, international, safety'],
     ],
-    footnote:
-      '*Comparison includes Twitch Bits/Subs (30-50%), StreamElements (~6-10%), Streamlabs (~6-10%), and [PayPal (~6-10%)](/guides/paypal-donation-fees-streamers).',
+    footnote: '*Effective fee on a typical $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
   },
 
   faq: [
