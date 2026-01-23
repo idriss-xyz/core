@@ -17,31 +17,32 @@ export const paypalDonationFeesStreamers: AnswerPageContent = {
       title: 'How much does PayPal take from my donations?',
       content: `For every donation, PayPal takes at least 2.89% + a fixed fee, depending on location and currency. A typical $10 domestic donation within the US costs $0.78 in fees, which is nearly 8%. For international donations, the total fee can be higher due to [international surcharge](https://www.paypal.com/us/business/paypal-business-fees).
 
-See the detailed breakdown for domestic donations within the US:
-
-| Donation Amount | PayPal Fees | You Receive | Effective Loss |
-|-----------------|-------------|-------------|----------------|
-| $1.00 | $0.52 | $0.48 | 52% |
-| $5.00 | $0.63 | $4.37 | 12.6% |
-| $10.00 | $0.78 | $9.22 | 7.8% |
-| $20.00 | $1.07 | $18.93 | 5.3% |
-| $100.00 | $3.38 | $96.62 | 3.4% |`,
+See the detailed breakdown for domestic donations within the US:`,
     },
     {
       title: 'Are there any hidden costs?',
       content: `The percentage cut is only one part of the friction. PayPal's traditional "merchant" model introduces other risks:
 
-**Chargeback fees:** If a donor disputes a payment, PayPal typically charges the streamer a non-refundable fee of $20 per incident in the US.
-
-**Payout delays:** Funds sit in your PayPal account until you transfer them to your bank, which typically takes 1-3 business days.
-
-**Frozen accounts:** Many streamers have [reported issues with donation holds](https://www.reddit.com/r/Twitch/comments/7gbbbx/paypal_and_large_donations_or_freezing_your/) or frozen accounts while trying to resolve disputes.`,
+- [Chargeback](/guides/streamer-chargebacks) fees: If a donor disputes a payment, PayPal typically charges the streamer a non-refundable fee of $20 per incident in the US.
+- Payout delays: Funds sit in your PayPal account until you transfer them to your bank, which typically takes 1-3 business days.
+- Frozen accounts: Many streamers have [reported issues with donation holds](https://www.reddit.com/r/Twitch/comments/7gbbbx/paypal_and_large_donations_or_freezing_your/) or frozen accounts while trying to resolve disputes.`,
     },
     {
       title: 'How does IDRISS compare?',
       content: `[IDRISS](https://idriss.xyz) was built to provide a better way to monetize than legacy banking "middlemen" that cause high fees and delays. By moving the monetization layer onchain, we replace 1990s payment rails with modern settlement. This minimizes fees, and removes the risk of chargebacks or account freezes.`,
     },
   ],
+
+  customTable: {
+    headers: ['Donation Amount', 'PayPal Fees', 'You Receive', 'Effective Loss'],
+    rows: [
+      ['$1.00', '$0.52', '$0.48', '52%'],
+      ['$5.00', '$0.63', '$4.37', '12.6%'],
+      ['$10.00', '$0.78', '$9.22', '7.8%'],
+      ['$20.00', '$1.07', '$18.93', '5.3%'],
+      ['$100.00', '$3.38', '$96.62', '3.4%'],
+    ],
+  },
 
   comparison: {
     idrissName: 'IDRISS',
@@ -64,7 +65,7 @@ See the detailed breakdown for domestic donations within the US:
       },
     ],
     footnote:
-      '*See [detailed breakdown](/guides/paypal-donation-fees-streamers) above.',
+      '*Effective fee on a $10 donation (see [detailed breakdown](#how-much-does-paypal-take-from-my-donations)).',
   },
 
   faq: [

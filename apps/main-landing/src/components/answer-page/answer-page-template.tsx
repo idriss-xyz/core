@@ -8,7 +8,12 @@ import { ScrollArea } from '@idriss-xyz/ui/scroll-area';
 import { TopBar } from '@/app/components/top-bar';
 import { Footer } from '@/app/components/footer';
 
-import { AnswerPageContent, ComparisonItem, FeeTable } from './types';
+import {
+  AnswerPageContent,
+  ComparisonItem,
+  FeeTable,
+  CustomTable,
+} from './types';
 
 type Properties = {
   content: AnswerPageContent;
@@ -71,6 +76,60 @@ const ComparisonCell = ({ value }: { value: string | boolean }) => {
     );
   }
   return <span>{value}</span>;
+};
+
+const CustomTableComponent = ({ customTable }: { customTable: CustomTable }) => {
+  return (
+    <div className="my-6">
+      <div className="relative overflow-hidden rounded-[24px] bg-white/80 backdrop-blur-[7px]">
+        <GradientBorder borderRadius={24} gradientDirection="toTop" />
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[500px]">
+            <thead>
+              <tr className="border-b border-mint-200">
+                {customTable.headers.map((header, index) => {
+                  return (
+                    <th
+                      key={index}
+                      className={`px-6 py-4 ${index === 0 ? 'text-left' : 'text-center'} text-label4 font-medium text-neutralGreen-900`}
+                    >
+                      {header}
+                    </th>
+                  );
+                })}
+              </tr>
+            </thead>
+            <tbody>
+              {customTable.rows.map((row, rowIndex) => {
+                return (
+                  <tr
+                    key={rowIndex}
+                    className={rowIndex % 2 === 0 ? 'bg-mint-50/50' : ''}
+                  >
+                    {row.map((cell, cellIndex) => {
+                      return (
+                        <td
+                          key={cellIndex}
+                          className={`px-6 py-4 ${cellIndex === 0 ? 'text-left' : 'text-center'} text-body5 text-neutralGreen-900`}
+                        >
+                          {cell}
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {customTable.footnote && (
+        <p className="mt-3 text-body6 italic text-neutralGreen-500">
+          {customTable.footnote}
+        </p>
+      )}
+    </div>
+  );
 };
 
 const FeeComparisonTable = ({ feeTable }: { feeTable: FeeTable }) => {
@@ -247,6 +306,11 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                           )}
                           {isFeeSection && content.feeTable && (
                             <FeeComparisonTable feeTable={content.feeTable} />
+                          )}
+                          {isFeeSection && content.customTable && (
+                            <CustomTableComponent
+                              customTable={content.customTable}
+                            />
                           )}
                         </div>
                       );
