@@ -22,7 +22,12 @@ export const bestWaysToMonetizeStream: AnswerPageContent = {
       content: `Once you qualify for the Affiliate or Partner programs, you can earn through subscriptions, Bits, and ad revenue. For most streamers, Twitch takes a 50% revenue split on subscriptions and a 30-50% cut of ad revenue. Payouts are not instant; they are typically processed on a [Net-15 cycle](/guides/twitch-payout-delays), meaning you receive your balance around the 15th of the following month, provided you meet the $50 minimum threshold.`,
       customTable: {
         title: 'Revenue split comparison - Twitch',
-        headers: ['Feature', 'Twitch Affiliate', 'Twitch Partner', 'Plus Program (Affiliate or Partner)'],
+        headers: [
+          'Feature',
+          'Twitch Affiliate',
+          'Twitch Partner',
+          'Plus Program (Affiliate or Partner)',
+        ],
         rows: [
           ['Subscriptions', '50/50', '50/50 (Default)', '60/40 or 70/30'],
           ['Bits', '$0.01 per Bit', '$0.01 per Bit', '$0.01 per Bit'],
@@ -94,7 +99,7 @@ See our [detailed fee breakdown](/guides/paypal-donation-fees-streamers) for exa
     },
     {
       title: "What's the best solution?",
-      content: `In 2026, the best solution for maximizing your earnings is to diversify your income by combining Twitch native tools for community engagement with [IDRISS](https://idriss.xyz) for your primary donation link.
+      content: `In 2026, the best solution for maximizing your earnings is to diversify your income by combining Twitch native tools for community engagement with IDRISS for your primary donation link.
 
 While Twitch native features like Bits provide a safe, integrated experience, they come with high platform cuts that can reach 50%. Transitioning your direct support to IDRISS allows you to bypass the ~6-10% effective fees of traditional processors like PayPal, offering a flat 1% fee, instant payouts, and 100% protection against chargeback trolls.`,
     },
