@@ -43,7 +43,13 @@ Modern onchain solutions like [IDRISS](https://idriss.xyz) eliminate these tradi
         ],
         rows: [
           ['IDRISS', '1% flat', '$0', 'Instant to your wallet', '1% ($0.10)'],
-          ['StreamElements (PayPal)', '~6-10%*', '$0', '1-3 days', '9.7% ($0.97)*'],
+          [
+            'StreamElements (PayPal)',
+            '~6-10%*',
+            '$0',
+            '1-3 days',
+            '9.7% ($0.97)*',
+          ],
           ['Streamlabs (PayPal)', '~6-10%*', '$0', '1-3 days', '9.7% ($0.97)*'],
           ['Twitch Bits', '~30%', '$50', '15-45 days', '30% ($3.00)'],
           ['Twitch Subs', '50%', '$50', '15-45 days', '50% ($5.00)'],

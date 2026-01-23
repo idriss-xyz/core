@@ -25,7 +25,12 @@ export const howToAvoidDonationChargebacks: AnswerPageContent = {
       title: 'Which platforms actually protect you?',
       content: `Not all "protection" is created equal. Some services merely block the user after the damage is done, while others prevent the damage entirely.`,
       customTable: {
-        headers: ['Platform', 'Protection level', 'Cost of chargeback', 'Window'],
+        headers: [
+          'Platform',
+          'Protection level',
+          'Cost of chargeback',
+          'Window',
+        ],
         rows: [
           ['IDRISS', '100%', '$0', '-'],
           ['SE.Pay', 'High', '$0 (Fees covered)', '120 Days'],

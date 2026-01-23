@@ -337,7 +337,9 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                                     {lines.map((line, index) => {
                                       const trimmedLine = line.trim();
                                       if (trimmedLine.startsWith('-')) {
-                                        const content = trimmedLine.slice(1).trim();
+                                        const content = trimmedLine
+                                          .slice(1)
+                                          .trim();
                                         return (
                                           <li key={index} className="pl-2">
                                             {parseMarkdownLinks(content)}
@@ -402,9 +404,7 @@ export const AnswerPageTemplate = ({ content }: Properties) => {
                       );
                     })}
                     {content.customTable && (
-                      <CustomTableComponent
-                        customTable={content.customTable}
-                      />
+                      <CustomTableComponent customTable={content.customTable} />
                     )}
                   </div>
                 </div>
