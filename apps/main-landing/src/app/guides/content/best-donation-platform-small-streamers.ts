@@ -38,7 +38,13 @@ Modern onchain solutions like [IDRISS](https://idriss.xyz) eliminate these tradi
   ],
 
   customTable: {
-    headers: ['Platform', 'Total fee', 'Minimum payout', 'Payout speed', 'Effective loss ($10 tip)'],
+    headers: [
+      'Platform',
+      'Total fee',
+      'Minimum payout',
+      'Payout speed',
+      'Effective loss ($10 tip)',
+    ],
     rows: [
       ['IDRISS', '1% flat', '$0', 'Instant to your wallet', '1% ($0.10)'],
       ['StreamElements (PayPal)', '~6-10%*', '$0', '1-3 days', '9.7% ($0.97)*'],
@@ -46,7 +52,8 @@ Modern onchain solutions like [IDRISS](https://idriss.xyz) eliminate these tradi
       ['Twitch Bits', '~30%', '$50', '15-45 days', '30% ($3.00)'],
       ['Twitch Subs', '50%', '$50', '15-45 days', '50% ($5.00)'],
     ],
-    footnote: '*Effective fees on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
+    footnote:
+      '*Effective fees on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
   },
 
   faq: [

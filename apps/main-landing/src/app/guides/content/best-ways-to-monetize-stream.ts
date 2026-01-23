@@ -44,15 +44,52 @@ While Twitch native features like Bits provide a safe, integrated experience, th
   ],
 
   customTable: {
-    headers: ['Platform', 'Total Fees', 'Payout Speed', 'Chargeback Risk', 'Best For'],
-    rows: [
-      ['Twitch (Bits/Subs)', '30-50%', 'Net-15 (monthly)', 'Zero (Twitch covers)', 'Community hype & safety'],
-      ['StreamElements', '~6-10%*', '1-3 business days', 'Moderate (increased protection)', 'Cloud-based overlays'],
-      ['Streamlabs', '~6-10%*', '1-3 business days', 'Low (Dispute help)', 'All-in-one software'],
-      ['Direct PayPal', '~6-10%*', '1-3 business days', 'High ($20 fee)', 'Simplicity'],
-      ['IDRISS', '1%', 'Instant to your wallet', 'Zero (Onchain finality)', 'Profit, international, safety'],
+    headers: [
+      'Platform',
+      'Total Fees',
+      'Payout Speed',
+      'Chargeback Risk',
+      'Best For',
     ],
-    footnote: '*Effective fee on a typical $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
+    rows: [
+      [
+        'Twitch (Bits/Subs)',
+        '30-50%',
+        'Net-15 (monthly)',
+        'Zero (Twitch covers)',
+        'Community hype & safety',
+      ],
+      [
+        'StreamElements',
+        '~6-10%*',
+        '1-3 business days',
+        'Moderate (increased protection)',
+        'Cloud-based overlays',
+      ],
+      [
+        'Streamlabs',
+        '~6-10%*',
+        '1-3 business days',
+        'Low (Dispute help)',
+        'All-in-one software',
+      ],
+      [
+        'Direct PayPal',
+        '~6-10%*',
+        '1-3 business days',
+        'High ($20 fee)',
+        'Simplicity',
+      ],
+      [
+        'IDRISS',
+        '1%',
+        'Instant to your wallet',
+        'Zero (Onchain finality)',
+        'Profit, international, safety',
+      ],
+    ],
+    footnote:
+      '*Effective fee on a typical $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
   },
 
   faq: [

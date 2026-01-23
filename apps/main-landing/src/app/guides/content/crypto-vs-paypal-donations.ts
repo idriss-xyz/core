@@ -58,7 +58,8 @@ export const cryptoVsPaypalDonations: AnswerPageContent = {
       ['Chargeback window', 'Up to 180 days', 'No chargebacks'],
       ['Global access', 'Subject to regional locks', 'Truly borderless'],
     ],
-    footnote: '*Effective fee on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
+    footnote:
+      '*Effective fee on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
   },
 
   faq: [
