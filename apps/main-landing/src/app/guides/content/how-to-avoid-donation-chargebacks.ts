@@ -19,9 +19,7 @@ export const howToAvoidDonationChargebacks: AnswerPageContent = {
     },
     {
       title: 'How much can chargebacks cost?',
-      content: `A chargeback isn't just a refund; it's a financial penalty. If a viewer disputes a $100 donation on PayPal, you don't just lose the $100. You are also hit with a non-refundable dispute fee (typically $20 in 2026).
-
-Learn more about the [true cost of chargebacks](/guides/streamer-chargebacks).`,
+      content: `A chargeback isn't just a refund; it's a financial penalty. If a viewer disputes a $100 donation on PayPal, you don't just lose the $100. You are also hit with a non-refundable dispute fee (typically $20 in 2026).`,
     },
     {
       title: 'Which platforms actually protect you?',

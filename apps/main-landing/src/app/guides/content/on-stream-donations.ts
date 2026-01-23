@@ -94,7 +94,7 @@ Because blockchain transactions are immutable, once you receive a crypto donatio
     {
       question: 'What is a chargeback?',
       answer:
-        'A chargeback is when someone sends a large donation to get a reaction on stream and then disputes the transaction with their bank or PayPal later. This causes the money to be pulled from the streamer\'s account and often results in the streamer being charged an additional $20 "dispute fee". Learn more in our [chargeback guide](/guides/streamer-chargebacks).',
+        'A chargeback is when someone sends a large donation to get a reaction on stream and then disputes the transaction with their bank or PayPal later. This causes the money to be pulled from the streamer\'s account and often results in the streamer being charged an additional $20 "dispute fee".',
     },
   ],
 

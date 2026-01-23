@@ -23,9 +23,7 @@ According to 2026 industry data, [72.8% of small streamers have yet to receive a
       title: 'Why is earning on Twitch so difficult?',
       content: `Most new streamers start with Twitch's native subs or Bits, but for those earning less than $500/month, these are often the least efficient tools.
 
-Twitch takes a 50% cut of subscriptions and roughly 30% of Bits revenue. Furthermore, you must reach a $50 minimum threshold ($100 for wire transfers) to withdraw to your account. Payouts are also processed on a [Net-15 schedule](/guides/twitch-payout-delays), meaning January's hard work doesn't reach your bank until mid-February at the earliest.
-
-Learn more about [Twitch payout delays](/guides/twitch-payout-delays).`,
+Twitch takes a 50% cut of subscriptions and roughly 30% of Bits revenue. Furthermore, you must reach a $50 minimum threshold ($100 for wire transfers) to withdraw to your account. Payouts are also processed on a [Net-15 schedule](/guides/twitch-payout-delays), meaning January's hard work doesn't reach your bank until mid-February at the earliest.`,
     },
     {
       title: 'What tool should I use for on-stream donations?',
@@ -33,43 +31,20 @@ Learn more about [Twitch payout delays](/guides/twitch-payout-delays).`,
 
 Most established platforms, including Streamlabs and StreamElements, rely on PayPal for payment processing. This makes your income vulnerable to a 180-day chargeback window and processing fees that can effectively eat up to 10% of a $10 donation once fixed costs are applied. See our [detailed PayPal fee breakdown](/guides/paypal-donation-fees-streamers).
 
-Modern onchain solutions like [IDRISS](https://idriss.xyz) eliminate these traditional pain points by moving transactions to the blockchain. This lowers the fee to just 1%, makes the payouts instant and fully removes the risk of [chargebacks](/guides/streamer-chargebacks) or account freezes.`,
+Modern onchain solutions like [IDRISS](https://idriss.xyz) eliminate these traditional pain points by moving transactions to the blockchain. This lowers the fee to just 1%, makes the payouts instant and fully removes the risk of chargebacks or account freezes.`,
+    },
+    {
+      title: 'Fan payment comparison',
+      content: `| Platform | Total fee | Minimum payout | Payout speed | Effective loss ($10 tip) |
+|----------|-----------|----------------|--------------|--------------------------|
+| IDRISS | 1% flat | $0 | Instant to your wallet | 1% ($0.10) |
+| StreamElements (PayPal) | ~6-10%* | $0 | 1-3 days | 9.7% ($0.97)* |
+| Streamlabs (PayPal) | ~6-10%* | $0 | 1-3 days | 9.7% ($0.97)* |
+| Twitch Bits | ~30% | $50 | 15-45 days | 30% ($3.00) |
+| Twitch Subs | 50% | $50 | 15-45 days | 50% ($5.00) |`,
+      footnote: '*Effective fees on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
     },
   ],
-
-  comparison: {
-    idrissName: 'IDRISS',
-    competitorName: 'Other Platforms',
-    items: [
-      {
-        label: 'Total fee',
-        idriss: '1% flat',
-        competitor: '~6-50%',
-      },
-      {
-        label: 'Minimum payout',
-        idriss: '$0',
-        competitor: '$0-$50',
-      },
-      {
-        label: 'Payout speed',
-        idriss: 'Instant to your wallet',
-        competitor: '1-45 days',
-      },
-      {
-        label: 'Effective loss ($10 tip)',
-        idriss: '1% ($0.10)',
-        competitor: '9.7-50% ($0.97-$5.00)',
-      },
-      {
-        label: 'Chargeback protection',
-        idriss: true,
-        competitor: false,
-      },
-    ],
-    footnote:
-      '*Comparison includes StreamElements, Streamlabs ([PayPal](/guides/paypal-donation-fees-streamers)), Twitch Bits, and Twitch Subs.',
-  },
 
   faq: [
     {
@@ -80,12 +55,12 @@ Modern onchain solutions like [IDRISS](https://idriss.xyz) eliminate these tradi
     {
       question: 'Why are chargebacks a risk for small streamers?',
       answer:
-        'A troll can donate $10, wait 30 days, and dispute the charge. Even if you win, PayPal often charges a non-refundable $20 fee, putting you at a net loss. Learn more in our [chargeback guide](/guides/streamer-chargebacks).',
+        'A troll can donate $10, wait 30 days, and dispute the charge. Even if you win, PayPal often charges a non-refundable $20 fee, putting you at a net loss.',
     },
     {
       question: 'How do I avoid chargebacks on Twitch donations?',
       answer:
-        'To achieve 100% protection against chargebacks, you should use an on-chain donation tool like [IDRISS](https://idriss.xyz), as blockchain transactions are final and cannot be disputed by "troll" donors.',
+        'To achieve 100% protection against chargebacks, you should use an on-chain donation tool like IDRISS, as blockchain transactions are final and cannot be disputed by "troll" donors.',
     },
     {
       question: "Why hasn't my Twitch payout arrived yet?",

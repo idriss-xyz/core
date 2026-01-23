@@ -31,7 +31,7 @@ See the detailed breakdown for domestic donations within the US:
       title: 'Are there any hidden costs?',
       content: `The percentage cut is only one part of the friction. PayPal's traditional "merchant" model introduces other risks:
 
-**Chargeback fees:** If a donor disputes a payment, PayPal typically charges the streamer a non-refundable fee of $20 per incident in the US. Learn more in our [chargeback guide](/guides/streamer-chargebacks).
+**Chargeback fees:** If a donor disputes a payment, PayPal typically charges the streamer a non-refundable fee of $20 per incident in the US.
 
 **Payout delays:** Funds sit in your PayPal account until you transfer them to your bank, which typically takes 1-3 business days.
 
