@@ -36,7 +36,11 @@ const parseMarkdownLinks = (text: string): ReactNode[] => {
           key={match.index}
           href={url}
           target="_blank"
-          rel={isReddit ? 'nofollow ugc noreferrer' : 'nofollow noreferrer'}
+          rel={
+            isReddit
+              ? 'nofollow ugc noopener noreferrer'
+              : 'nofollow noopener noreferrer'
+          }
           className="text-mint-600 underline"
         >
           {linkText}
