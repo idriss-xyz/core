@@ -74,11 +74,7 @@ export const TokenSection = () => {
                 '4xl:text-body',
               )}
             >
-              IDRISS is the utility token powering{'\u00A0'}the IDRISS{'\u00A0'}
-              DAO, giving you access{'\u00A0'}to{'\u00A0'}
-              <br className="hidden lg:block" />
-              decentralized{'\u00A0'}revenue sharing, governance rights, and
-              more.
+              IDRISS is the governance token of{'\u00A0'}IDRISS{'\u00A0'}DAO.
             </p>
             <div className="w-full max-w-[444px] flex-row justify-normal gap-6 lg:flex lg:w-auto lg:max-w-none">
               <div className="flex flex-col gap-6 lg:gap-4">

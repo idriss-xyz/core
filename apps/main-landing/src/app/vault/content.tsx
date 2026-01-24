@@ -1,9 +1,6 @@
 'use client';
-import { Button } from '@idriss-xyz/ui/button';
 import { GradientBorder } from '@idriss-xyz/ui/gradient-border';
 import { TabItem, Tabs } from '@idriss-xyz/ui/tabs';
-import { Icon } from '@idriss-xyz/ui/icon';
-import { VAULT_DOCS_LINK } from '@idriss-xyz/constants';
 import { useMemo } from 'react';
 
 import { backgroundLines2, IDRISS_COIN, IDRISS_SCENE_STREAM } from '@/assets';
@@ -55,65 +52,15 @@ export const VaultContent = () => {
             src={IDRISS_COIN.src}
             alt=""
           />
-          <div className="relative flex flex-col rounded-[36px] bg-[rgba(255,255,255,0.5)] p-5 pb-2 backdrop-blur-[45px] lg:flex-row lg:p-10">
+          <div className="relative flex flex-col rounded-[36px] bg-[rgba(255,255,255,0.5)] p-5 pb-2 backdrop-blur-[45px] lg:p-10">
             <GradientBorder
               gradientDirection="toTop"
               gradientStopColor="rgba(145, 206, 154, 0.50)"
               borderWidth={1}
               borderRadius={36}
             />
-            <div className="lg:w-[460px]">
+            <div className="w-full">
               <Tabs items={tabItems} />
-            </div>
-            <span className="my-4 block h-px w-full bg-[radial-gradient(111.94%_122.93%_at_16.62%_0%,_#E7F5E7_0%,_#76C282_100%)] opacity-50 lg:mx-10 lg:my-0 lg:mt-6 lg:h-auto lg:w-px" />
-            <div className="flex flex-col lg:w-[292px]">
-              <div className="flex flex-col gap-2">
-                <span className="pb-4 text-label4 text-neutralGreen-700 lg:text-label3">
-                  VAULT BENEFITS
-                </span>
-                <div className="flex gap-1.5 lg:gap-2.5">
-                  <div className="flex size-6 items-center justify-center">
-                    <Icon
-                      name="PiggyBank"
-                      size={24}
-                      className="text-gray-300"
-                    />
-                  </div>
-                  <span className="text-body4 text-neutralGreen-700 lg:text-body3">
-                    Earn <span className="gradient-text">12% APR</span> on
-                    locked tokens
-                  </span>
-                </div>
-                <div className="flex gap-1.5 lg:gap-2.5">
-                  <div className="flex size-6 items-center justify-center">
-                    <Icon name="Gem" size={24} className="text-gray-300" />
-                  </div>
-                  <span className="text-body4 text-neutralGreen-700 lg:text-body3">
-                    Lock <span className="gradient-text">10,000 $IDRISS</span>{' '}
-                    or more to unlock new premium features
-                  </span>
-                </div>
-                <div className="flex gap-1.5 lg:gap-2.5">
-                  <div className="flex size-6 shrink-0 items-center justify-center">
-                    <Icon name="PieChart" size={20} className="text-gray-300" />
-                  </div>
-                  <span className="text-body4 text-neutralGreen-700 lg:text-body3">
-                    Access to decentralized revenue sharing in the future
-                  </span>
-                </div>
-              </div>
-
-              <Button
-                intent="tertiary"
-                size="medium"
-                isExternal
-                asLink
-                className="mb-4 mt-6 w-full lg:mt-8"
-                suffixIconName="IdrissArrowRight"
-                href={VAULT_DOCS_LINK}
-              >
-                LEARN MORE
-              </Button>
             </div>
           </div>
         </div>
