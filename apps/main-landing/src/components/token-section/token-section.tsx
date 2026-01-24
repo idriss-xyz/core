@@ -74,7 +74,8 @@ export const TokenSection = () => {
                 '4xl:text-body',
               )}
             >
-              IDRISS is the governance token of{'\u00A0'}IDRISS{'\u00A0'}DAO.
+              IDRISS is a governance token that lets the community collectively
+              decide how the project evolves.
             </p>
             <div className="w-full max-w-[444px] flex-row justify-normal gap-6 lg:flex lg:w-auto lg:max-w-none">
               <div className="flex flex-col gap-6 lg:gap-4">
