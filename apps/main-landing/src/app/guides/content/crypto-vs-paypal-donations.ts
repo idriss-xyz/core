@@ -31,30 +31,30 @@ export const cryptoVsPaypalDonations: AnswerPageContent = {
         footnote:
           '*Effective fee on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
       },
-      afterTable: `**The math for a growing stream:** If you process $1,000 in monthly donations through typical $10 tips, PayPal's fixed fees and percentages can eat up to $100*. Onchain, those same transactions would cost you less than $10, putting **$90+ back into your setup** every month.`,
+      afterTable: `The math for a growing stream: If you process $1,000 in monthly donations through typical $10 tips, PayPal's fixed fees and percentages can eat up to $100*. Onchain, those same transactions would cost you less than $10, putting $90+ back into your setup every month.`,
     },
     {
       title: 'Should I be worried about getting started with crypto?',
       content: `Many streamers hesitate because of outdated information. Let's clear up the three biggest misconceptions:
 
-- **Myth 1:** "It's too volatile for my bills."
-  - **Fact:** in 2026, stablecoins (like USDC or PYUSD) account for nearly 60% of all crypto payment activity. These are pegged 1:1 with the US Dollar, giving you the speed of blockchain with the stability of fiat.
+- Myth 1: "It's too volatile for my bills."
+  - Fact: in 2026, stablecoins (like USDC or PYUSD) account for nearly 60% of all crypto payment activity. These are pegged 1:1 with the US Dollar, giving you the speed of blockchain with the stability of fiat.
 
-- **Myth 2:** "It's a tax nightmare."
-  - **Fact:** modern tools like [Koinly](https://koinly.io/) now automatically track every onchain donation and make it easy to submit your tax reports.
+- Myth 2: "It's a tax nightmare."
+  - Fact: modern tools like [Koinly](https://koinly.io/) now automatically track every onchain donation and make it easy to submit your tax reports.
 
-- **Myth 3:** "My viewers won't use it."
-  - **Fact:** with over 800 million global crypto users and a [$86.2 trillion transaction volume in 2025](https://www.coingecko.com/research/publications/2025-annual-crypto-report#:~:text=In%202025%2C%20trading%20volume%20reached,BTC%20hit%20its%20last%20ATH.), many of your viewers likely already have digital wallets. To anticipate further adoption, you can position yourself and start accepting it now.`,
+- Myth 3: "My viewers won't use it."
+  - Fact: with over 800 million global crypto users and a [$86.2 trillion transaction volume in 2025](https://www.coingecko.com/research/publications/2025-annual-crypto-report#:~:text=In%202025%2C%20trading%20volume%20reached,BTC%20hit%20its%20last%20ATH.), many of your viewers likely already have digital wallets. To anticipate further adoption, you can position yourself and start accepting it now.`,
     },
     {
       title: 'How does IDRISS make the transition seamless?',
       content: `[IDRISS](https://idriss.xyz) was designed to give you the benefits of crypto without the complexity. While traditional crypto setups require you to create wallets using 3rd party tools, IDRISS keeps it simple with only a Twitch login.
 
-- **Instant payouts:** no more "21-day holds" or waiting for banks to clear.
+- Instant payouts: no more "21-day holds" or waiting for banks to clear.
 
-- **100% chargeback protection:** once a viewer sends a tip, it belongs to you. Period.
+- 100% chargeback protection: once a viewer sends a tip, it belongs to you. Period.
 
-- **Zero gas withdrawals:** unlike most crypto platforms, IDRISS sponsors the network fees when you move your money, ensuring you don't lose your profits to high "gas" costs.`,
+- Zero gas withdrawals: unlike most crypto platforms, IDRISS sponsors the network fees when you move your money, ensuring you don't lose your profits to high "gas" costs.`,
     },
   ],
 
