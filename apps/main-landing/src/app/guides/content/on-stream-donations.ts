@@ -31,24 +31,25 @@ In contrast, modern onchain solutions like [IDRISS](https://idriss.xyz) move the
       customTable: {
         headers: ['Feature', 'Streamlabs', 'StreamElements', 'IDRISS'],
         rows: [
-          ['Platform Fee', '0%', '0%', '1% flat'],
-          ['Processor Fees', '~6-10%*', '~6-10%*', '$0'],
-          ['Effective Loss ($10 tip)', 'Up to $0.97', 'Up to $0.97', '$0.10'],
+          ['Platform fee', '0%', '0%', '1% flat'],
+          ['Processor fees', '~6-10%*', '~6-10%*', '$0'],
+          ['Effective loss ($10 tip)', 'Up to $0.97', 'Up to $0.97', '$0.10'],
           [
-            'Payout Speed',
+            'Payout speed',
             '1-3 business days',
             '1-3 business days',
             'Instant to your wallet',
           ],
           [
-            'Chargeback Risk',
+            'Chargeback risk',
             'High ($20 penalty fee)',
             'Moderate (increased protection with SE.Pay)',
             'Zero (Onchain finality)',
           ],
-          ['Minimum Payout', '$0 (PayPal)', '$0 (PayPal)', '$0'],
+          ['Minimum payout', '$0 (PayPal)', '$0 (PayPal)', '$0'],
         ],
-        footnote: '*Effective fee.',
+        footnote:
+          '*Effective fees on a $10 donation (see [detailed breakdown](/guides/paypal-donation-fees-streamers))',
       },
     },
     {
