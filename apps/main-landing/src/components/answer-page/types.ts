@@ -22,6 +22,13 @@ export type FeeTable = {
   footnote?: string;
 };
 
+export type CustomTable = {
+  title?: string;
+  headers: string[];
+  rows: string[][];
+  footnote?: string;
+};
+
 export type AnswerPageContent = {
   // SEO
   slug: string;
@@ -39,10 +46,15 @@ export type AnswerPageContent = {
     title: string;
     content: string;
     footnote?: string;
+    customTable?: CustomTable;
+    afterTable?: string;
   }[];
 
   // Optional fee breakdown table (inline in content)
   feeTable?: FeeTable;
+
+  // Optional custom table (flexible columns)
+  customTable?: CustomTable;
 
   // Optional feature comparison table
   comparison?: {
