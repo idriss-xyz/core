@@ -26,7 +26,7 @@ export function DonateFormHeader({ creatorInfo }: Properties) {
           src={creatorInfo.profilePictureUrl}
           key={creatorInfo.profilePictureUrl}
           className="ml-3 inline h-8 rounded-full"
-          alt="profile-pic"
+          alt=""
           onError={() => {
             return setImageError(true);
           }}

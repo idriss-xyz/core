@@ -28,12 +28,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/vault`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.3,
-    },
-    {
       url: `${baseUrl}/dao`,
       lastModified: new Date(),
       changeFrequency: 'monthly',

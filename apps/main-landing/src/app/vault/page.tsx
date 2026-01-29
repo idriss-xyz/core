@@ -1,3 +1,4 @@
+import { Metadata } from 'next';
 import { MobileNotSupported } from '@idriss-xyz/ui/mobile-not-supported';
 
 import { IDRISS_SCENE_STREAM } from '@/assets';
@@ -5,6 +6,15 @@ import { TopBar } from '@/components';
 
 import { Providers } from './providers';
 import { VaultContent } from './content';
+
+// ts-unused-exports:disable-next-line
+export const metadata: Metadata = {
+  description: 'IDRISS Vault',
+  robots: {
+    index: false,
+    follow: false,
+  },
+};
 
 // ts-unused-exports:disable-next-line
 export default function Vault() {
