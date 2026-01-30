@@ -83,6 +83,9 @@ export const metadata: Metadata = {
     },
   ],
   metadataBase: DEPLOYMENT_URL,
+  verification: {
+    google: 'wx8uGBFVk6YofFKVUuTO1pQPCujvrGpyrgvISkX_gGE',
+  },
   other: {
     'base:app_id': '693b3e008a7c4e55fec73eb6',
   },
