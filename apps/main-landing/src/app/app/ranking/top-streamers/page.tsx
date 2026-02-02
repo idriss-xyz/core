@@ -24,8 +24,9 @@ export default function TopCreators() {
       const donor = leaderboardQuery.data?.find((d) => {
         return d.displayName === displayName;
       });
+
       if (donor && donor.displayName !== 'anon') {
-        window.open(`${donor.donateLink}`, '_blank');
+        window.open(`/${donor.displayName}`, '_blank');
       }
     },
     [leaderboardQuery.data],
