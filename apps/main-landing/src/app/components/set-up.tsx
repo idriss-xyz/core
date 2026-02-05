@@ -14,14 +14,14 @@ import {
   CREATORS_LINES_TABLET,
   CRETORS_FORM_MOBILE_PNG,
   CRETORS_FORM_MOBILE_SVG,
-  CRETORS_FORM_PNG,
-  CRETORS_FORM_SVG,
+  DONATION_FORM_SVG,
+  DONATION_FORM_PNG,
 } from './set-up-section/assets';
 
 export const SetUp = () => {
-  const creatorsFormSrc = useBrowserBasedImage({
-    svgSrc: CRETORS_FORM_SVG.src,
-    pngSrc: CRETORS_FORM_PNG.src,
+  const donationFormSrc = useBrowserBasedImage({
+    svgSrc: DONATION_FORM_SVG.src,
+    pngSrc: DONATION_FORM_PNG.src,
   });
 
   const creatorsFormMobileSrc = useBrowserBasedImage({
@@ -84,7 +84,7 @@ export const SetUp = () => {
                     <Icon size={22} name="Hexagon" className="text-mint-400" />
 
                     <p className="text-body3 text-midnightGreen-200">
-                      Create your donation link
+                      Log in withh Twitch
                     </p>
                   </li>
 
@@ -92,7 +92,7 @@ export const SetUp = () => {
                     <Icon size={22} name="Hexagon" className="text-mint-400" />
 
                     <p className="text-body3 text-midnightGreen-200">
-                      Add donation alerts to your OBS
+                      Add a donation link to your bio
                     </p>
                   </li>
 
@@ -100,7 +100,7 @@ export const SetUp = () => {
                     <Icon size={22} name="Hexagon" className="text-mint-400" />
 
                     <p className="text-body3 text-midnightGreen-200">
-                      Boost visibility with a banner for your bio
+                      Set up alerts in your streaming software
                     </p>
                   </li>
                 </ul>
@@ -128,7 +128,7 @@ export const SetUp = () => {
             >
               <img
                 alt=""
-                src={creatorsFormSrc}
+                src={donationFormSrc}
                 className="relative z-1 ml-auto hidden h-full max-h-[600px] object-contain lg:block"
               />
 

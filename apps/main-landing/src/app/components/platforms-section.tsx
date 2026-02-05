@@ -32,8 +32,8 @@ export const PlatformsSection = () => {
                   'lg:whitespace-pre-wrap lg:text-left lg:text-display3',
                 )}
               >
-                Get paid anywhere
-                {'\n'}you create
+                Your money
+                {'\n'}is finally yours
               </h2>
 
               <p
@@ -41,9 +41,8 @@ export const PlatformsSection = () => {
                   'text-body2 text-neutralGreen-900 opacity-70 sm:text-center lg:text-balance lg:text-left',
                 )}
               >
-                Whether you are on Twitch, YouTube, Kick, Facebook or anywhere
-                else, you can start earning with IDRISS. All it takes is sharing
-                a link with your audience.
+                Stop losing 50% of your revenue to platform fees, waiting weeks
+                for payouts, and fighting chargebacks.
               </p>
             </div>
 
