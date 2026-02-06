@@ -85,7 +85,7 @@ export const ProsSection = () => {
               )}
             >
               Why streamers
-              {'\n'}choose Idriss
+              {'\n'}switch to IDRISS
             </h2>
 
             <p
@@ -93,8 +93,7 @@ export const ProsSection = () => {
                 'text-center text-body3 text-midnightGreen-200 lg:text-balance',
               )}
             >
-              More earnings, more ways to get paid, more reasons for your fans
-              to keep coming back.
+              We rebuilt the monetization layer to put you as a creator first.
             </p>
           </div>
 

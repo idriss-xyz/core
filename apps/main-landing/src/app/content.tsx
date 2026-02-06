@@ -10,7 +10,6 @@ import { ProsSection } from './components/pros-section';
 import { SetUp } from './components/set-up';
 import { TopCreators } from './components/top-creators';
 import { Footer } from './components/footer';
-import { NftSection } from './components/nft-section';
 import { getCookie } from './cookies';
 
 type ContentProperties = { creator?: CreatorProfileResponse | null };
@@ -52,7 +51,6 @@ export default function Content({ creator }: ContentProperties) {
         />
         <PlatformsSection />
         <ProsSection />
-        <NftSection />
         <SetUp />
         <TopCreators />
       </main>

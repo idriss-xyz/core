@@ -12,21 +12,21 @@ import {
   CREATORS_LINES,
   CREATORS_LINES_MOBILE,
   CREATORS_LINES_TABLET,
-  CRETORS_FORM_MOBILE_PNG,
-  CRETORS_FORM_MOBILE_SVG,
-  CRETORS_FORM_PNG,
-  CRETORS_FORM_SVG,
+  DONATION_FORM_MOBILE_PNG,
+  DONATION_FORM_MOBILE_SVG,
+  DONATION_FORM_SVG,
+  DONATION_FORM_PNG,
 } from './set-up-section/assets';
 
 export const SetUp = () => {
-  const creatorsFormSrc = useBrowserBasedImage({
-    svgSrc: CRETORS_FORM_SVG.src,
-    pngSrc: CRETORS_FORM_PNG.src,
+  const donationFormSrc = useBrowserBasedImage({
+    svgSrc: DONATION_FORM_SVG.src,
+    pngSrc: DONATION_FORM_PNG.src,
   });
 
-  const creatorsFormMobileSrc = useBrowserBasedImage({
-    svgSrc: CRETORS_FORM_MOBILE_SVG.src,
-    pngSrc: CRETORS_FORM_MOBILE_PNG.src,
+  const donationFormMobileSrc = useBrowserBasedImage({
+    svgSrc: DONATION_FORM_MOBILE_SVG.src,
+    pngSrc: DONATION_FORM_MOBILE_PNG.src,
   });
   return (
     <div className="relative z-1 overflow-visible px-safe">
@@ -84,7 +84,7 @@ export const SetUp = () => {
                     <Icon size={22} name="Hexagon" className="text-mint-400" />
 
                     <p className="text-body3 text-midnightGreen-200">
-                      Create your donation link
+                      Log in withh Twitch
                     </p>
                   </li>
 
@@ -92,7 +92,7 @@ export const SetUp = () => {
                     <Icon size={22} name="Hexagon" className="text-mint-400" />
 
                     <p className="text-body3 text-midnightGreen-200">
-                      Add donation alerts to your OBS
+                      Add a donation link to your bio
                     </p>
                   </li>
 
@@ -100,7 +100,7 @@ export const SetUp = () => {
                     <Icon size={22} name="Hexagon" className="text-mint-400" />
 
                     <p className="text-body3 text-midnightGreen-200">
-                      Boost visibility with a banner for your bio
+                      Set up alerts in your streaming software
                     </p>
                   </li>
                 </ul>
@@ -128,13 +128,13 @@ export const SetUp = () => {
             >
               <img
                 alt=""
-                src={creatorsFormSrc}
+                src={donationFormSrc}
                 className="relative z-1 ml-auto hidden h-full max-h-[600px] object-contain lg:block"
               />
 
               <img
                 alt=""
-                src={creatorsFormMobileSrc}
+                src={donationFormMobileSrc}
                 className="relative z-1 mx-auto block h-full max-h-[600px] object-contain px-4 lg:hidden"
               />
 
@@ -153,7 +153,7 @@ export const SetUp = () => {
               <img
                 alt=""
                 src={CREATORS_LINES.src}
-                className="absolute right-0 top-0 hidden h-full object-contain lg:block"
+                className="absolute right-32 top-0 hidden h-full object-contain lg:block xl:right-40"
               />
             </div>
           </div>

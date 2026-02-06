@@ -66,9 +66,8 @@ export const HeroSection = ({
               'lg:text-left xl:text-display2',
             )}
           >
-            Make more
-            {'\n'}Grow faster
-            {'\n'}Take control
+            EARN MORE
+            {'\n'}ON STREAM
           </h1>
 
           <p
@@ -77,8 +76,8 @@ export const HeroSection = ({
               'lg:text-left',
             )}
           >
-            Streamer monetization app that helps you earn more with instant
-            payouts and near-zero platform cuts.
+            Direct donation tool for streamers. Get paid instantly with
+            near-zero fees and no chargeback risk.
           </p>
 
           <Button
@@ -86,11 +85,11 @@ export const HeroSection = ({
             className="z-1"
             intent="primary"
             ref={heroButtonReference}
-            aria-label="Start earning now"
+            aria-label="Get started"
             suffixIconName="IdrissArrowRight"
             onClick={handleStartEarningClick}
           >
-            Start earning now
+            Get started
           </Button>
         </div>
 
