@@ -153,7 +153,7 @@ export const SetUp = () => {
               <img
                 alt=""
                 src={CREATORS_LINES.src}
-                className="absolute right-0 top-0 hidden h-full object-contain lg:block"
+                className="absolute right-12 top-0 hidden h-full object-contain lg:block xl:right-16"
               />
             </div>
           </div>

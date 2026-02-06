@@ -45,9 +45,8 @@ export const Footer = () => {
                 'lg:text-display3',
               )}
             >
-              Make more
-              {'\n'}Grow faster
-              {'\n'}Take control
+              Earn more
+              {'\n'}on stream
             </h2>
             <Button
               intent="negative"
