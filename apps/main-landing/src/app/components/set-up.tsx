@@ -84,7 +84,7 @@ export const SetUp = () => {
                     <Icon size={22} name="Hexagon" className="text-mint-400" />
 
                     <p className="text-body3 text-midnightGreen-200">
-                      Log in withh Twitch
+                      Log in with Twitch
                     </p>
                   </li>
 
