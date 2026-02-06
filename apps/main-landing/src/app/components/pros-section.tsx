@@ -101,8 +101,8 @@ export const ProsSection = () => {
             <div className="relative flex flex-col gap-y-4 overflow-hidden rounded-[24px] p-4 py-8 pb-0 lg:grid lg:grid-cols-[1fr,1fr] lg:items-center lg:gap-x-8 lg:p-8">
               <ProsItem
                 iconName="TrendingUp"
-                heading="Less fees, more revenue"
-                description="Keep more of what you earn. Stop losing a big portion of your earnings to platform cuts and transaction fees."
+                heading="More revenue, less fees"
+                description="Stop losing a significant portion of your earnings to transaction fees and platform cuts. With IDRISS, you keep more of what you earn and offer your supporters a smooth, borderless way to contribute."
               />
 
               <img
@@ -124,8 +124,8 @@ export const ProsSection = () => {
               <div className="relative flex flex-col items-start rounded-[24px] p-4 py-8 lg:p-8">
                 <ProsItem
                   iconName="HandCoins"
-                  heading="Instant payouts"
-                  description="Withdraw your earnings instantly straight to your wallet. Forget about delays and minimum payout thresholds."
+                  heading="More ways to donate"
+                  description="Let your supporters contribute in the way that suits them best. Accept payments in a variety of top cryptocurrencies."
                   innerClassName="max-w-[490px]"
                 >
                   <TokensShowcase className="my-16" />
@@ -142,9 +142,9 @@ export const ProsSection = () => {
 
               <div className="relative flex flex-col items-start gap-y-10 overflow-hidden rounded-[24px] p-4 py-8 lg:gap-y-8 lg:p-8">
                 <ProsItem
-                  iconName="Lock"
-                  heading="Zero chargebacks"
-                  description="The support you receive from your fans stays in your pocket. Say goodbye to the stress of donation disputes."
+                  iconName="Trophy"
+                  heading="More fun and recognition"
+                  description="Give your fans a reason to show up and give more. With donation alerts and leaderboards you engage and recognize your loyal supporters."
                 />
 
                 <div className="mt-auto min-h-[248.33px] w-full">
