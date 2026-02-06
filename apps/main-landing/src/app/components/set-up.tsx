@@ -12,8 +12,8 @@ import {
   CREATORS_LINES,
   CREATORS_LINES_MOBILE,
   CREATORS_LINES_TABLET,
-  CRETORS_FORM_MOBILE_PNG,
-  CRETORS_FORM_MOBILE_SVG,
+  DONATION_FORM_MOBILE_PNG,
+  DONATION_FORM_MOBILE_SVG,
   DONATION_FORM_SVG,
   DONATION_FORM_PNG,
 } from './set-up-section/assets';
@@ -24,9 +24,9 @@ export const SetUp = () => {
     pngSrc: DONATION_FORM_PNG.src,
   });
 
-  const creatorsFormMobileSrc = useBrowserBasedImage({
-    svgSrc: CRETORS_FORM_MOBILE_SVG.src,
-    pngSrc: CRETORS_FORM_MOBILE_PNG.src,
+  const donationFormMobileSrc = useBrowserBasedImage({
+    svgSrc: DONATION_FORM_MOBILE_SVG.src,
+    pngSrc: DONATION_FORM_MOBILE_PNG.src,
   });
   return (
     <div className="relative z-1 overflow-visible px-safe">
@@ -134,7 +134,7 @@ export const SetUp = () => {
 
               <img
                 alt=""
-                src={creatorsFormMobileSrc}
+                src={donationFormMobileSrc}
                 className="relative z-1 mx-auto block h-full max-h-[600px] object-contain px-4 lg:hidden"
               />
 
