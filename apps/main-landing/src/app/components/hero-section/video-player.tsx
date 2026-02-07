@@ -25,7 +25,7 @@ export const VideoPlayer = () => {
         ref={videoReference}
         className="size-full cursor-pointer object-cover"
       >
-        <source src="/videos/creators-intro.mp4" type="video/mp4" />
+        <source src="/videos/creators-intro-v2.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
 
