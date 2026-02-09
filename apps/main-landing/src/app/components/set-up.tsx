@@ -122,14 +122,14 @@ export const SetUp = () => {
             <div
               className={classes(
                 'size-full pb-8 pt-[168px] md:pb-10',
-                'lg:py-11 lg:pr-12',
-                'relative xl:py-12 xl:pr-[56px]',
+                'lg:pb-6 lg:pr-12 lg:pt-11',
+                'relative xl:pb-6 xl:pr-[56px] xl:pt-12',
               )}
             >
               <img
                 alt=""
                 src={donationFormSrc}
-                className="relative z-1 ml-auto hidden h-full max-h-[600px] object-contain lg:block"
+                className="relative z-1 mx-auto hidden h-full max-h-[600px] object-contain lg:block"
               />
 
               <img
@@ -149,13 +149,13 @@ export const SetUp = () => {
                 src={CREATORS_LINES_TABLET.src}
                 className="absolute inset-x-0 top-0 hidden w-full object-contain sm:block lg:hidden"
               />
-
-              <img
-                alt=""
-                src={CREATORS_LINES.src}
-                className="absolute right-32 top-0 hidden h-full object-contain lg:block xl:right-40"
-              />
             </div>
+
+            <img
+              alt=""
+              src={CREATORS_LINES.src}
+              className="absolute right-0 top-1/2 hidden w-[65%] -translate-y-1/2 lg:block"
+            />
           </div>
 
           <img

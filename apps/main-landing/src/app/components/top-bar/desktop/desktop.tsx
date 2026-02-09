@@ -145,11 +145,11 @@ export const Desktop = ({
               <Button
                 size="small"
                 intent="primary"
-                aria-label="Start earning"
+                aria-label="Get started"
                 onClick={handleMobileStartEarningClick}
                 suffixIconName="IdrissArrowRight"
               >
-                Start earning
+                Get started
               </Button>
             )}
             <DesktopSocials
@@ -182,10 +182,10 @@ export const Desktop = ({
             size="medium"
             intent="primary"
             onClick={handleStartEarningClick}
-            aria-label="Start earning"
+            aria-label="Get started"
             suffixIconName="IdrissArrowRight"
           >
-            Start earning
+            Get started
           </Button>
         </div>
       ) : (
