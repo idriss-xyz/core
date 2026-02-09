@@ -12,7 +12,7 @@ export const CreatorsSectionActions = () => {
         href={MAIN_LANDING_LINK}
         isExternal
       >
-        START EARNING
+        GET STARTED
       </Button>
       {/* 4xl */}
       <Button
@@ -23,7 +23,7 @@ export const CreatorsSectionActions = () => {
         href={MAIN_LANDING_LINK}
         isExternal
       >
-        START EARNING
+        GET STARTED
       </Button>
     </>
   );

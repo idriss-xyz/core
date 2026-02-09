@@ -101,8 +101,8 @@ export const ProsSection = () => {
             <div className="relative flex flex-col gap-y-4 overflow-hidden rounded-[24px] p-4 py-8 pb-0 lg:grid lg:grid-cols-[1fr,1fr] lg:items-center lg:gap-x-8 lg:p-8">
               <ProsItem
                 iconName="TrendingUp"
-                heading="More revenue, less fees"
-                description="Stop losing a significant portion of your earnings to transaction fees and platform cuts. With IDRISS, you keep more of what you earn and offer your supporters a smooth, borderless way to contribute."
+                heading="Less fees, more revenue"
+                description="Keep more of what you earn. Stop losing a big portion of your earnings to platform cuts and transaction fees."
               />
 
               <img

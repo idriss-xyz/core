@@ -55,7 +55,7 @@ export const Footer = () => {
               className="mt-6 uppercase lg:mt-10"
               onClick={handleStartEarningClick}
             >
-              Start earning now
+              GET STARTED
             </Button>
           </div>
 
