@@ -3,7 +3,7 @@ import { configureEnv } from './config/environment';
 
 configureEnv(mode, __dirname);
 
-import express, { Application, Request, Response } from 'express';
+import express, { Application, NextFunction, Request, Response } from 'express';
 import cookieParser from 'cookie-parser';
 import http from 'http';
 import { Server as SocketIOServer, Socket } from 'socket.io';
@@ -39,6 +39,7 @@ import { MAIN_LANDING_LINK } from '@idriss-xyz/constants';
 import { startDbListener } from './services/db-listener';
 
 const app: Application = express();
+app.set('trust proxy', 1);
 app.use(express.json());
 app.use(cookieParser());
 
@@ -176,6 +177,19 @@ app.get('/', (req: Request, res: Response) => {
 
 app.get('/health', (req: Request, res: Response) => {
   res.send('ok');
+});
+
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({ error: 'Internal server error' });
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught exception:', err);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled rejection:', reason);
 });
 
 server.listen(PORT, HOST, () => {
