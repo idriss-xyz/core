@@ -27,12 +27,14 @@ import {
 } from '@idriss-xyz/db';
 import {
   fetchNftFloorFromOpensea,
+  getAlchemyCurrentPrice,
   getAlchemyHistoricalPrice,
   getOldestZapperPrice,
   getZapperPrice,
 } from './pricing-utils.js';
 
 const HOURLY_PRICE_CACHE = new Map<string, number>();
+const THIRTY_MINUTES_MS = 30 * 60 * 1000;
 
 async function getOrCreateUser(address: Hex): Promise<User> {
   const addr = address.toLowerCase() as Hex;
@@ -53,11 +55,16 @@ async function getHourlyTokenPriceUSD(
   const key = `${network}_${lookupAddress.toLowerCase()}_${hourKey}`;
   if (HOURLY_PRICE_CACHE.has(key)) return HOURLY_PRICE_CACHE.get(key) ?? null;
 
-  const price =
-    (await getZapperPrice(lookupAddress, network, date)) ??
-    (await getAlchemyHistoricalPrice(lookupAddress, network, date)) ??
-    getOldestZapperPrice(lookupAddress, network) ??
-    null;
+  const isRecent = Date.now() - date.getTime() < THIRTY_MINUTES_MS;
+
+  const price = isRecent
+    ? ((await getAlchemyCurrentPrice(lookupAddress, network)) ??
+      (await getZapperPrice(lookupAddress, network, new Date())) ??
+      null)
+    : ((await getZapperPrice(lookupAddress, network, date)) ??
+      (await getAlchemyHistoricalPrice(lookupAddress, network, date)) ??
+      getOldestZapperPrice(lookupAddress, network) ??
+      null);
 
   if (price !== null) HOURLY_PRICE_CACHE.set(key, price);
   return price;
