@@ -16,7 +16,8 @@
     "circular-dependencies": "depcruise --config .dependency-cruiser.cjs src",
     "unused-exports": "ts-unused-exports ./tsconfig.json --excludePathsFromReport=./src/api/index.ts",
     "typecheck": "tsc",
-    "serve": "ponder serve --api src/api/index.ts"
+    "serve": "ponder serve --api src/api/index.ts",
+    "test": "vitest run"
   },
   "dependencies": {
     "@idriss-xyz/blockchain-clients": "workspace:*",
@@ -36,7 +37,8 @@
     "eslint": "^8.53.0",
     "eslint-config-ponder": "^0.13.13",
     "ts-unused-exports": "^10.1.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^3.2.4"
   },
   "engines": {
     "node": ">=18.14"

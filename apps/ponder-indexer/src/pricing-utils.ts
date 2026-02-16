@@ -61,7 +61,7 @@ export async function getZapperPrice(
   txDate: Date,
 ): Promise<number | null> {
   const zapperCacheKey = `${network}_${tokenAddress}`;
-  const priceTicks = zapperHistoryCache[zapperCacheKey];
+  let priceTicks = zapperHistoryCache[zapperCacheKey];
   let fallbackPrice: number | null = null;
 
   // Fetch entire price history if not cached
@@ -99,8 +99,8 @@ export async function getZapperPrice(
         };
       };
       fallbackPrice = json.data?.fungibleTokenV2?.priceData?.price ?? null;
-      zapperHistoryCache[zapperCacheKey] =
-        json.data?.fungibleTokenV2?.priceData?.priceTicks ?? [];
+      priceTicks = json.data?.fungibleTokenV2?.priceData?.priceTicks ?? [];
+      zapperHistoryCache[zapperCacheKey] = priceTicks;
     } catch (error) {
       console.error('Zapper price fetch failed:', error);
       return null;
@@ -183,6 +183,57 @@ export async function getAlchemyHistoricalPrice(
   } catch (error) {
     console.error(
       `Failed to fetch Alchemy price for token ${tokenAddress} on ${network} after retries:`,
+      error,
+    );
+    return null;
+  }
+}
+
+export async function getAlchemyCurrentPrice(
+  tokenAddress: string,
+  network: string,
+): Promise<number | null> {
+  const alchemyNetwork =
+    NETWORK_TO_ALCHEMY[network as keyof typeof NETWORK_TO_ALCHEMY];
+  if (!alchemyNetwork) return null;
+
+  try {
+    if (tokenAddress === zeroAddress) {
+      const symbol =
+        ALCHEMY_NATIVE_TOKENS[network as keyof typeof ALCHEMY_NATIVE_TOKENS];
+      if (!symbol) return null;
+      const prices = await fetchNativePricesFromAlchemy([symbol]);
+      return prices[symbol] ?? null;
+    }
+
+    return await retryWithBackoff(async () => {
+      const response = await fetch(
+        `https://api.g.alchemy.com/prices/v1/${process.env.ALCHEMY_API_KEY}/tokens/by-address`,
+        {
+          method: 'POST',
+          headers: {
+            'accept': 'application/json',
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            addresses: [{ address: tokenAddress, network: alchemyNetwork }],
+          }),
+        },
+      );
+      if (!response.ok)
+        throw new Error(`Alchemy request failed: ${response.status}`);
+
+      const data = (await response.json()) as {
+        data?: {
+          prices?: { value: string }[];
+        }[];
+      };
+      const price = data.data?.[0]?.prices?.[0]?.value;
+      return price ? Number(price) : null;
+    });
+  } catch (error) {
+    console.error(
+      `Failed to fetch Alchemy current price for ${tokenAddress}:`,
       error,
     );
     return null;
