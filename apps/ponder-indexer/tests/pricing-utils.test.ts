@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { zeroAddress } from 'viem';
 
-import { getAlchemyCurrentPrice } from './pricing-utils.js';
+import { getAlchemyCurrentPrice } from '../src/pricing-utils.js';
 
 const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
