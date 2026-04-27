@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-import { loadExistingEvents } from '@/utils';
 import { ClaimEvent } from '@/constants';
+import { loadExistingEvents } from '@/utils';
 
 interface ApiResponse {
   error?: string;
@@ -24,11 +24,11 @@ export function GET(request: Request): NextResponse<ApiResponse> {
       const score = [
         {
           address: '0x896C20Da40c2A4df9B7C98B16a8D5A95129161a5',
-          score: '21837038200000000000000',
+          score: '22748040300000000000000',
         },
         {
           address: '0x656A78630F31432E6F35F6996AF5C0a4E445655c',
-          score: '165903700000000000000',
+          score: '176711200000000000000',
         },
       ];
       return NextResponse.json({ score });
